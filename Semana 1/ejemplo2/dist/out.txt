@@ -1,0 +1,4 @@
+args.length: 3
+args[0]: abcd
+args[1]: 12
+args[2]: xyz

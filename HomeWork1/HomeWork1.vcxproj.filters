@@ -30,4 +30,7 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\salarios.txt" />
+  </ItemGroup>
 </Project>

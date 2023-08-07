@@ -46,8 +46,20 @@ string Person::toString()
     s << id + " - " + name + " " + middleName + " " + lastName + " - " + birthDate + " - " + salary;
     return s.str();
 }
+void Person::setName(string name)
+{
+    this->name = name;
+}
 
+void Person::setMiddleName(string middleName)
+{
+    this->middleName = middleName;
+}
+
+void Person::setLastName(string lastName)
+{
+    this->lastName = lastName;
+}
 Person::~Person()
 {
 }
-

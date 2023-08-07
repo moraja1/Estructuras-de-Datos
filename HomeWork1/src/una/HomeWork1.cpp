@@ -12,6 +12,13 @@ bool equals(string const &v1, string const &v2)
     return v1 == v2;
 }
 
+void removeAccent(char &a)
+{
+    switch (a) {
+    case -61: a = 'A'; break;
+    }
+}
+
 list<Person> sortPersons(list<Person> const &original)
 {
     list<Person> sorted;
@@ -50,13 +57,28 @@ list<Person> sortPersons(list<Person> const &original)
                     }
                 }
             }
-
             //Realizo el ordenamiento
             for(int i = 0; i < oWord.length() && i < sWord.length(); i++)
             {
-                if(oWord[i] != sWord[i])
+                char alpha = oWord[i];
+                char beta = sWord[i];
+
+                if(alpha == -61 && i > 0)
                 {
-                    if (oWord[i] < sWord[i])
+                    alpha = oWord[i + 1];
+                }
+                if(beta == -61 && i > 0)
+                {
+                    beta = sWord[i + 1];
+                }
+
+                //Elimino los acentos en caso de existir
+                removeAccent(alpha);
+                removeAccent(beta);
+
+                if(alpha != beta)
+                {
+                    if (alpha < beta)
                     {
                         sorted.insert(iterator, o);
                         inserted = true;
@@ -76,6 +98,7 @@ list<Person> sortPersons(list<Person> const &original)
 }
 
 int main(int argc, char** argv) {
+    
 
     // Open the file
     ifstream file;
@@ -118,6 +141,10 @@ int main(int argc, char** argv) {
         file.close();
 
         persons = sortPersons(persons);
+        for(Person p : persons)
+        {
+            cout << p.toString() << endl;
+        }
     }
     return 0;
 }

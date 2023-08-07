@@ -40,7 +40,7 @@ string Person::getSalary() const
     return salary;
 }
 
-string Person::toString()
+string Person::toString() const
 {
     stringstream s;
     s << id + " - " + name + " " + middleName + " " + lastName + " - " + birthDate + " - " + salary;
@@ -61,5 +61,26 @@ void Person::setLastName(string lastName)
     this->lastName = lastName;
 }
 Person::~Person()
+= default;
+
+double Person::getDSalary() const
 {
+    return dSalary;
 }
+
+void Person::setDSalary(double dSalary)
+{
+    this->dSalary = dSalary;
+}
+
+
+double Person::getDeductions() const
+{
+    return deductions;
+}
+
+void Person::setDeductions(double deductions)
+{
+    this->deductions = deductions;
+}
+

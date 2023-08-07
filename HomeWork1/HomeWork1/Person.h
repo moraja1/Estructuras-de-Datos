@@ -11,7 +11,8 @@ private:
 	string lastName;
 	string birthDate;
 	string salary;
-
+	double dSalary;
+	double deductions;
 public:
 	Person(string, string, string, string, string, string);
 	string getId() const;
@@ -20,9 +21,13 @@ public:
 	string getLastName() const;
 	string getBirthDate() const;
 	string getSalary() const;
-	string toString();
+	string toString() const;
 	void setName(string name);
 	void setMiddleName(string middleName);
 	void setLastName(string lastName);
+	double getDSalary() const;
+	void setDSalary(double dSalary);
+	double getDeductions() const;
+	void setDeductions(double deductions);
 	~Person();
 };

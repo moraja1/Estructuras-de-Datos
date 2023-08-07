@@ -184,23 +184,76 @@ list<Person> sortPersons(list<Person> const &original)
     return sorted;
 }
 
+void getSubtotals(double& min_salary, double& max_salary, double& average_salary, double& min_net_salary, double& max_net_salary, double& average_net_salary,
+                 const list<Person>& list)
+{
+	list<Person>::const_iterator iterator;
+    for (iterator = list.begin(); iterator != list.end(); iterator++)
+	{
+        Person p = *iterator;
+
+        //Sumo promedios
+        average_salary += p.getDSalary();
+        average_net_salary += (p.getDSalary() - p.getDeductions());
+
+        //Minimos y maximos
+        if(iterator == list.begin())
+        {
+            min_salary = p.getDSalary();
+            min_net_salary = (p.getDSalary() - p.getDeductions());
+            max_salary = min_salary;
+            max_net_salary = min_net_salary;
+        }else
+        {
+	        //SE COMPARAN LOS MINIMOS Y MAXIMOS
+        }
+	}
+
+    average_salary /= list.size();
+    average_net_salary /= list.size();
+}
+
 void generateReport(const list<Person>& list)
 {
+    setlocale(LC_ALL, "en_US");
+
     cout << "+-----------+--------------------------+------------------+----------------+----------------+----------------+---+\n";
     cout << "|        Id | Apellidos                | Nombre           |     Sal. bruto |    Deducciones |      Sal. neto | * |\n";
     cout << "+-----------+--------------------------+------------------+----------------+----------------+----------------+---+\n";
 
     for(Person p : list)
     {
-        double salary = stod(p.getSalary());
-        double deductions = 0;
+        p.setDSalary(stod(p.getSalary()));
+        if(p.getDSalary() <= 950000.00)
+        {
+            p.setDeductions(p.getDSalary() * 0.09);
+        }else
+        {
+            p.setDeductions(p.getDSalary() * 0.09 + (p.getDSalary() - 950000.00) * 0.05);
+        }
+    }
+
+    double averageSalary = 0;
+    double averageNetSalary = 0;
+    double minSalary = 0;
+    double maxSalary = 0;
+    double minNetSalary = 0;
+    double maxNetSalary = 0;
+
+    getSubtotals(minSalary, maxSalary, averageSalary, minNetSalary, maxNetSalary, averageNetSalary, list);
+
+    for (Person p : list)
+    {
         cout << "| " << std::setw(9) << p.getId() << " ";
-        cout << "| " << setw(24) << right << p.getMiddleName() + " " + p.getLastName() << " ";
+        cout << "| " << setw(24) << left << p.getMiddleName() + " " + p.getLastName() << " ";
         cout << "| " << std::setw(16) << p.getName() << " ";
-        cout << "| " << std::setw(15) << std::fixed << std::setprecision(2) << p.getSalary();
-        cout << "| " << std::setw(15) << std::fixed << std::setprecision(2) << deductions;
-        cout << "| " << std::setw(15) << std::fixed << std::setprecision(2) << (salary - deductions);
-    	cout << "| " << "* |\n";
+        cout.imbue(std::locale("en_US"));
+        cout << right;
+        cout << "| " << std::setw(15) << std::fixed << std::setprecision(2) << p.getDSalary();
+        cout << "| " << std::setw(15) << std::fixed << std::setprecision(2) << p.getDeductions();
+        cout << "| " << std::setw(15) << std::fixed << std::setprecision(2) << (p.getDSalary() - p.getDeductions());
+        cout << "| ";
+
     }
 
     cout << "+-----------+--------------------------+------------------+----------------+----------------+----------------+---+\n";

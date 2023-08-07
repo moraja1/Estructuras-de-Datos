@@ -4,6 +4,7 @@
 #include <regex>
 #include "Person.h"
 #include <list>
+#include <locale>
 
 using namespace std;
 
@@ -12,10 +13,39 @@ bool equals(string const &v1, string const &v2)
     return v1 == v2;
 }
 
-void removeAccent(char &a)
+void removeAccents(string &a)
 {
-    switch (a) {
-    case -61: a = 'A'; break;
+    char const lookFor = -61;
+    string::size_type found = a.find(lookFor);
+
+    while (found != string::npos) {
+        char c1 = a[found];
+        char c2 = a[++found];
+
+        if (c1 == static_cast<char>(-61) && c2 == static_cast<char>(-95)) {
+            // Caso de la vocal 'á' (á = -61 - 160)
+            a.replace((found-1), 2, "a");
+        }
+        else if (c1 == static_cast<char>(-61) && c2 == static_cast<char>(-87)) {
+            // Caso de la vocal 'é' (é = -61 - 169)
+            a.replace((found - 1), 2, "e");
+        }
+        else if (c1 == static_cast<char>(-61) && c2 >= static_cast<char>(-83)) {
+            // Caso de la vocal 'í' (í = -61 - 173)
+            a.replace((found - 1), 2, "i");
+        }
+        else if (c1 == static_cast<char>(-61) && c2 == static_cast<char>(-77)) {
+            // Caso de la vocal 'ó' (ó = -61 - 179)
+            a.replace((found - 1), 2, "o");
+        }
+        else if (c1 == static_cast<char>(-61) && c2 >= static_cast<char>(-68)) {
+            // Caso de la vocal 'ú' (ú = -61 - 163)
+            a.replace((found - 1), 2, "u");
+        }
+        else if (c1 == static_cast<char>(-61) && c2 == static_cast<char>(-127)) {
+            a.replace((found - 1), 2, "A");
+        }
+        found = a.find(lookFor);
     }
 }
 
@@ -57,24 +87,15 @@ list<Person> sortPersons(list<Person> const &original)
                     }
                 }
             }
+            //Busco las tildes y las elimino
+            removeAccents(oWord);
+            removeAccents(sWord);
+
             //Realizo el ordenamiento
             for(int i = 0; i < oWord.length() && i < sWord.length(); i++)
             {
                 char alpha = oWord[i];
                 char beta = sWord[i];
-
-                if(alpha == -61 && i > 0)
-                {
-                    alpha = oWord[i + 1];
-                }
-                if(beta == -61 && i > 0)
-                {
-                    beta = sWord[i + 1];
-                }
-
-                //Elimino los acentos en caso de existir
-                removeAccent(alpha);
-                removeAccent(beta);
 
                 if(alpha != beta)
                 {
@@ -98,7 +119,7 @@ list<Person> sortPersons(list<Person> const &original)
 }
 
 int main(int argc, char** argv) {
-    
+    locale::global(locale("en_US.UTF-8"));
 
     // Open the file
     ifstream file;
@@ -108,7 +129,7 @@ int main(int argc, char** argv) {
         file = ifstream(argv[1]);
     }else
     {
-        file = ifstream("src\\salarios.txt");
+        file = ifstream("salarios.txt");
     }
 
     if (!file.is_open()) {
@@ -141,10 +162,10 @@ int main(int argc, char** argv) {
         file.close();
 
         persons = sortPersons(persons);
-        for(Person p : persons)
+        /*for(Person p : persons)
         {
             cout << p.toString() << endl;
-        }
+        }*/
     }
     return 0;
 }

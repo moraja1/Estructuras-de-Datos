@@ -15,22 +15,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\una\HomeWork1.cpp">
+    <ClCompile Include="HomeWork1.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="src\una\cpp\Person.cpp">
+    <ClCompile Include="Person.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\una\Persona.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\una\Person.h">
+    <ClInclude Include="Person.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="src\salarios.txt" />
+    <Text Include="salarios.txt" />
   </ItemGroup>
 </Project>

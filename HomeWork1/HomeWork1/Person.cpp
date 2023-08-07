@@ -1,4 +1,4 @@
-#include "../Person.h"
+#include "Person.h"
 #include <sstream>
 
 Person::Person(string id, string name, string middleName, string lastName, string birthDate, string salary) {

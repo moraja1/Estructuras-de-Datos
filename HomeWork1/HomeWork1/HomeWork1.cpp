@@ -186,6 +186,8 @@ list<Person> sortPersons(list<Person> const &original)
 
 void generateReport(const list<Person>& persons)
 {
+    setlocale(LC_ALL, "en_US");
+
     cout << "+-----------+--------------------------+------------------+----------------+----------------+----------------+---+\n";
     cout << "|        Id | Apellidos                | Nombre           |     Sal. bruto |    Deducciones |      Sal. neto | * |\n";
     cout << "+-----------+--------------------------+------------------+----------------+----------------+----------------+---+\n";

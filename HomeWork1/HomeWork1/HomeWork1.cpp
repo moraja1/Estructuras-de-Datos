@@ -186,8 +186,6 @@ list<Person> sortPersons(list<Person> const &original)
 
 void generateReport(const list<Person>& persons)
 {
-    setlocale(LC_ALL, "en_US");
-
     cout << "+-----------+--------------------------+------------------+----------------+----------------+----------------+---+\n";
     cout << "|        Id | Apellidos                | Nombre           |     Sal. bruto |    Deducciones |      Sal. neto | * |\n";
     cout << "+-----------+--------------------------+------------------+----------------+----------------+----------------+---+\n";
@@ -286,7 +284,7 @@ void generateReport(const list<Person>& persons)
 }
 
 int main(int argc, char** argv) {
-    locale::global(locale("en_US.UTF-8"));
+    locale::global(locale("spanish"));
 
     // Open the file
     ifstream file;

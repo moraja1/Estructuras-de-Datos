@@ -13,6 +13,7 @@ private:
 	string salary;
 	double dSalary;
 	double deductions;
+	double netSalary;
 public:
 	Person(string, string, string, string, string, string);
 	string getId() const;
@@ -29,5 +30,7 @@ public:
 	void setDSalary(double dSalary);
 	double getDeductions() const;
 	void setDeductions(double deductions);
+	double getNetSalary() const;
+	void setNetSalary(double netSalary);
 	~Person();
 };

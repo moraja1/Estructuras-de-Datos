@@ -84,3 +84,13 @@ void Person::setDeductions(double deductions)
     this->deductions = deductions;
 }
 
+
+double Person::getNetSalary() const
+{
+    return netSalary;
+}
+
+void Person::setNetSalary(double netSalary)
+{
+    this->netSalary = netSalary;
+}

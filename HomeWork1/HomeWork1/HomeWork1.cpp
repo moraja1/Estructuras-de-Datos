@@ -121,13 +121,13 @@ list<Person> sortPersons(list<Person> const &original)
         }
 
         //Creo un iterador para ubicarme en cada persona de la lista.
-        list<Person>::iterator iterator;
+        list<Person>::iterator it;
         bool inserted = false;
-        for(iterator = sorted.begin(); !inserted; iterator++)
+        for(it = sorted.begin(); !inserted; it++)
         {
             //Variables necesarias
             char flag = 'a';
-            Person s = *iterator;
+            Person s = *it;
             string oWord = o.getMiddleName();
             string sWord = s.getMiddleName();
             
@@ -167,11 +167,11 @@ list<Person> sortPersons(list<Person> const &original)
                     normalizePerson(o);
                     if (alpha < beta)
                     {
-                        sorted.insert(iterator, o);
+                        sorted.insert(it, o);
                         inserted = true;
                         break;
                     }
-                    if (iterator == --sorted.end())
+                    if (it == --sorted.end())
                     {
                         sorted.push_back(o);
                         inserted = true;
@@ -184,54 +184,13 @@ list<Person> sortPersons(list<Person> const &original)
     return sorted;
 }
 
-void getSubtotals(double& min_salary, double& max_salary, double& average_salary, double& min_net_salary, double& max_net_salary, double& average_net_salary,
-                 const list<Person>& list)
+void generateReport(const list<Person>& persons)
 {
-	list<Person>::const_iterator iterator;
-    for (iterator = list.begin(); iterator != list.end(); iterator++)
-	{
-        Person p = *iterator;
-
-        //Sumo promedios
-        average_salary += p.getDSalary();
-        average_net_salary += (p.getDSalary() - p.getDeductions());
-
-        //Minimos y maximos
-        if(iterator == list.begin())
-        {
-            min_salary = p.getDSalary();
-            min_net_salary = (p.getDSalary() - p.getDeductions());
-            max_salary = min_salary;
-            max_net_salary = min_net_salary;
-        }else
-        {
-	        //SE COMPARAN LOS MINIMOS Y MAXIMOS
-        }
-	}
-
-    average_salary /= list.size();
-    average_net_salary /= list.size();
-}
-
-void generateReport(const list<Person>& list)
-{
-    setlocale(LC_ALL, "en_US");
-
     cout << "+-----------+--------------------------+------------------+----------------+----------------+----------------+---+\n";
     cout << "|        Id | Apellidos                | Nombre           |     Sal. bruto |    Deducciones |      Sal. neto | * |\n";
     cout << "+-----------+--------------------------+------------------+----------------+----------------+----------------+---+\n";
 
-    for(Person p : list)
-    {
-        p.setDSalary(stod(p.getSalary()));
-        if(p.getDSalary() <= 950000.00)
-        {
-            p.setDeductions(p.getDSalary() * 0.09);
-        }else
-        {
-            p.setDeductions(p.getDSalary() * 0.09 + (p.getDSalary() - 950000.00) * 0.05);
-        }
-    }
+    list<Person>::const_iterator it = persons.cbegin();
 
     double averageSalary = 0;
     double averageNetSalary = 0;
@@ -240,23 +199,88 @@ void generateReport(const list<Person>& list)
     double minNetSalary = 0;
     double maxNetSalary = 0;
 
-    getSubtotals(minSalary, maxSalary, averageSalary, minNetSalary, maxNetSalary, averageNetSalary, list);
-
-    for (Person p : list)
+    while(it != persons.cend())
     {
-        cout << "| " << std::setw(9) << p.getId() << " ";
-        cout << "| " << setw(24) << left << p.getMiddleName() + " " + p.getLastName() << " ";
-        cout << "| " << std::setw(16) << p.getName() << " ";
-        cout.imbue(std::locale("en_US"));
-        cout << right;
-        cout << "| " << std::setw(15) << std::fixed << std::setprecision(2) << p.getDSalary();
-        cout << "| " << std::setw(15) << std::fixed << std::setprecision(2) << p.getDeductions();
-        cout << "| " << std::setw(15) << std::fixed << std::setprecision(2) << (p.getDSalary() - p.getDeductions());
-        cout << "| ";
+        Person p = *it;
 
+        //Min and Max
+        if (it == persons.cbegin())
+        {
+            minSalary = p.getDSalary();
+            minNetSalary = p.getNetSalary();
+            maxSalary = p.getDSalary();
+            maxNetSalary = p.getNetSalary();
+        }
+        else
+        {
+            if (minSalary > p.getDSalary())
+            {
+                minSalary = p.getDSalary();
+            }
+            if (maxSalary < p.getDSalary())
+            {
+                maxSalary = p.getDSalary();
+            }
+            if (minNetSalary > (p.getDSalary() - p.getDeductions()))
+            {
+                minNetSalary = (p.getDSalary() - p.getDeductions());
+            }
+            if (maxNetSalary < (p.getDSalary() - p.getDeductions()))
+            {
+                maxNetSalary = (p.getDSalary() - p.getDeductions());
+            }
+        }
+
+        //Sumo promedios
+        averageSalary += p.getDSalary();
+        averageNetSalary += (p.getDSalary() - p.getDeductions());
+
+    	++it;
     }
 
+    averageSalary = averageSalary / persons.size();
+    averageNetSalary = averageNetSalary / persons.size();
+
+    double minDeduction = minSalary - minNetSalary;
+    double averageDeduction = averageSalary - averageNetSalary;
+    double maxDeduction = maxSalary - maxNetSalary;
+    
+    for (Person p : persons)
+    {
+         cout << "| " << setw(9) << p.getId() << " ";
+        cout << "| " << setw(24) << left << p.getMiddleName() + " " + p.getLastName() << " ";
+        cout << "| " << setw(16) << p.getName() << " ";
+        cout.imbue(locale("en_US"));
+        cout << right;
+        cout << "| " << setw(15) << fixed << setprecision(2) << p.getDSalary();
+        cout << "| " << setw(15) << fixed << setprecision(2) << p.getDeductions();
+        cout << "| " << setw(15) << fixed << setprecision(2) << (p.getDSalary() - p.getDeductions());
+        cout << "| ";
+        if(p.getDSalary() < averageSalary)
+        {
+            cout << "* |" << endl;
+        }else
+        {
+            cout << "  |" << endl;
+        }
+    }
     cout << "+-----------+--------------------------+------------------+----------------+----------------+----------------+---+\n";
+    cout << setw(58) << " ";
+    cout << right;
+    cout << "| " << setw(15) << fixed << setprecision(2) << minSalary;
+    cout << "| " << setw(15) << fixed << setprecision(2) << minDeduction;
+    cout << "| " << setw(15) << fixed << setprecision(2) << minNetSalary << "|\n";
+    cout << setw(58) << " ";
+    cout << right;
+    cout << "| " << setw(15) << fixed << setprecision(2) << averageSalary;
+    cout << "| " << setw(15) << fixed << setprecision(2) << averageDeduction;
+    cout << "| " << setw(15) << fixed << setprecision(2) << averageNetSalary << "|\n";
+    cout << setw(58) << " ";
+    cout << right;
+    cout << "| " << setw(15) << fixed << setprecision(2) << maxSalary;
+    cout << "| " << setw(15) << fixed << setprecision(2) << maxDeduction;
+    cout << "| " << setw(15) << fixed << setprecision(2) << maxNetSalary << "|\n";
+    cout << setw(58) << " " << "+----------------+----------------+----------------+\n";
 }
 
 int main(int argc, char** argv) {
@@ -297,6 +321,20 @@ int main(int argc, char** argv) {
                 string salary = matcher[6];
 
                 Person p(id, name, middleName, lastName, birthDate, salary);
+
+                //Obtains deductions
+                p.setDSalary(stod(p.getSalary()));
+                if (p.getDSalary() <= 950000.00)
+                {
+                    p.setDeductions(p.getDSalary() * 0.09);
+                }
+                else
+                {
+                    p.setDeductions(p.getDSalary() * 0.09 + (p.getDSalary() - 950000.00) * 0.05);
+                }
+
+                p.setNetSalary(p.getDSalary() - p.getDeductions());
+
                 persons.push_back(p);
             }
         }

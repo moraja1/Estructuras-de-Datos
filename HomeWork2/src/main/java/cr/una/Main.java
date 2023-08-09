@@ -30,45 +30,40 @@ public class Main {
                 }
 
                 //Organize List while entering data
-                if(persons.isEmpty() && p != null){
+                if (persons.isEmpty() && p != null) {
                     persons.add(p);
-                }else{
+                } else {
                     boolean inserted = false;
-                    for(int i = 0; !inserted; i++){
+                    for (int i = 0; !inserted; i++) {
                         Person s = persons.get(i);
                         String pWord = p.getMiddleName();
                         String sWord = s.getMiddleName();
-                        if(pWord.equals(sWord))
-                        {
+                        if (pWord.equals(sWord)) {
                             pWord = p.getLastName();
                             sWord = s.getLastName();
-                            if(pWord.equals(sWord))
-                            {
+                            if (pWord.equals(sWord)) {
                                 pWord = p.getName();
                                 sWord = s.getName();
-                                if(pWord.equals(sWord))
-                                {
+                                if (pWord.equals(sWord)) {
                                     pWord = p.getId();
                                     sWord = s.getId();
                                 }
                             }
                         }
-                        for(int j = 0; j < pWord.length() && j < sWord.length(); j++)
-                        {
+                        removeAccents(pWord);
+                        removeAccents(sWord);
+                        for (int j = 0; j < pWord.length() && j < sWord.length(); j++) {
                             char alpha = pWord.charAt(j);
                             char beta = sWord.charAt(j);
 
-                            if(alpha != beta)
-                            {
+                            if (alpha != beta) {
                                 //normalizePerson(o);
-                                if (alpha < beta)
-                                {
+                                if (alpha < beta) {
                                     persons.insert(p, i);
                                     inserted = true;
                                     break;
                                 }
-                                if (i == persons.getSize()-1)
-                                {
+                                if (i == persons.getSize() - 1) {
                                     persons.add(p);
                                     inserted = true;
                                 }
@@ -80,6 +75,16 @@ public class Main {
             }
         } catch (IOException e) {
             System.out.println("Ocurrió un error al leer el archivo: " + e.getMessage());
+        }
+
+        System.out.println();
+    }
+
+    private static void removeAccents(String word) {
+        for (int i = 0; i < word.length(); i++) {
+            char c1 = word.charAt(i);
+
+
         }
     }
 

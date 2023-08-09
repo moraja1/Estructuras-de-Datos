@@ -24,18 +24,25 @@ public class List <E> {
         return this;
     }
 
-    public List<E> insert(int idx, E data){
-        Link<E> temp = first;
-        if(idx == 0){
+    public List<E> insert(E data, int idx){
+        Link<E> temp;
+        if(idx > size){
+            return null;
+        }else if(idx == size){
+            return add(data);
+        }else if(idx == 0){
             temp = new Link<>(data);
             temp.setNext(first);
             first = temp;
+            size++;
+            return this;
         }
+        temp = first;
         for(int i = 1; i < idx; i++){
             temp = temp.getNext();
         }
         Link<E> tempNext = temp.getNext();
-        temp.setNext(new Link<E>(data));
+        temp.setNext(new Link<>(data));
         temp.getNext().setNext(tempNext);
         size++;
         return this;

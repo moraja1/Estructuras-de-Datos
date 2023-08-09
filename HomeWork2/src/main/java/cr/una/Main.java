@@ -36,7 +36,45 @@ public class Main {
                     boolean inserted = false;
                     for(int i = 0; i < persons.getSize(); i++){
                         Person s = persons.get(i);
+                        String pWord = p.getMiddleName();
+                        String sWord = s.getMiddleName();
+                        if(pWord.equals(sWord))
+                        {
+                            pWord = p.getLastName();
+                            sWord = s.getLastName();
+                            if(pWord.equals(sWord))
+                            {
+                                pWord = p.getName();
+                                sWord = s.getName();
+                                if(pWord.equals(sWord))
+                                {
+                                    pWord = p.getId();
+                                    sWord = s.getId();
+                                }
+                            }
+                        }
+                        for(int j = 0; j < pWord.length() && j < sWord.length(); j++)
+                        {
+                            char alpha = pWord.charAt(j);
+                            char beta = sWord.charAt(j);
 
+                            if(alpha != beta)
+                            {
+                                //normalizePerson(o);
+                                if (alpha < beta)
+                                {
+                                    persons.insert(p, i);
+                                    inserted = true;
+                                    break;
+                                }
+                                if (it == --sorted.end())
+                                {
+                                    sorted.push_back(o);
+                                    inserted = true;
+                                }
+                                break;
+                            }
+                        }
                     }
                 }
             }

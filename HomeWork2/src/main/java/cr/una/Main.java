@@ -34,7 +34,7 @@ public class Main {
                     persons.add(p);
                 }else{
                     boolean inserted = false;
-                    for(int i = 0; i < persons.getSize(); i++){
+                    for(int i = 0; !inserted; i++){
                         Person s = persons.get(i);
                         String pWord = p.getMiddleName();
                         String sWord = s.getMiddleName();
@@ -67,9 +67,9 @@ public class Main {
                                     inserted = true;
                                     break;
                                 }
-                                if (it == --sorted.end())
+                                if (i == persons.getSize()-1)
                                 {
-                                    sorted.push_back(o);
+                                    persons.add(p);
                                     inserted = true;
                                 }
                                 break;

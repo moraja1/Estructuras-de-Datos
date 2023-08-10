@@ -9,8 +9,6 @@ import java.util.regex.Pattern;
 
 public class Main {
     public static void main(String[] args) {
-        //Locale.setDefault(new Locale("es", "ES"));
-
         Main program = new Main();
         List<Person> persons = new List<>();
         double averageSalary = 0;

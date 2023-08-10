@@ -1,8 +1,7 @@
 package cr.una;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -10,6 +9,8 @@ import java.util.regex.Pattern;
 
 public class Main {
     public static void main(String[] args) {
+        //Locale.setDefault(new Locale("es", "ES"));
+
         Main program = new Main();
         List<Person> persons = new List<>();
         double averageSalary = 0;
@@ -25,7 +26,9 @@ public class Main {
         } else {
             fileName = args[0];
         }
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+        try (FileInputStream fis = new FileInputStream(fileName);
+             InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+             BufferedReader br = new BufferedReader(isr)) {
             String line;
             Pattern regex = Pattern.compile("^([^\\t]+)\\t([^\\t]+)\\t([^\\t]+)\\t([^\\t]+)\\t([^\\t]+)\\t([^\\t]+)$");
             Matcher matcher;
@@ -109,7 +112,7 @@ public class Main {
     private static void printReport(List<Person> persons, double minSalary, double averageSalary, double maxSalary,
                                     double minNetSalary, double averageNetSalary, double maxNetSalary) {
         String format = "+-----------+--------------------------+------------------+----------------+----------------+----------------+---+\n" +
-                         "| %9s | %-24s | %-16s | %14s | %14s | %14s | %1s |\n" +
+                        "| %9s | %-24s | %-16s | %14s | %14s | %14s | %1s |\n" +
                         "+-----------+--------------------------+------------------+----------------+----------------+----------------+---+\n";
         System.out.print(String.format(format, "Id", "Apellidos", "Nombre", "Sal. bruto", "Deducciones", "Sal. neto", "*"));
         format = "| %-9s | %-24s | %-16s | %14s | %14s | %14s | %1s |\n";

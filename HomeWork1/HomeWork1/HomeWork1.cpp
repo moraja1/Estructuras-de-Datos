@@ -24,32 +24,32 @@ void removeAccents(string& a)
         char c2 = a[++found];
 
         if (c1 == static_cast<char>(-61) && c2 == static_cast<char>(-95)) {
-            // Caso de la vocal 'á'
+            // Caso de la vocal 'ï¿½'
             a.replace((found-1), 2, "a");
         }
         else if (c1 == static_cast<char>(-61) && c2 == static_cast<char>(-87)) {
-            // Caso de la vocal 'é'
+            // Caso de la vocal 'ï¿½'
             a.replace((found - 1), 2, "e");
         }
         else if (c1 == static_cast<char>(-61) && c2 == static_cast<char>(-83)) {
-            // Caso de la vocal 'í'
+            // Caso de la vocal 'ï¿½'
             a.replace((found - 1), 2, "i");
         }
         else if (c1 == static_cast<char>(-61) && c2 == static_cast<char>(-77)) {
-            // Caso de la vocal 'ó'
+            // Caso de la vocal 'ï¿½'
             a.replace((found - 1), 2, "o");
         }
         else if (c1 == static_cast<char>(-61) && (c2 == static_cast<char>(-68) || c2 == static_cast<char>(-70))) {
-            // Caso de la vocal 'ú'
+            // Caso de la vocal 'ï¿½'
             a.replace((found - 1), 2, "u");
         }
         else if (c1 == static_cast<char>(-61) && c2 == static_cast<char>(-127)) {
-            // Caso de la vocal 'Á'
+            // Caso de la vocal 'ï¿½'
             a.replace((found - 1), 2, "A");
         }else if(c1 == static_cast<char>(-61) && c2 == static_cast<char>(-79))
         {
-            // Caso de la vocal 'ñ'
-            a.replace((found - 1), 2, "ñ");
+            // Caso de la vocal 'ï¿½'
+            a.replace((found - 1), 2, "ï¿½");
         }
         found = a.find(lookFor);
     }
@@ -65,37 +65,37 @@ void normalizeAccents(string& a)
         char c2 = a[++found];
 
         if (c1 == static_cast<char>(-61) && c2 == static_cast<char>(-95)) {
-            // Caso de la vocal 'á'
-            a.replace((found - 1), 2, "á");
+            // Caso de la vocal 'ï¿½'
+            a.replace((found - 1), 2, "ï¿½");
         }
         else if (c1 == static_cast<char>(-61) && c2 == static_cast<char>(-87)) {
-            // Caso de la vocal 'é'
-            a.replace((found - 1), 2, "é");
+            // Caso de la vocal 'ï¿½'
+            a.replace((found - 1), 2, "ï¿½");
         }
         else if (c1 == static_cast<char>(-61) && c2 == static_cast<char>(-83)) {
-            // Caso de la vocal 'í'
-            a.replace((found - 1), 2, "í");
+            // Caso de la vocal 'ï¿½'
+            a.replace((found - 1), 2, "ï¿½");
         }
         else if (c1 == static_cast<char>(-61) && c2 == static_cast<char>(-77)) {
-            // Caso de la vocal 'ó'
-            a.replace((found - 1), 2, "ó");
+            // Caso de la vocal 'ï¿½'
+            a.replace((found - 1), 2, "ï¿½");
         }
         else if (c1 == static_cast<char>(-61) && c2 == static_cast<char>(-70)) {
-            // Caso de la vocal 'ú'
-            a.replace((found - 1), 2, "ú");
+            // Caso de la vocal 'ï¿½'
+            a.replace((found - 1), 2, "ï¿½");
         }else if(c1 == static_cast<char>(-61) && c2 == static_cast<char>(-68))
         {
-            // Caso de la vocal 'ü'
-            a.replace((found - 1), 2, "ü");
+            // Caso de la vocal 'ï¿½'
+            a.replace((found - 1), 2, "ï¿½");
         }
         else if (c1 == static_cast<char>(-61) && c2 == static_cast<char>(-127)) {
-            // Caso de la vocal 'Á'
-            a.replace((found - 1), 2, "Á");
+            // Caso de la vocal 'ï¿½'
+            a.replace((found - 1), 2, "ï¿½");
         }
         else if (c1 == static_cast<char>(-61) && c2 == static_cast<char>(-79))
         {
-            // Caso de la vocal 'ñ'
-            a.replace((found - 1), 2, "ñ");
+            // Caso de la vocal 'ï¿½'
+            a.replace((found - 1), 2, "ï¿½");
         }
         found = a.find(lookFor);
     }

@@ -3,6 +3,8 @@ package cr.una;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,6 +12,12 @@ public class Main {
     public static void main(String[] args) {
         Main program = new Main();
         List<Person> persons = new List<>();
+        double averageSalary = 0;
+        double averageNetSalary = 0;
+        double minSalary = 0;
+        double maxSalary = 0;
+        double minNetSalary = 0;
+        double maxNetSalary = 0;
 
         String fileName;
         if (args.length != 1) {
@@ -17,59 +25,74 @@ public class Main {
         } else {
             fileName = args[0];
         }
-
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
             Pattern regex = Pattern.compile("^([^\\t]+)\\t([^\\t]+)\\t([^\\t]+)\\t([^\\t]+)\\t([^\\t]+)\\t([^\\t]+)$");
             Matcher matcher;
+            boolean first = true;
             while ((line = br.readLine()) != null) {
                 matcher = regex.matcher(line);
                 Person p = null;
                 if (matcher.find()) {
                     p = program.createPerson(matcher);
-                }
 
+                    //Min and Max
+                    if(first){
+                        first = false;
+                        minSalary = p.getSalary();
+                        maxSalary = p.getSalary();
+                        minNetSalary = p.getNetSalary();
+                        maxNetSalary = p.getNetSalary();
+                    }else{
+                        if(minSalary > p.getSalary()) minSalary = p.getSalary();
+                        if(minNetSalary > p.getNetSalary()) minNetSalary = p.getNetSalary();
+                        if(maxSalary < p.getSalary()) maxSalary = p.getSalary();
+                        if(maxNetSalary < p.getNetSalary()) maxNetSalary = p.getNetSalary();
+                    }
+
+                    //Averages
+                    averageSalary += p.getSalary();
+                    averageNetSalary += p.getNetSalary();
+                }
                 //Organize List while entering data
                 if (persons.isEmpty() && p != null) {
                     persons.add(p);
-                } else {
-                    boolean inserted = false;
-                    for (int i = 0; !inserted; i++) {
-                        Person s = persons.get(i);
-                        String pWord = p.getMiddleName();
-                        String sWord = s.getMiddleName();
+                    continue;
+                }
+                boolean inserted = false;
+                for (int i = 0; !inserted; i++) {
+                    Person s = persons.get(i);
+                    String pWord = p.getMiddleName();
+                    String sWord = s.getMiddleName();
+                    //Establishes word to use
+                    if (pWord.equals(sWord)) {
+                        pWord = p.getLastName();
+                        sWord = s.getLastName();
                         if (pWord.equals(sWord)) {
-                            pWord = p.getLastName();
-                            sWord = s.getLastName();
+                            pWord = p.getName();
+                            sWord = s.getName();
                             if (pWord.equals(sWord)) {
-                                pWord = p.getName();
-                                sWord = s.getName();
-                                if (pWord.equals(sWord)) {
-                                    pWord = p.getId();
-                                    sWord = s.getId();
-                                }
+                                pWord = p.getId();
+                                sWord = s.getId();
                             }
                         }
-                        pWord = program.removeAccents(pWord);
-                        sWord = program.removeAccents(sWord);
+                    }
+                    for (int j = 0; j < pWord.length() && j < sWord.length(); j++) {
+                        char alpha = program.removeAccents(pWord.charAt(j));
+                        char beta = program.removeAccents(sWord.charAt(j));
 
-                        for (int j = 0; j < pWord.length() && j < sWord.length(); j++) {
-                            char alpha = pWord.charAt(j);
-                            char beta = sWord.charAt(j);
-
-                            if (alpha != beta) {
-                                //normalizePerson(o);
-                                if (alpha < beta) {
-                                    persons.insert(p, i);
-                                    inserted = true;
-                                    break;
-                                }
-                                if (i == persons.getSize() - 1) {
-                                    persons.add(p);
-                                    inserted = true;
-                                }
+                        if (alpha != beta) {
+                            //normalizePerson(o);
+                            if (alpha < beta) {
+                                persons.insert(p, i);
+                                inserted = true;
                                 break;
                             }
+                            if (i == persons.getSize() - 1) {
+                                persons.add(p);
+                                inserted = true;
+                            }
+                            break;
                         }
                     }
                 }
@@ -77,29 +100,67 @@ public class Main {
         } catch (IOException e) {
             System.out.println("Ocurrió un error al leer el archivo: " + e.getMessage());
         }
+        averageSalary /= persons.getSize();
+        averageNetSalary /= persons.getSize();
 
-        System.out.println(persons);
+        printReport(persons, minSalary, averageSalary, maxSalary, minNetSalary, averageNetSalary, maxNetSalary);
     }
 
-    private String removeAccents(String word) {
-        for (int i = 0; i < word.length(); i++) {
-            char c1 = word.charAt(i);
-            switch (c1)
-            {
-                case 'Á': word = word.replace(c1, 'A'); break;
-                case 'É': word = word.replace(c1, 'E'); break;
-                case 'Í': word = word.replace(c1, 'I'); break;
-                case 'Ó': word = word.replace(c1, 'O'); break;
-                case 'Ú':
-                case 'Ü': word = word.replace(c1, 'U'); break;
-                case 'á': word = word.replace(c1, 'a'); break;
-                case 'é': word = word.replace(c1, 'e'); break;
-                case 'í': word = word.replace(c1, 'i'); break;
-                case 'ó': word = word.replace(c1, 'o'); break;
-                case 'ú':
-                case 'ü': word = word.replace(c1, 'u'); break;
-                case 'ñ': word = word.replace(c1, 'n'); break;
-            }
+    private static void printReport(List<Person> persons, double minSalary, double averageSalary, double maxSalary,
+                                    double minNetSalary, double averageNetSalary, double maxNetSalary) {
+        String format = "+-----------+--------------------------+------------------+----------------+----------------+----------------+---+\n" +
+                         "| %9s | %-24s | %-16s | %14s | %14s | %14s | %1s |\n" +
+                        "+-----------+--------------------------+------------------+----------------+----------------+----------------+---+\n";
+        System.out.print(String.format(format, "Id", "Apellidos", "Nombre", "Sal. bruto", "Deducciones", "Sal. neto", "*"));
+        format = "| %-9s | %-24s | %-16s | %14s | %14s | %14s | %1s |\n";
+        NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+        numberFormat.setMinimumFractionDigits(2);
+
+        for(int i = 0; i < persons.getSize(); i++){
+            Person p = persons.get(i);
+            String salary = numberFormat.format(p.getSalary());
+            String deductions = numberFormat.format(p.getDeductions());
+            String netSalary = numberFormat.format(p.getNetSalary());
+            String overAverage = " ";
+            if(p.getSalary() < averageSalary) overAverage = "*";
+            System.out.print(String.format(format, p.getId(), p.getMiddleName() + " " + p.getLastName(), p.getName(),
+                    salary, deductions, netSalary, overAverage));
+        }
+        System.out.print("+-----------+--------------------------+------------------+----------------+----------------+----------------+---+\n");
+        format = " %-56s | %14s | %14s | %14s |\n";
+
+        String sMinSalary = numberFormat.format(minSalary);
+        String sAverageSalary = numberFormat.format(averageSalary);
+        String sMaxSalary = numberFormat.format(maxSalary);
+        String sMinNetSalary = numberFormat.format(minNetSalary);
+        String sAverageNetSalary = numberFormat.format(averageNetSalary);
+        String sMaxNetSalary = numberFormat.format(maxNetSalary);
+        String sMinDeductions = numberFormat.format((minSalary - minNetSalary));
+        String sAverageDeductions = numberFormat.format((averageSalary - averageNetSalary));
+        String sMaxDeductions = numberFormat.format((maxSalary - maxNetSalary));
+
+        System.out.print(String.format(format, " ",  sMinSalary, sMinDeductions, sMinNetSalary));
+        System.out.print(String.format(format, " ",  sAverageSalary, sAverageDeductions, sAverageNetSalary));
+        System.out.print(String.format(format, " ",  sMaxSalary, sMaxDeductions, sMaxNetSalary));
+        System.out.print("                                                          +----------------+----------------+----------------+   \n");
+    }
+
+    private char removeAccents(char word) {
+        switch (word)
+        {
+            case 'Á': word = 'A'; break;
+            case 'É': word = 'E'; break;
+            case 'Í': word = 'I'; break;
+            case 'Ó': word = 'O'; break;
+            case 'Ú':
+            case 'Ü': word = 'U'; break;
+            case 'á': word = 'a'; break;
+            case 'é': word = 'e'; break;
+            case 'í': word = 'i'; break;
+            case 'ó': word = 'o'; break;
+            case 'ú':
+            case 'ü': word = 'u'; break;
+            case 'ñ': word = 'n'; break;
         }
         return word;
     }

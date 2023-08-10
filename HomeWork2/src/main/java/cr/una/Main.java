@@ -50,8 +50,9 @@ public class Main {
                                 }
                             }
                         }
-                        removeAccents(pWord);
-                        removeAccents(sWord);
+                        pWord = program.removeAccents(pWord);
+                        sWord = program.removeAccents(sWord);
+
                         for (int j = 0; j < pWord.length() && j < sWord.length(); j++) {
                             char alpha = pWord.charAt(j);
                             char beta = sWord.charAt(j);
@@ -77,15 +78,30 @@ public class Main {
             System.out.println("Ocurrió un error al leer el archivo: " + e.getMessage());
         }
 
-        System.out.println();
+        System.out.println(persons);
     }
 
-    private static void removeAccents(String word) {
+    private String removeAccents(String word) {
         for (int i = 0; i < word.length(); i++) {
             char c1 = word.charAt(i);
-
-
+            switch (c1)
+            {
+                case 'Á': word = word.replace(c1, 'A'); break;
+                case 'É': word = word.replace(c1, 'E'); break;
+                case 'Í': word = word.replace(c1, 'I'); break;
+                case 'Ó': word = word.replace(c1, 'O'); break;
+                case 'Ú':
+                case 'Ü': word = word.replace(c1, 'U'); break;
+                case 'á': word = word.replace(c1, 'a'); break;
+                case 'é': word = word.replace(c1, 'e'); break;
+                case 'í': word = word.replace(c1, 'i'); break;
+                case 'ó': word = word.replace(c1, 'o'); break;
+                case 'ú':
+                case 'ü': word = word.replace(c1, 'u'); break;
+                case 'ñ': word = word.replace(c1, 'n'); break;
+            }
         }
+        return word;
     }
 
     private Person createPerson(Matcher matcher) {

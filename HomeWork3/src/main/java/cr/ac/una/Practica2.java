@@ -20,8 +20,8 @@ public class Practica2 {
 
         // Muestra el resultado de evaluar cada una
         // de las funciones..
-        for (int n = 0; n <= 10; n++) {
-            System.out.printf("n = %2d, F(n) = %s\t%20s%n",
+        for (int n = 0; n <= 95; n++) {
+            System.out.printf("n = %2d, F(n) = \t%20s\t%20s%n",
                     n, f1(n), f2(n));
         }
     }
@@ -45,14 +45,19 @@ public class Practica2 {
     }
 
     public BigInteger f2(int n) { // O(2^n)
-        return f2(n, BigInteger.ONE, BigInteger.ZERO, BigInteger.ONE);
+        return f2(n, BigInteger.ZERO, BigInteger.ZERO, BigInteger.ONE);
     }
 
     public BigInteger f2(int n, BigInteger r, BigInteger lastRes1, BigInteger lastRes2){
-        if(n <= 1) return r;
-        if(r.equals(BigInteger.ZERO)) r.add(BigInteger.ONE);
-        return f2(n-1, lastRes1.add(lastRes2), lastRes1.add(lastRes2),
-                !lastRes1.equals(BigInteger.ZERO) ? lastRes1 : lastRes2);
+        if(n <= 1){
+            if(r.equals(BigInteger.ZERO)){
+                return new BigInteger(String.valueOf(n));
+            }else{
+                return r;
+            }
+        } else{
+            BigInteger res = lastRes1.add(lastRes2);
+            return f2(n-1, res, res, !lastRes1.equals(BigInteger.ZERO) ? lastRes1 : lastRes2);
+        }
     }
-
 }

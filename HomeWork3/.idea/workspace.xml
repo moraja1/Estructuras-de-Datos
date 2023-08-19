@@ -5,21 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d792c280-8c1c-4ab0-93f9-b0cc9724face" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cr/ac/una/Practica2.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../experimento1/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../experimento1/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../experimento1/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../experimento1/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../experimento1/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../experimento1/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../experimento1/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../experimento1/src/main/java/cr/ac/una/experimento1/Experimento1.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../experimento1/target/classes/cr/ac/una/experimento1/Experimento1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../experimento1/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../experimento1/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cr/ac/una/Practica2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cr/ac/una/Practica2.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,8 +17,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": -1
+  "associatedIndex": 5
 }]]></component>
   <component name="ProjectId" id="2UB269mHuZKkOlp7krltEyR5FIP" />
   <component name="ProjectLevelVcsManager">
@@ -49,7 +35,8 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/jeiso/Desktop/Proyects/Estructuras-de-Datos/experimento1",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/jeiso/Desktop/Proyects/Estructuras-de-Datos/HomeWork3",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -65,7 +52,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1692398477671</updated>
-      <workItem from="1692398479662" duration="3930000" />
+      <workItem from="1692398479662" duration="4160000" />
+      <workItem from="1692415658366" duration="1548000" />
     </task>
     <servers />
   </component>
@@ -74,16 +62,5 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/cr/ac/una/Practica2.java</url>
-          <line>23</line>
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

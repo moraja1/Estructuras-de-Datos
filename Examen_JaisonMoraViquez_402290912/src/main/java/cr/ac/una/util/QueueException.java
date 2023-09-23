@@ -1,4 +1,4 @@
-package cr.ac.util;
+package cr.ac.una.util;
 
 public class QueueException extends Exception {
 

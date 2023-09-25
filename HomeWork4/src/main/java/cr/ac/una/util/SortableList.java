@@ -11,7 +11,20 @@ public class SortableList<T extends Comparable<T>> extends List<T> {
     public void insertionSort(boolean trace) {
         List<T> insertionList = new List<>();
         while(!isEmpty()) {
-            for(int i = 0; i <= insertionList.count())
+            for(int i = 0; i <= insertionList.count(); i++) {
+                if(i == insertionList.count()) {
+                    insertionList.add(remove(0));
+                    i = insertionList.count()+1;
+                } else {
+                    if(get(0).compareTo(insertionList.get(i)) < 0) {
+                        insertionList.add(remove(0), (i));
+                        i = insertionList.count()+1;
+                    }
+                }
+            }
+        }
+        while(!insertionList.isEmpty()){
+            add(insertionList.remove(0));
         }
     }
 

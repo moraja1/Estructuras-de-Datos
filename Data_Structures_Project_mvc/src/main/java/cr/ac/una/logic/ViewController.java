@@ -16,6 +16,6 @@ public class ViewController {
 
     public void init() {
         window.init();
-        model.setInGameOver(true);
+        model.getLastGameState(configuration);
     }
 }

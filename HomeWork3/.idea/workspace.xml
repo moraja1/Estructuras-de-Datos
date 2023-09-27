@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d792c280-8c1c-4ab0-93f9-b0cc9724face" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../HomeWork2/target/classes/cr/una/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/../HomeWork2/target/classes/cr/una/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cr/ac/una/Practica2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cr/ac/una/Practica2.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,9 +16,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="2UB269mHuZKkOlp7krltEyR5FIP" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -36,7 +36,7 @@
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/jeiso/Desktop/Proyects/Estructuras-de-Datos/HomeWork3",
+    "last_opened_file_path": "D:/git/Data-Structures-Project/Simon",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -54,6 +54,8 @@
       <updated>1692398477671</updated>
       <workItem from="1692398479662" duration="4160000" />
       <workItem from="1692415658366" duration="1548000" />
+      <workItem from="1693093524397" duration="40000" />
+      <workItem from="1693533612142" duration="77000" />
     </task>
     <servers />
   </component>

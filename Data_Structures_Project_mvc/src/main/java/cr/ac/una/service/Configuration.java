@@ -33,6 +33,7 @@ public class Configuration extends Properties {
                 System.out.printf("MaxTime:   %s%n", instance.get("maxTime"));
                 System.out.printf("UserTime:  %s%n", instance.get("userTime"));
                 System.out.printf("LastScore: %s%n", instance.get("lastScore"));
+                System.out.printf("HigherScore: %s%n", instance.get("higherScore"));
             } catch (IOException ex) {
                 System.err.printf("No se pudo cargar el archivo de configuración: '%s'..%n",
                         configurationPath);

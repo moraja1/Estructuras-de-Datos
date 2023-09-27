@@ -28,6 +28,11 @@ public class Configuration extends Properties {
                 System.out.println("Cargando configuración por defecto..");
                 configurationPath = PathUtils.getResourceDirectory(CONFIGURATION_FILE);
                 instance.loadFromXML(new FileInputStream(configurationPath));
+                System.out.printf("Colors:    %s%n", instance.get("colors"));
+                System.out.printf("MinTime:   %s%n", instance.get("minTime"));
+                System.out.printf("MaxTime:   %s%n", instance.get("maxTime"));
+                System.out.printf("UserTime:  %s%n", instance.get("userTime"));
+                System.out.printf("LastScore: %s%n", instance.get("lastScore"));
             } catch (IOException ex) {
                 System.err.printf("No se pudo cargar el archivo de configuración: '%s'..%n",
                         configurationPath);

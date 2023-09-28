@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class View extends JFrame implements PropertyChangeListener {
     }
 
     private JPanel setupSimonPanel() {
-        return new JPanel(){
+        return new JPanel() {
 
             private final int MIN_DIAMETER = 180;
             private final int MARGIN = 50;
@@ -56,13 +57,11 @@ public class View extends JFrame implements PropertyChangeListener {
                 g.fillRect(0, 0, getWidth(), getHeight());
                 drawSimon(g, x, y, diameter);
 
-                if (viewModel.isInHud()){
-                    drawHud(g);
-                }
+                if (viewModel.isInHud()) drawHud(g);
                 drawPlayerFeedback(g);
             }
 
-            void drawSimon(Graphics g, int x, int y, int diameter){
+            void drawSimon(Graphics g, int x, int y, int diameter) {
                 g.setColor(Color.BLACK);
 
                 //Dibuja slices
@@ -82,20 +81,14 @@ public class View extends JFrame implements PropertyChangeListener {
                 g.drawOval(xMid, yMid, diameterCent, diameterCent);
             }
 
-            void drawHud(Graphics g){
+            void drawHud(Graphics g) {
                 g.setColor(Color.BLACK);
                 //Place HUD
-                GradientPaint gradient = new GradientPaint(0f, 0f, Color.BLACK, 0f, getHeight()*4, new Color(0f, 0f, 0f, 0f));
+                GradientPaint gradient = new GradientPaint(0f, 0f, Color.BLACK, 0f, getHeight() * 4, new Color(0f, 0f, 0f, 0f));
                 ((Graphics2D) g).setPaint(gradient);
                 g.fillRect(0, 0, getWidth(), getHeight());
 
-                String text;
-                if(viewModel.isInGameOver()){
-                    text = "Perdiste! Haz click para volver a empezar!";
-                } else {
-                    //Place Message
-                    text = "Haz click para empezar!";
-                }
+                String text = viewModel.isInGameOver() ? "Perdiste! Haz click para volver a empezar!" : "Haz click para empezar!";
 
                 g.setColor(Color.WHITE);
                 Font font = new Font("Arial", Font.BOLD, 24);
@@ -109,12 +102,13 @@ public class View extends JFrame implements PropertyChangeListener {
             private void drawPlayerFeedback(Graphics g) {
                 //Dibuja el timer
                 g.setColor(Color.BLACK);
-                String userTimeValue = "Tiempo Restante: " + viewModel.getUserTime();
+                int userTime = viewModel.getUserTime();
+                String userTimeValue = String.format("Tiempo Restante: %d", userTime);
                 Font userTimeFont = new Font("Arial", Font.BOLD, 12);
                 int xs = 15;
                 int ys = 40;
                 g.setFont(userTimeFont);
-                if(viewModel.isPlaying()) g.drawString(userTimeValue, xs, ys);
+                if (viewModel.isPlaying()) g.drawString(userTimeValue, xs, ys);
 
                 //Dibuja la instrucción
                 userTimeValue = viewModel.isPlaying() ? "Es tu turno! Repite la secuencia!" : "Observa la secuencia y trata de recordarla!";
@@ -128,6 +122,11 @@ public class View extends JFrame implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                repaint();
+            }
+        });
     }
 }

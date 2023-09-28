@@ -1,6 +1,8 @@
 package cr.ac.una.presentation;
 
 import java.awt.*;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 /**
  * Esta clase representa un boton que se ilumina en el SimonModel basado en una secuencia
@@ -12,8 +14,10 @@ public class SliceButton {
     private final Color buttonColor;
     private final Color lightColor;
     private boolean isLightning;
+    private final PropertyChangeSupport support;
 
     public SliceButton(Color buttonColor, Color lightColor, int startAngle, int arcAngle) {
+        support = new PropertyChangeSupport(this);
         this.startAngle = startAngle;
         this.arcAngle = arcAngle;
         this.buttonColor = buttonColor;
@@ -58,8 +62,9 @@ public class SliceButton {
         g.drawLine(centerX, centerY, startX, startY);
         g.drawLine(centerX, centerY, endX, endY);
     }
-    public void setLightning(boolean lightning) {
-        isLightning = lightning;
+    public void setLightning(boolean isLightning) {
+        support.firePropertyChange("isLightning", this.isLightning, isLightning);
+        this.isLightning = isLightning;
     }
     public boolean isLightning() {
         return isLightning;
@@ -69,5 +74,15 @@ public class SliceButton {
     }
     public Color getButtonColor() {
         return buttonColor;
+    }
+    public void addPropertyChangeListener(PropertyChangeListener pcl) {
+        support.addPropertyChangeListener(pcl);
+    }
+    public void removePropertyChangeListener(PropertyChangeListener pcl) {
+        support.removePropertyChangeListener(pcl);
+    }
+
+    public void setObserver(PropertyChangeListener observer) {
+        addPropertyChangeListener(observer);
     }
 }

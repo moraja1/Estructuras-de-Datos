@@ -1,5 +1,6 @@
 package cr.ac.una.logic;
 
+import com.sun.istack.NotNull;
 import cr.ac.una.data.Simon;
 import cr.ac.una.presentation.SliceButton;
 import cr.ac.una.presentation.View;
@@ -35,11 +36,11 @@ public class ViewController extends MouseClickedListener implements ActionListen
     private final View window;
     private final Simon model;
     private Thread executor;
+    private Thread auxiliar;
     private Timer timer;
 
     public ViewController(Configuration configuration) {
         this.configuration = configuration;
-        timer = new Timer(1000, this);
         model = new Simon();
         model.setGameConfigurations(
                 Double.parseDouble(configuration.getProperty(MIN_TIME)),
@@ -54,14 +55,8 @@ public class ViewController extends MouseClickedListener implements ActionListen
         window = new View(this);
     }
 
-    private void setInitialState() {
-        model.setInHud(true);
-        model.setInGameOver(false);
-        model.setPlaying(false);
-    }
-
     public void init() {
-        window.init(model);
+        SwingUtilities.invokeLater(() -> window.init(model));
         double ARC_ANGLE = (double) 360 / model.getColors().size();
         for (int i = 0; i < model.getColors().size(); i++) {
             Color colorToAdd = model.getColors().get(i);
@@ -96,40 +91,15 @@ public class ViewController extends MouseClickedListener implements ActionListen
         );
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        executor = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (model.isInHud()) {
-                    setPresentationState(); //Osea que los click no se procesan
-                    model.updateSequence(SequenceGenerator.getRandomColor(model.getColors()));
-                    sendSequence(model.getSequence());
-                    setPlayingState(); //Osea que se reciben los clicks
-                    timer.start();
-                }
+    private void startTimer() {
+        timer = new Timer(1000, this);
+        timer.start();
+    }
 
-                if (model.isPlaying()) {
-                    Color color = null;
-                    try {
-                        color = new Robot().getPixelColor(e.getXOnScreen(), e.getYOnScreen());
-                    } catch (AWTException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    color = getNaturalColor(color);
-                    if (!color.equals(Color.WHITE) && !color.equals(Color.BLACK)) {
-                        if (color.equals(model.getSequence().poll())) {
-
-                        } else if (color.equals(Color.DARK_GRAY)) {
-
-                        } else {
-
-                        }
-                    }
-                }
-            }
-        });
-        executor.start();
+    private void setInitialState() {
+        model.setInHud(true);
+        model.setInGameOver(false);
+        model.setPlaying(false);
     }
 
     private void setPlayingState() {
@@ -149,33 +119,6 @@ public class ViewController extends MouseClickedListener implements ActionListen
         model.setInHud(true);
         model.setPlaying(false);
         model.setUserTime(Integer.parseInt(configuration.getProperty(USER_TIME)));
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        executor = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Color color = new Robot().getPixelColor(e.getXOnScreen(), e.getYOnScreen());
-                    turnOnSlice(color);
-                } catch (AWTException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-        });
-        if (model.isPlaying()) executor.start();
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        executor = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                turnOffSlices();
-            }
-        });
-        if (model.isPlaying()) executor.start();
     }
 
     private void sendSequence(Queue<Color> sequence) {
@@ -209,7 +152,7 @@ public class ViewController extends MouseClickedListener implements ActionListen
 
     private void turnOffSlices() {
         for (SliceButton slice : slicesList) {
-            slice.setLightning(false);
+            if(slice.isLightning()) slice.setLightning(false);
         }
     }
 
@@ -218,11 +161,65 @@ public class ViewController extends MouseClickedListener implements ActionListen
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if(model.getUserTime() > 0) model.setUserTime(model.getUserTime()-1);
-        else {
-            timer.stop();
-            setGameOverState();
+    public void mouseClicked(MouseEvent e) {
+        if (model.isInHud()) {
+            executor = new Thread(() -> {
+                setPresentationState();
+                model.updateSequence(SequenceGenerator.getRandomColor(model.getColors()));
+                sendSequence(model.getSequence());
+                setPlayingState();
+                startTimer();
+            });
+        }  else if (model.isPlaying()) {
+            executor = new Thread(() -> {
+                int x = e.getX();
+                int y = e.getY();
+
+                for (SliceButton s: slicesList) {
+
+                }
+            });
         }
+        if(!executor.isAlive()) executor.start();
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        if(model.isPlaying()) {
+            new Thread(() -> {
+                int x = e.getX();
+                int y = e.getY();
+
+                for (SliceButton s: slicesList) {
+                    if(s.contains(x, y)) s.setLightning(true);
+                }
+            }).start();
+        }
+    }
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if(model.isPlaying()) {
+            new Thread(() -> {
+                int x = e.getX();
+                int y = e.getY();
+
+                for (SliceButton s: slicesList) {
+                    if(s.contains(x, y)) s.setLightning(false);
+                }
+            }).start();
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        new Thread(() -> {
+            if(model.getUserTime() > 0) {
+                model.setUserTime(model.getUserTime()-1);
+            }
+            else {
+                timer.stop();
+                setGameOverState();
+            }
+        }).start();
     }
 }

@@ -122,11 +122,6 @@ public class View extends JFrame implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                repaint();
-            }
-        });
+        new Thread(() -> mainPanel.repaint()).start();
     }
 }

@@ -1,6 +1,7 @@
 package cr.ac.una.presentation;
 
 import java.awt.*;
+import java.awt.geom.Arc2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -15,6 +16,7 @@ public class SliceButton {
     private final Color lightColor;
     private boolean isLightning;
     private final PropertyChangeSupport support;
+    private Arc2D arc;
 
     public SliceButton(Color buttonColor, Color lightColor, int startAngle, int arcAngle) {
         support = new PropertyChangeSupport(this);
@@ -23,6 +25,7 @@ public class SliceButton {
         this.buttonColor = buttonColor;
         this.lightColor = lightColor;
         isLightning = false;
+
     }
 
     /**
@@ -36,13 +39,14 @@ public class SliceButton {
         g.setColor((isLightning) ? lightColor : buttonColor);
         // Dibujar un sector circular relleno con el centro en (100, 100) y el radio de 80
         // El ángulo inicial es starAngle y el ángulo de extensión es arcAngle
-        g.fillArc(x, y, diameter, diameter, startAngle, arcAngle);
+        arc = new Arc2D.Double(x, y, diameter, diameter, startAngle, arcAngle, Arc2D.PIE);
+        ((Graphics2D)g).fill(arc);
 
         g.setColor(Color.BLACK);
         ((Graphics2D)g).setStroke(new BasicStroke(8f));
 
         // Dibuja el contorno del arco
-        g.drawArc(x, y, diameter, diameter, startAngle, arcAngle);
+        ((Graphics2D)g).draw(arc);
 
         // Calcula las coordenadas del centro del arco
         int centerX = x + diameter / 2;
@@ -63,7 +67,7 @@ public class SliceButton {
         g.drawLine(centerX, centerY, endX, endY);
     }
     public void setLightning(boolean isLightning) {
-        support.firePropertyChange("isLightning", this.isLightning, isLightning);
+        if(this.isLightning != isLightning) support.firePropertyChange("isLightning", this.isLightning, isLightning);
         this.isLightning = isLightning;
     }
     public boolean isLightning() {
@@ -81,8 +85,10 @@ public class SliceButton {
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
         support.removePropertyChangeListener(pcl);
     }
-
     public void setObserver(PropertyChangeListener observer) {
         addPropertyChangeListener(observer);
+    }
+    public boolean contains(int x, int y) {
+        return arc.contains(x, y);
     }
 }

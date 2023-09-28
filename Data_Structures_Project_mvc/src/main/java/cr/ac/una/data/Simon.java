@@ -47,13 +47,15 @@ public class Simon implements ViewModel {
     }
 
     public void setUpColors(int quantity) {
-        for(int i = 0; i < quantity; i++) {
+        for (int i = 0; i < quantity; i++) {
             colorsEnabled.add(POSSIBLE_COLORS.get(i));
         }
     }
+
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
         support.addPropertyChangeListener(pcl);
     }
+
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
         support.removePropertyChangeListener(pcl);
     }
@@ -69,16 +71,19 @@ public class Simon implements ViewModel {
     public void setHigherScore(double higherScore) {
         this.higherScore = higherScore;
     }
+
     public void setLastScore(double lastScore) {
         this.lastScore = lastScore;
     }
+
     public void setCurrentScore(double currentScore) {
-        support.firePropertyChange("currentScore", this.currentScore, currentScore);
+        if (this.currentScore != currentScore)
+            support.firePropertyChange("currentScore", this.currentScore, currentScore);
         this.currentScore = currentScore;
     }
 
     public void setUserTime(int userTime) {
-        support.firePropertyChange("userTime", this.userTime, userTime);
+        if (this.userTime != userTime) support.firePropertyChange("userTime", this.userTime, userTime);
         this.userTime = userTime;
     }
 
@@ -87,21 +92,25 @@ public class Simon implements ViewModel {
     }
 
     public void setPlaying(boolean playing) {
-        support.firePropertyChange("playing", this.playing, playing);
+        if (this.playing != playing) support.firePropertyChange("playing", this.playing, playing);
         this.playing = playing;
     }
+
     public void setInHud(boolean inHud) {
-        support.firePropertyChange("inHud", this.inHud, inHud);
+        if (this.inHud != inHud) support.firePropertyChange("inHud", this.inHud, inHud);
         this.inHud = inHud;
     }
+
     public void setInGameOver(boolean inGameOver) {
-        if(inGameOver) SEQUENCE.clear();
+        if (inGameOver) SEQUENCE.clear();
         this.inGameOver = inGameOver;
     }
+
     @Override
     public boolean isPlaying() {
         return playing;
     }
+
     @Override
     public boolean isInHud() {
         return inHud;
@@ -123,10 +132,12 @@ public class Simon implements ViewModel {
     public boolean isInGameOver() {
         return inGameOver;
     }
+
     @Override
     public Integer getUserTime() {
         return userTime;
     }
+
     public List<Color> getColors() {
         return colorsEnabled;
     }
@@ -134,6 +145,7 @@ public class Simon implements ViewModel {
     public void setObserver(PropertyChangeListener observer) {
         addPropertyChangeListener(observer);
     }
+
     @Override
     public double getHigherScore() {
         return higherScore;
@@ -155,12 +167,5 @@ public class Simon implements ViewModel {
 
     public Queue<Color> getSequence() {
         return new ArrayDeque<>(SEQUENCE);
-    }
-
-    private void setGameOverState() {
-        inGameOver = true;
-        inHud = true;
-        setPlaying(false);
-        SEQUENCE.clear();
     }
 }

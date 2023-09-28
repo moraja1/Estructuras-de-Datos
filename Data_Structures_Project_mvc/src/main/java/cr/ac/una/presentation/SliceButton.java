@@ -58,15 +58,12 @@ public class SliceButton {
         g.drawLine(centerX, centerY, startX, startY);
         g.drawLine(centerX, centerY, endX, endY);
     }
-
     public void setLightning(boolean lightning) {
         isLightning = lightning;
     }
-
     public boolean isLightning() {
         return isLightning;
     }
-
     public Color getLightColor() {
         return lightColor;
     }

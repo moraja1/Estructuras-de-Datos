@@ -11,12 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class View extends JFrame implements PropertyChangeListener {
-    private final int MIN_DIAMETER = 180;
-    private double ARC_ANGLE = 0;
     private final ViewController controller;
     private ViewModel viewModel;
-    private List<Color> colorList;
-    private List<SliceButton> slicesList = new ArrayList<>();
+    private final List<Color> colorList;
     private JPanel mainPanel;
 
     public View(ViewController controller, List<Color> colorList) {
@@ -36,16 +33,6 @@ public class View extends JFrame implements PropertyChangeListener {
 
     public void init(ViewModel viewModel) {
         this.viewModel = viewModel;
-        ARC_ANGLE = (double) 360 / colorList.size();
-        for (int i = 0; i < colorList.size(); i++) {
-            Color colorToAdd = colorList.get(i);
-            slicesList.add(new SliceButton(
-                    colorToAdd,
-                    controller.getLightColor(colorToAdd),
-                    (int) (i * ARC_ANGLE),
-                    (int) ARC_ANGLE)
-            );
-        }
         mainPanel = setupSimonPanel();
         mainPanel.addMouseListener(controller);
         setLayout(new BorderLayout());
@@ -55,8 +42,23 @@ public class View extends JFrame implements PropertyChangeListener {
 
     private JPanel setupSimonPanel() {
         return new JPanel(){
+            private final List<SliceButton> slicesList = new ArrayList<>();
             private final int MIN_DIAMETER = 180;
             private final int MARGIN = 50;
+
+            {
+                double ARC_ANGLE = (double) 360 / colorList.size();
+                for (int i = 0; i < colorList.size(); i++) {
+                    Color colorToAdd = colorList.get(i);
+                    slicesList.add(new SliceButton(
+                            colorToAdd,
+                            controller.getLightColor(colorToAdd),
+                            (int) (i * ARC_ANGLE),
+                            (int) ARC_ANGLE)
+                    );
+                }
+            }
+
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -118,33 +120,29 @@ public class View extends JFrame implements PropertyChangeListener {
                 g.setFont(font);
                 g.drawString(text, xs, ys);
             }
+
+            private void drawPlayerFeedback(Graphics g) {
+                //Dibuja el timer
+                g.setColor(Color.BLACK);
+                String userTimeValue = "Tiempo Restante: " + viewModel.getUserTime();
+                Font userTimeFont = new Font("Arial", Font.BOLD, 12);
+                int xs = 15;
+                int ys = 40;
+                g.setFont(userTimeFont);
+                g.drawString(userTimeValue, xs, ys);
+
+                //Dibuja la instrucción
+                userTimeValue = "Es tu turno! Repite la secuencia!";
+                userTimeFont = new Font("Arial", Font.BOLD, 12);
+                ys = 25;
+                g.setFont(userTimeFont);
+                g.drawString(userTimeValue, xs, ys);
+            }
         };
     }
 
-    private void drawPlayerFeedback(Graphics g) {
-        //Dibuja el timer
-        g.setColor(Color.BLACK);
-        String userTimeValue = "Tiempo Restante: " + viewModel.getUserTime();
-        Font userTimeFont = new Font("Arial", Font.BOLD, 12);
-        int xs = 15;
-        int ys = 40;
-        g.setFont(userTimeFont);
-        g.drawString(userTimeValue, xs, ys);
-
-
-        //Dibuja la instrucción
-        userTimeValue = "Es tu turno! Repite la secuencia!";
-        userTimeFont = new Font("Arial", Font.BOLD, 12);
-        ys = 25;
-        g.setFont(userTimeFont);
-        g.drawString(userTimeValue, xs, ys);
-    }
-
-
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        System.out.printf("Value: %s%n", evt.getPropertyName());
-        System.out.printf("OldValue: %s%n", evt.getOldValue());
-        System.out.printf("NewValue: %s%n", evt.getNewValue());
+
     }
 }

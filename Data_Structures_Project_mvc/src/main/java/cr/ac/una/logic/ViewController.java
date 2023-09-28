@@ -1,6 +1,5 @@
 package cr.ac.una.logic;
 
-import com.sun.istack.NotNull;
 import cr.ac.una.data.Simon;
 import cr.ac.una.presentation.SliceButton;
 import cr.ac.una.presentation.View;
@@ -12,8 +11,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +28,7 @@ public class ViewController extends MouseClickedListener implements ActionListen
     private final String LAST_SCORE_PROPERTY = "lastScore";
     private final String HIGHER_SCORE_PROPERTY = "higherScore";
     private final String USER_TIME = "userTime";
-    private final String ROUND_SEQUENCE = "maxRounds";
+    private final String MAX_ROUNDS = "maxRounds";
     private final Configuration configuration;
 
     //-------------PROJECT ELEMENTS-----------------------------
@@ -50,7 +47,7 @@ public class ViewController extends MouseClickedListener implements ActionListen
                 Double.parseDouble(configuration.getProperty(LAST_SCORE_PROPERTY)),
                 Double.parseDouble(configuration.getProperty(HIGHER_SCORE_PROPERTY)),
                 Integer.parseInt(configuration.getProperty(USER_TIME)),
-                Integer.parseInt(configuration.getProperty(ROUND_SEQUENCE))
+                Integer.parseInt(configuration.getProperty(MAX_ROUNDS))
         );
         model.setUpColors(Integer.parseInt((String) configuration.get(COLORS)));
         setInitialState();
@@ -59,7 +56,13 @@ public class ViewController extends MouseClickedListener implements ActionListen
 
     public void init() {
         SwingUtilities.invokeLater(() -> window.init(model));
+        setupSlices();
+        model.setObserver(window);
+    }
+
+    private void setupSlices() {
         double ARC_ANGLE = (double) 360 / model.getColors().size();
+        if(!slicesList.isEmpty()) slicesList.clear();
         for (int i = 0; i < model.getColors().size(); i++) {
             Color colorToAdd = model.getColors().get(i);
             slicesList.add(new SliceButton(
@@ -69,7 +72,6 @@ public class ViewController extends MouseClickedListener implements ActionListen
                     (int) ARC_ANGLE)
             );
         }
-        model.setObserver(window);
         for(SliceButton slice : slicesList) {
             slice.setObserver(window);
         }
@@ -81,15 +83,6 @@ public class ViewController extends MouseClickedListener implements ActionListen
                 colorLighter.apply(colorToAdd.getRed()),
                 colorLighter.apply(colorToAdd.getGreen()),
                 colorLighter.apply(colorToAdd.getBlue())
-        );
-    }
-
-    private Color getNaturalColor(Color colorToNaturalize) {
-        UnaryOperator<Integer> colorNaturalize = v -> v == 255 ? 150 : v;
-        return new Color(
-                colorNaturalize.apply(colorToNaturalize.getRed()),
-                colorNaturalize.apply(colorToNaturalize.getGreen()),
-                colorNaturalize.apply(colorToNaturalize.getBlue())
         );
     }
 
@@ -122,6 +115,13 @@ public class ViewController extends MouseClickedListener implements ActionListen
         model.setInHud(true);
         model.setPlaying(false);
         model.setUserTime(Integer.parseInt(configuration.getProperty(USER_TIME)));
+    }
+
+    private void setNewLevelState() {
+        model.setInNewLevel(true);
+        model.setInGameOver(false);
+        model.setInHud(true);
+        model.setPlaying(false);
     }
 
     private void sendSequence(Queue<Color> sequence) {
@@ -167,12 +167,14 @@ public class ViewController extends MouseClickedListener implements ActionListen
     public void mouseClicked(MouseEvent e) {
         if (model.isInHud()) {
             executor = new Thread(() -> {
-                setPresentationState();
-                model.updateSequence(SequenceGenerator.getRandomColor(model.getColors()));
-                sequenceCopy = model.getSequence();
-                sendSequence(model.getSequence());
-                setPlayingState();
-                startTimer();
+                if(model.isInNewLevel()) {
+                    if(model.getMaxTime() > model.getMinTime()) model.setMaxTime(model.getMaxTime() - model.getMinTime());
+                    if(model.getMaxTime() <= 0) model.setMaxTime(model.getMinTime());
+                    model.setUpColors(Integer.parseInt((String) configuration.get(COLORS)));
+                    setupSlices();
+                } else {
+                    levelUp();
+                }
             });
         }  else if (model.isPlaying()) {
             executor = new Thread(() -> {
@@ -181,7 +183,12 @@ public class ViewController extends MouseClickedListener implements ActionListen
                 for (SliceButton s: slicesList) {
                     if(s.contains(x, y)) {
                         if (s.getButtonColor().equals(sequenceCopy.poll())) {
-
+                            model.setUserTime(Integer.parseInt(configuration.getProperty(USER_TIME)));
+                            if(sequenceCopy.isEmpty()) {
+                                timer.stop();
+                                model.setRoundSequence(model.getRoundSequence()-1);
+                                levelUp();
+                            }
                         } else {
                             setGameOverState();
                         }
@@ -190,6 +197,19 @@ public class ViewController extends MouseClickedListener implements ActionListen
             });
         }
         if(!executor.isAlive()) executor.start();
+    }
+
+    private void levelUp() {
+        if (model.getRoundSequence() == 0) {
+            setNewLevelState();
+        } else {
+            setPresentationState();
+            model.updateSequence(SequenceGenerator.getRandomColor(model.getColors()));
+            sequenceCopy = model.getSequence();
+            sendSequence(model.getSequence());
+            setPlayingState();
+            startTimer();
+        }
     }
 
     @Override

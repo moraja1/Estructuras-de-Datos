@@ -88,7 +88,10 @@ public class View extends JFrame implements PropertyChangeListener {
                 ((Graphics2D) g).setPaint(gradient);
                 g.fillRect(0, 0, getWidth(), getHeight());
 
-                String text = viewModel.isInGameOver() ? "Perdiste! Haz click para volver a empezar!" : "Haz click para empezar!";
+                String text;
+                if(viewModel.isInGameOver()) text = "Perdiste! Haz click para volver a empezar!";
+                else if(viewModel.isInNewLevel()) text = "Felicidades! Superaste esta ronda!\n\nDale click para aumentar de nivel!";
+                else text = "Haz click para empezar!";
 
                 g.setColor(Color.WHITE);
                 Font font = new Font("Arial", Font.BOLD, 24);

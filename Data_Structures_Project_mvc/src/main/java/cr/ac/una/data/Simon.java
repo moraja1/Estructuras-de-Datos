@@ -22,6 +22,7 @@ public class Simon implements ViewModel {
     private boolean playing = false;
     private boolean inHud = false;
     private boolean inGameOver = false;
+    private boolean inNewLevel = false;
 
     static {
         POSSIBLE_COLORS.put(0, new Color(0, 0, 150));
@@ -47,6 +48,7 @@ public class Simon implements ViewModel {
     }
 
     public void setUpColors(int quantity) {
+        if(!colorsEnabled.isEmpty()) colorsEnabled.clear();
         for (int i = 0; i < quantity; i++) {
             colorsEnabled.add(POSSIBLE_COLORS.get(i));
         }
@@ -106,6 +108,10 @@ public class Simon implements ViewModel {
         this.inGameOver = inGameOver;
     }
 
+    public void setInNewLevel(boolean inNewLevel) {
+        this.inNewLevel = inNewLevel;
+    }
+
     @Override
     public boolean isPlaying() {
         return playing;
@@ -131,6 +137,11 @@ public class Simon implements ViewModel {
     @Override
     public boolean isInGameOver() {
         return inGameOver;
+    }
+
+    @Override
+    public boolean isInNewLevel() {
+        return inNewLevel;
     }
 
     @Override

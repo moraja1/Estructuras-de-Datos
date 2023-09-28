@@ -7,5 +7,6 @@ public interface ViewModel {
     boolean isPlaying();
     boolean isInHud();
     boolean isInGameOver();
+    boolean isInNewLevel();
     Integer getUserTime();
 }

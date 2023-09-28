@@ -9,10 +9,13 @@ public class Simon implements ViewModel{
     private final Queue<Color> SEQUENCE = new ArrayDeque<>();
     private static final HashMap<Integer, Color> POSSIBLE_COLORS = new HashMap<>();
     private final List<Color> colorsEnabled = new ArrayList<>();
+    private double minTime = 0;
+    private double maxTime = 0;
     private double higherScore = 0;
     private double lastScore = 0;
     private double currentScore = 0;
-    private double userTime = 0;
+    private int userTime = 0;
+    private int roundSequence = 0;
     private final PropertyChangeSupport support;
     private boolean playing;
     private boolean inHud;
@@ -22,22 +25,30 @@ public class Simon implements ViewModel{
         POSSIBLE_COLORS.put(0, new Color(0, 0, 150));
         POSSIBLE_COLORS.put(1, new Color(0, 150, 0));
         POSSIBLE_COLORS.put(2, new Color(150, 0, 0));
-        POSSIBLE_COLORS.put(3, new Color(0, 150, 150));
-        POSSIBLE_COLORS.put(4, new Color(150, 150, 0));
+        POSSIBLE_COLORS.put(3, new Color(150, 150, 0));
+        POSSIBLE_COLORS.put(4, new Color(0, 150, 150));
         POSSIBLE_COLORS.put(5, new Color(150, 0, 150));
     }
 
     public Simon() {
         support = new PropertyChangeSupport(this);
-        playing = false;
-        inHud = true;
-        inGameOver = false;
+        setInitialState();
         setCurrentScore(0);
     }
-    public void setLastGameState(double lastScore, double higherScore, double userTime) {
+
+    private void setInitialState() {
+        playing = false;
+        inGameOver = false;
+        inHud = true;
+    }
+
+    public void setGameConfigurations(double minTime, double maxTime, double lastScore, double higherScore, int userTime, int roundSequence) {
+        setMinTime(minTime);
+        setMaxTime(maxTime);
         setLastScore(lastScore);
         setHigherScore(higherScore);
         setUserTime(userTime);
+        setRoundSequence(roundSequence);
     }
 
     public void setUpColors(int quantity) {
@@ -51,6 +62,15 @@ public class Simon implements ViewModel{
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
         support.removePropertyChangeListener(pcl);
     }
+
+    public void setMinTime(double minTime) {
+        this.minTime = minTime;
+    }
+
+    public void setMaxTime(double maxTime) {
+        this.maxTime = maxTime;
+    }
+
     public void setHigherScore(double higherScore) {
         this.higherScore = higherScore;
     }
@@ -61,8 +81,12 @@ public class Simon implements ViewModel{
         this.currentScore = currentScore;
     }
 
-    public void setUserTime(double userTime) {
+    public void setUserTime(int userTime) {
         this.userTime = userTime;
+    }
+
+    public void setRoundSequence(int roundSequence) {
+        this.roundSequence = roundSequence;
     }
 
     public void setPlaying(boolean playing) {
@@ -74,6 +98,7 @@ public class Simon implements ViewModel{
     public void setInGameOver(boolean inGameOver) {
         this.inGameOver = inGameOver;
     }
+    @Override
     public boolean isPlaying() {
         return playing;
     }
@@ -81,12 +106,25 @@ public class Simon implements ViewModel{
     public boolean isInHud() {
         return inHud;
     }
+
+    public double getMinTime() {
+        return minTime;
+    }
+
+    public double getMaxTime() {
+        return maxTime;
+    }
+
+    public int getRoundSequence() {
+        return roundSequence;
+    }
+
     @Override
     public boolean isInGameOver() {
         return inGameOver;
     }
     @Override
-    public Double getUserTime() {
+    public Integer getUserTime() {
         return userTime;
     }
     public List<Color> getColors() {
@@ -108,5 +146,24 @@ public class Simon implements ViewModel{
     @Override
     public double getCurrentScore() {
         return currentScore;
+    }
+
+    public void startPresentation() {
+        playing = false;
+        inGameOver = false;
+        inHud = false;
+    }
+    public void startPlaying() {
+        playing = true;
+        inGameOver= false;
+        inHud = false;
+    }
+
+    public void updateSequence(Color randomColor) {
+        SEQUENCE.add(randomColor);
+    }
+
+    public Queue<Color> getSequence() {
+        return new ArrayDeque<>(SEQUENCE);
     }
 }

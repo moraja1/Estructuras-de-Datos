@@ -32,6 +32,7 @@ public class Configuration extends Properties {
                 System.out.printf("MinTime:   %s%n", instance.get("minTime"));
                 System.out.printf("MaxTime:   %s%n", instance.get("maxTime"));
                 System.out.printf("UserTime:  %s%n", instance.get("userTime"));
+                System.out.printf("MaxRounds:  %s%n", instance.get("maxRounds"));
                 System.out.printf("LastScore: %s%n", instance.get("lastScore"));
                 System.out.printf("HigherScore: %s%n", instance.get("higherScore"));
             } catch (IOException ex) {

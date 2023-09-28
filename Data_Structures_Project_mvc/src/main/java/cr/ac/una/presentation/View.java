@@ -13,12 +13,10 @@ import java.util.List;
 public class View extends JFrame implements PropertyChangeListener {
     private final ViewController controller;
     private ViewModel viewModel;
-    private final List<Color> colorList;
     private JPanel mainPanel;
 
-    public View(ViewController controller, List<Color> colorList) {
+    public View(ViewController controller) {
         this.controller = controller;
-        this.colorList = colorList;
         setTitle("Simon");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -42,22 +40,9 @@ public class View extends JFrame implements PropertyChangeListener {
 
     private JPanel setupSimonPanel() {
         return new JPanel(){
-            private final List<SliceButton> slicesList = new ArrayList<>();
+
             private final int MIN_DIAMETER = 180;
             private final int MARGIN = 50;
-
-            {
-                double ARC_ANGLE = (double) 360 / colorList.size();
-                for (int i = 0; i < colorList.size(); i++) {
-                    Color colorToAdd = colorList.get(i);
-                    slicesList.add(new SliceButton(
-                            colorToAdd,
-                            controller.getLightColor(colorToAdd),
-                            (int) (i * ARC_ANGLE),
-                            (int) ARC_ANGLE)
-                    );
-                }
-            }
 
             @Override
             protected void paintComponent(Graphics g) {
@@ -81,7 +66,7 @@ public class View extends JFrame implements PropertyChangeListener {
                 g.setColor(Color.BLACK);
 
                 //Dibuja slices
-                for (SliceButton sliceButton : slicesList) {
+                for (SliceButton sliceButton : controller.getSlices()) {
                     sliceButton.draw(g, x, y, diameter);
                 }
 
@@ -129,10 +114,10 @@ public class View extends JFrame implements PropertyChangeListener {
                 int xs = 15;
                 int ys = 40;
                 g.setFont(userTimeFont);
-                g.drawString(userTimeValue, xs, ys);
+                if(viewModel.isPlaying()) g.drawString(userTimeValue, xs, ys);
 
                 //Dibuja la instrucción
-                userTimeValue = "Es tu turno! Repite la secuencia!";
+                userTimeValue = viewModel.isPlaying() ? "Es tu turno! Repite la secuencia!" : "Observa la secuencia y trata de recordarla!";
                 userTimeFont = new Font("Arial", Font.BOLD, 12);
                 ys = 25;
                 g.setFont(userTimeFont);

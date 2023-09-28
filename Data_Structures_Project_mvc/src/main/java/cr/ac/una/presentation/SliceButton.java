@@ -67,4 +67,7 @@ public class SliceButton {
     public Color getLightColor() {
         return lightColor;
     }
+    public Color getButtonColor() {
+        return buttonColor;
+    }
 }

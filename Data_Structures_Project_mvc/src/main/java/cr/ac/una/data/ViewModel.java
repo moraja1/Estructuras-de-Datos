@@ -4,7 +4,8 @@ public interface ViewModel {
     double getHigherScore();
     double getLastScore();
     double getCurrentScore();
+    boolean isPlaying();
     boolean isInHud();
     boolean isInGameOver();
-    Double getUserTime();
+    Integer getUserTime();
 }

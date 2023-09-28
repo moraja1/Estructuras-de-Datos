@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -21,6 +22,7 @@ import java.util.function.UnaryOperator;
 
 public class ViewController extends MouseClickedListener implements ActionListener {
     private final List<SliceButton> slicesList = new ArrayList<>();
+    private Queue<Color> sequenceCopy = new ArrayDeque<>();
 
     //--------------CONFIGURATION KEYS-------------------------
     private final String COLORS = "colors";
@@ -115,6 +117,7 @@ public class ViewController extends MouseClickedListener implements ActionListen
     }
 
     private void setGameOverState() {
+        timer.stop();
         model.setInGameOver(true);
         model.setInHud(true);
         model.setPlaying(false);
@@ -166,6 +169,7 @@ public class ViewController extends MouseClickedListener implements ActionListen
             executor = new Thread(() -> {
                 setPresentationState();
                 model.updateSequence(SequenceGenerator.getRandomColor(model.getColors()));
+                sequenceCopy = model.getSequence();
                 sendSequence(model.getSequence());
                 setPlayingState();
                 startTimer();
@@ -174,9 +178,14 @@ public class ViewController extends MouseClickedListener implements ActionListen
             executor = new Thread(() -> {
                 int x = e.getX();
                 int y = e.getY();
-
                 for (SliceButton s: slicesList) {
+                    if(s.contains(x, y)) {
+                        if (s.getButtonColor().equals(sequenceCopy.poll())) {
 
+                        } else {
+                            setGameOverState();
+                        }
+                    }
                 }
             });
         }
@@ -189,7 +198,6 @@ public class ViewController extends MouseClickedListener implements ActionListen
             new Thread(() -> {
                 int x = e.getX();
                 int y = e.getY();
-
                 for (SliceButton s: slicesList) {
                     if(s.contains(x, y)) s.setLightning(true);
                 }
@@ -202,7 +210,6 @@ public class ViewController extends MouseClickedListener implements ActionListen
             new Thread(() -> {
                 int x = e.getX();
                 int y = e.getY();
-
                 for (SliceButton s: slicesList) {
                     if(s.contains(x, y)) s.setLightning(false);
                 }
@@ -217,7 +224,6 @@ public class ViewController extends MouseClickedListener implements ActionListen
                 model.setUserTime(model.getUserTime()-1);
             }
             else {
-                timer.stop();
                 setGameOverState();
             }
         }).start();

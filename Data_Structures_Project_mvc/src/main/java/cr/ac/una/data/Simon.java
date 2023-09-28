@@ -1,7 +1,5 @@
 package cr.ac.una.data;
 
-import cr.ac.una.presentation.View;
-
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;

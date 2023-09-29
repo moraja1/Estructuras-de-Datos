@@ -11,9 +11,10 @@ public class Main {
     }
 
     private void init() {
-        Sounds.instance().playSound(Sounds.Tracks.TIMER);
-        ViewController controller = new ViewController(Configuration.getInstance());
-        controller.init();
+        Sounds.instance().playSound(Sounds.Tracks.SUCCESS);
+        System.out.println();
+//        ViewController controller = new ViewController(Configuration.getInstance());
+//        controller.init();
     }
 
 }

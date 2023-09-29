@@ -104,7 +104,7 @@ public class Simon implements ViewModel {
     }
 
     public void setInGameOver(boolean inGameOver) {
-        if (inGameOver) SEQUENCE.clear();
+        if (inGameOver) clearSequence();
         this.inGameOver = inGameOver;
     }
 
@@ -178,5 +178,9 @@ public class Simon implements ViewModel {
 
     public Queue<Color> getSequence() {
         return new ArrayDeque<>(SEQUENCE);
+    }
+
+    public void clearSequence(){
+        SEQUENCE.clear();
     }
 }

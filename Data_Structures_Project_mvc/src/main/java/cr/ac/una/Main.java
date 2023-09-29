@@ -2,6 +2,7 @@ package cr.ac.una;
 
 import cr.ac.una.logic.ViewController;
 import cr.ac.una.service.Configuration;
+import cr.ac.una.service.Sounds;
 
 public class Main {
 
@@ -10,6 +11,7 @@ public class Main {
     }
 
     private void init() {
+        Sounds.instance().playSound(Sounds.Tracks.TIMER);
         ViewController controller = new ViewController(Configuration.getInstance());
         controller.init();
     }

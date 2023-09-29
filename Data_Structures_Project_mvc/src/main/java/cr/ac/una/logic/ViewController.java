@@ -35,7 +35,7 @@ public class ViewController extends MouseClickedListener implements ActionListen
     private final View window;
     private final Simon model;
     private Thread executor;
-    private Thread auxiliar;
+    private int level = 0;
     private Timer timer;
 
     public ViewController(Configuration configuration) {
@@ -122,6 +122,7 @@ public class ViewController extends MouseClickedListener implements ActionListen
         model.setInGameOver(false);
         model.setInHud(true);
         model.setPlaying(false);
+        model.clearSequence();
     }
 
     private void sendSequence(Queue<Color> sequence) {
@@ -170,11 +171,13 @@ public class ViewController extends MouseClickedListener implements ActionListen
                 if(model.isInNewLevel()) {
                     if(model.getMaxTime() > model.getMinTime()) model.setMaxTime(model.getMaxTime() - model.getMinTime());
                     if(model.getMaxTime() <= 0) model.setMaxTime(model.getMinTime());
-                    model.setUpColors(Integer.parseInt((String) configuration.get(COLORS)));
+                    int colors = Integer.parseInt((String) configuration.get(COLORS)) + level;
+                    if (colors > 6) colors = 6;
+                    model.setUpColors(colors);
+                    model.setRoundSequence(Integer.parseInt(configuration.getProperty(MAX_ROUNDS)));
                     setupSlices();
-                } else {
-                    levelUp();
                 }
+                levelUp();
             });
         }  else if (model.isPlaying()) {
             executor = new Thread(() -> {
@@ -201,6 +204,7 @@ public class ViewController extends MouseClickedListener implements ActionListen
 
     private void levelUp() {
         if (model.getRoundSequence() == 0) {
+            level++;
             setNewLevelState();
         } else {
             setPresentationState();

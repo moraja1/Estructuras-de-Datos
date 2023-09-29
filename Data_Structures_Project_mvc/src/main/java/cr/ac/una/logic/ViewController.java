@@ -7,6 +7,8 @@ import cr.ac.una.service.Configuration;
 import cr.ac.una.service.Sounds;
 import cr.ac.una.service.util.MouseClickedListener;
 
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -38,6 +40,7 @@ public class ViewController extends MouseClickedListener implements ActionListen
     private Thread executor;
     private int level = 0;
     private Timer timer;
+    private boolean isPlayingSound = false;
 
     public ViewController(Configuration configuration) {
         this.configuration = configuration;
@@ -170,7 +173,10 @@ public class ViewController extends MouseClickedListener implements ActionListen
     public void mouseClicked(MouseEvent e) {
         if (model.isInHud()) {
             executor = new Thread(() -> {
-                Sounds.instance().playSound(Sounds.Tracks.START_BEEP);
+                SwingUtilities.invokeLater(() -> Sounds.instance().playSound(Sounds.Tracks.START_BEEP));
+                try {
+                    Thread.sleep((long) (model.getMaxTime() * 1000));
+                } catch (InterruptedException ignored) {}
                 if(model.isInNewLevel()) {
                     if(model.getMaxTime() > model.getMinTime()) model.setMaxTime(model.getMaxTime() - model.getMinTime());
                     if(model.getMaxTime() <= 0) model.setMaxTime(model.getMinTime());
@@ -192,14 +198,20 @@ public class ViewController extends MouseClickedListener implements ActionListen
                             model.setUserTime(Integer.parseInt(configuration.getProperty(USER_TIME)));
                             if(sequenceCopy.isEmpty()) {
                                 timer.stop();
-                                Sounds.instance().playSound(Sounds.Tracks.SUCCESS);
+                                SwingUtilities.invokeLater(() -> Sounds.instance().playSound(Sounds.Tracks.SUCCESS));
+                                try {
+                                    Thread.sleep((long) (model.getMaxTime() * 1000));
+                                } catch (InterruptedException ignored) {}
                                 model.setRoundSequence(model.getRoundSequence()-1);
                                 levelUp();
                             } else {
-                                Sounds.instance().playSound(Sounds.Tracks.CORRECT);
+                                SwingUtilities.invokeLater(() -> Sounds.instance().playSound(Sounds.Tracks.CORRECT));
                             }
                         } else {
-                            Sounds.instance().playSound(Sounds.Tracks.FAIL);
+                            SwingUtilities.invokeLater(() -> Sounds.instance().playSound(Sounds.Tracks.FAIL));
+                            try {
+                                Thread.sleep((long) (model.getMaxTime() * 1000));
+                            } catch (InterruptedException ignored) {}
                             setGameOverState();
                         }
                     }
@@ -219,7 +231,7 @@ public class ViewController extends MouseClickedListener implements ActionListen
             sequenceCopy = model.getSequence();
             sendSequence(model.getSequence());
             setPlayingState();
-            Sounds.instance().playSound(Sounds.Tracks.TIMER);
+            SwingUtilities.invokeLater(() -> Sounds.instance().playSound(Sounds.Tracks.TIMER));
             startTimer();
         }
     }

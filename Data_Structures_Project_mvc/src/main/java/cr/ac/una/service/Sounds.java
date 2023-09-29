@@ -5,11 +5,12 @@ import javax.sound.sampled.*;
 import java.io.IOException;
 import java.util.Objects;
 
-public class Sounds implements LineListener {
+public class Sounds implements LineListener, Runnable{
     private static Sounds theInstance;
-    Clip audioClip;
     private boolean isPlaybackCompleted = false;
-    private Thread player;
+    private Clip clip;
+    private Thread mixer;
+    private Tracks track;
 
     public static Sounds instance() {
         if (theInstance == null) {
@@ -22,45 +23,50 @@ public class Sounds implements LineListener {
     }
 
     public void playSound(Tracks track) {
-        player = new Thread(() -> {
-            try (AudioInputStream audioStream =
-                         AudioSystem.getAudioInputStream(
-                                 Objects.requireNonNull(getClass().getResourceAsStream(track.getName())))) {
-                audioClip = AudioSystem.getClip();
-                audioClip.addLineListener(this);
-                audioClip.open(audioStream);
-                if (track.equals(Tracks.TIMER)) {
-                    audioClip.setLoopPoints(0, 315200);
-                    audioClip.loop(Clip.LOOP_CONTINUOUSLY);
-                }
-                audioClip.start();
-                while (!isPlaybackCompleted) {
-                }
-                stopSound();
-            } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        player.start();
+        this.track = track;
+        if(mixer != null) {
+            while (mixer.isAlive()) isPlaybackCompleted = true;
+            mixer = null;
+        }
+        mixer = new Thread(this, "Sound Player");
+        mixer.start();
     }
 
     private void stopSound() {
-        isPlaybackCompleted = false;
-        audioClip.stop();
-        audioClip.close();
-    }
-
-    public void setPlaybackCompleted(boolean playbackCompleted) {
-        isPlaybackCompleted = playbackCompleted;
+        clip.flush();
+        clip.stop();
+        clip.close();
     }
 
     @Override
     public void update(LineEvent event) {
-        if (event.getType().equals(LineEvent.Type.START)) {
-            isPlaybackCompleted = false;
-        } else if (event.getType().equals(LineEvent.Type.STOP)) {
+        if(event.getType().equals(LineEvent.Type.STOP)) {
             isPlaybackCompleted = true;
         }
+    }
+
+    @Override
+    public void run() {
+        isPlaybackCompleted = false;
+        try {
+            clip = AudioSystem.getClip();
+            clip.addLineListener(this);
+            AudioInputStream ais = AudioSystem.getAudioInputStream(
+                    Objects.requireNonNull(Sounds.class.getResourceAsStream(track.getName()))
+            );
+            clip.open(ais);
+            clip.start();
+            while(!isPlaybackCompleted) {
+                clip.isActive();
+            }
+            stopSound();
+        } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean isPlaybackCompleted() {
+        return isPlaybackCompleted;
     }
 
     public enum Tracks {

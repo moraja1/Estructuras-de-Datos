@@ -1,16 +1,16 @@
 package cr.ac.una.util;
 
-public class BSTVertex<T> {
+public class Vertex<T> {
     T info;
     int count;
-    BSTVertex<T> left;
-    BSTVertex<T> right;
+    Vertex<T> left;
+    Vertex<T> right;
 
-    public BSTVertex(T info) {
+    public Vertex(T info) {
         this(info, null, null);
     }
 
-    public BSTVertex(T info, BSTVertex<T> left, BSTVertex<T> right) {
+    public Vertex(T info, Vertex<T> left, Vertex<T> right) {
         this.info = info;
         this.count = 1;
         this.left = left;

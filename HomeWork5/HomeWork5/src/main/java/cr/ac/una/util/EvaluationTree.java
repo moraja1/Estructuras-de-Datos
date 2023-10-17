@@ -1,10 +1,10 @@
 package cr.ac.una.util;
 
 // Binary Search Tree
-public class BSTree<T> {
-    private BSTVertex<T> root;
-    
-    public BSTree() {
+public class EvaluationTree{
+    private Vertex<String> root;
+
+    public EvaluationTree() {
         this.root = null;
     }
 
@@ -20,19 +20,19 @@ public class BSTree<T> {
         return count(root);
     }
 
-    public static <V> int count(BSTVertex<V> root) {
+    public static int count(Vertex<String> root) {
         return (root == null)
                 ? 0
                 : root.count + count(root.left) + count(root.right);
     }
 
-    public T getRoot() {
+    public String getRoot() {
         return (!isEmpty() ? root.info : null);
     }
 
     // -----------------------------------------------------------------
     //
-    public BSTree<T> add(T info) {
+    public EvaluationTree add(String info) {
         if (info != null) {
             root = add(root, info);
         } else {
@@ -41,16 +41,16 @@ public class BSTree<T> {
         return this;
     }
 
-    private BSTVertex<T> add(BSTVertex<T> root, T info) {
-        BSTVertex<T> r = root;
-        if (r == null) {
-            r = new BSTVertex<>(info);
+    private Vertex<String> add(Vertex<String> root, String info) {
+        Vertex<String> r = root;
+        if (root == null) {
+            r = new Vertex<>(info);
         } else {
-            /*
-
-            AQUI VA EL ALGORITMO DE INSERCIÓN
-
-             */
+            if(r.right == null) r.right = add(r.right, info);
+            else {
+                if(r.right.info.matches("\\d+\\.\\d+?")) r.right = add(r.right, info);
+                if(!isComplete(r.right)) r.right = add(r.right, info);
+            }
         }
         return r;
     }

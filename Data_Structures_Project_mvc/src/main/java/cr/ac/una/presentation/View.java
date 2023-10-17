@@ -89,8 +89,9 @@ public class View extends JFrame implements PropertyChangeListener {
                 g.fillRect(0, 0, getWidth(), getHeight());
                 int fontSize = Math.max((getWidth() - 250) / 15, 18);
                 String text;
-                if(viewModel.isInGameOver()) text = "Perdiste! Haz click para volver a empezar!";
-                else if(viewModel.isInNewLevel()) text = "Felicidades! Superaste esta ronda!!";
+                if(viewModel.isInGameOver()){ text = "¡Perdiste!Ronda alcanzada: " + controller.getROUND_COUNT();
+                controller.setGameOver(true);}// + "\nHaz click para volver a empezar!"
+                else if(viewModel.isInNewLevel()){ text = "Felicidades! Superaste esta ronda!!"; controller.setGameOver(false);}
                 else text = "Haz click para empezar!";
 
                 g.setColor(Color.WHITE);

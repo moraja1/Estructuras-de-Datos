@@ -30,6 +30,7 @@ public class ViewController extends MouseClickedListener implements ActionListen
     private final String MAX_TIME = "maxTime";
     private final String LAST_SCORE_PROPERTY = "lastScore";
     private final String HIGHER_SCORE_PROPERTY = "higherScore";
+
     private final String USER_TIME = "userTime";
     private final String MAX_ROUNDS = "maxRounds";
     private final Configuration configuration;
@@ -40,7 +41,12 @@ public class ViewController extends MouseClickedListener implements ActionListen
     private Thread executor;
     private int level = 0;
     private Timer timer;
+    private int ROUND_COUNT = 1;
+    private boolean isGameOver = false;
     private boolean isPlayingSound = false;
+
+
+
 
     public ViewController(Configuration configuration) {
         this.configuration = configuration;
@@ -81,6 +87,22 @@ public class ViewController extends MouseClickedListener implements ActionListen
         }
     }
 
+    public void setROUND_COUNT(int ROUND_COUNT) {
+        this.ROUND_COUNT = ROUND_COUNT;
+    }
+
+    public int getROUND_COUNT() {
+        return ROUND_COUNT;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        isGameOver = gameOver;
+    }
+
+    public boolean isGameOver() {
+        return isGameOver;
+    }
+
     public Color getLightColor(Color colorToAdd) {
         UnaryOperator<Integer> colorLighter = v -> v > 0 ? v + 105 : 0;
         return new Color(
@@ -91,6 +113,7 @@ public class ViewController extends MouseClickedListener implements ActionListen
     }
 
     private void startTimer() {
+        if(isGameOver) setROUND_COUNT(1);
         timer = new Timer(1000, this);
         timer.start();
     }
@@ -144,17 +167,34 @@ public class ViewController extends MouseClickedListener implements ActionListen
     }
 
     private void turnOnSlice(Color color) {
+
         try {
             Thread.sleep((long) (model.getMaxTime() * 1000));
         } catch (InterruptedException ignored) {}
         for (SliceButton slice : slicesList) {
             if (slice.getButtonColor().equals(color)) {
-                Sounds.instance().playSound(Sounds.Tracks.BLIP);
+                verificarColor(slice.getButtonColor());
                 slice.setLightning(true);
                 break;
             }
         }
 
+    }
+
+    public static void verificarColor(Color color) {
+        if (color.equals(new Color(0,0,150))) {
+            Sounds.instance().playSound(Sounds.Tracks.BLIP);
+        } else if (color.equals(new Color(150,0,0))) {
+            Sounds.instance().playSound(Sounds.Tracks.BLIP1);
+        } else if (color.equals(new Color(0,150,0))) {
+            Sounds.instance().playSound(Sounds.Tracks.BLIP2);
+        } else if (color.equals(new Color(150, 150, 0))) {
+            Sounds.instance().playSound(Sounds.Tracks.BLIP3);
+        } else if (color.equals(new Color(0, 150, 150))){
+            Sounds.instance().playSound(Sounds.Tracks.BLIP4);
+        }else if (color.equals(new Color(150, 0, 150))){
+            Sounds.instance().playSound(Sounds.Tracks.BLIP5);
+        }
     }
 
     private void turnOffSlices() {
@@ -185,6 +225,7 @@ public class ViewController extends MouseClickedListener implements ActionListen
                     model.setUpColors(colors);
                     model.setRoundSequence(Integer.parseInt(configuration.getProperty(MAX_ROUNDS)));
                     setupSlices();
+
                 }
                 levelUp();
             });
@@ -199,6 +240,10 @@ public class ViewController extends MouseClickedListener implements ActionListen
                             if(sequenceCopy.isEmpty()) {
                                 timer.stop();
                                 SwingUtilities.invokeLater(() -> Sounds.instance().playSound(Sounds.Tracks.SUCCESS));
+                                ROUND_COUNT++;
+                                if(model.getMaxTime() > model.getMinTime()) model.setMaxTime(model.getMaxTime() - 0.2);
+                                if(model.getMaxTime() <= 0) model.setMaxTime(model.getMinTime());
+                               // model.setMaxTime(Integer.parseInt(configuration.getProperty(MAX_TIME))-0.3);
                                 try {
                                     Thread.sleep((long) (model.getMaxTime() * 1000));
                                 } catch (InterruptedException ignored) {}
@@ -216,7 +261,9 @@ public class ViewController extends MouseClickedListener implements ActionListen
                         }
                     }
                 }
+
             });
+
         }
         if(!executor.isAlive()) executor.start();
     }
@@ -224,6 +271,7 @@ public class ViewController extends MouseClickedListener implements ActionListen
     private void levelUp() {
         if (model.getRoundSequence() == 0) {
             level++;
+
             setNewLevelState();
         } else {
             setPresentationState();
@@ -235,6 +283,7 @@ public class ViewController extends MouseClickedListener implements ActionListen
             startTimer();
         }
     }
+
 
     @Override
     public void mousePressed(MouseEvent e) {

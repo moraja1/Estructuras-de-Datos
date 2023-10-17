@@ -183,4 +183,5 @@ public class Simon implements ViewModel {
     public void clearSequence(){
         SEQUENCE.clear();
     }
+
 }

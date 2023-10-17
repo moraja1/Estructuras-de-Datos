@@ -32,6 +32,7 @@ public class Sounds implements LineListener, Runnable{
         mixer.start();
     }
 
+    //este metodo era privado
     private void stopSound() {
         clip.flush();
         clip.stop();
@@ -74,6 +75,11 @@ public class Sounds implements LineListener, Runnable{
         TIMER("timer.wav"),
         YOUR_TURN("yourTurnSound.wav"),
         BLIP("sequenceSound.wav"),
+        BLIP1("sequenceSound1.wav"),
+        BLIP2("sequenceSound2.wav"),
+        BLIP3("sequenceSound3.wav"),
+        BLIP4("sequenceSound4.wav"),
+        BLIP5("sequenceSound5.wav"),
         FAIL("Fail.wav"),
         SUCCESS("successSound.wav"),
         START_BEEP("gameStart.wav");

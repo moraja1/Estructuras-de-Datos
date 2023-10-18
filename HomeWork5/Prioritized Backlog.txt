@@ -2,7 +2,7 @@ Prioritized Backlog
 
 1. Create Evaluation Tree - "DONE"
 2. Create Expressions Insertion Algorithm - "DONE"
-3. Create Reading Expressions Algorithm
+3. Create Reading Expressions Algorithm - "DONE"
 4. Create Transformation Expressions Algorithm from Infix to Postfix Expressions
 5. Create Evaluation and Corrections Expressions Algorithms
 6. Create File Reading line by line Algorithm

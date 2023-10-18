@@ -77,12 +77,16 @@ public class EvaluationTree{
     }
 
     public static String inorder(Vertex<String> root) {
-        StringBuilder str = new StringBuilder();
-        if(root.isLeaf()) return root.info;
-        else {
-            str.append("(").append(inorder(root.left)).append(" ").append(root.info).append(" ");
-            str.append(inorder(root.right)).append(")");
+        if(root != null){
+            StringBuilder str = new StringBuilder();
+            if(root.isLeaf()) return root.info;
+            else {
+                str.append("(").append(inorder(root.left)).append(" ").append(root.info).append(" ");
+                str.append(inorder(root.right)).append(")");
+            }
+            return str.toString();
+        } else {
+            throw new NullPointerException();
         }
-        return str.toString();
     }
 }

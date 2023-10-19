@@ -2,6 +2,12 @@ package cr.ac.una;
 
 import cr.ac.una.util.Stack;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
@@ -11,8 +17,23 @@ public class Main {
     }
 
     private void init(String[] args) {
-        String expression = infixToPostfix("5 -2");
-        System.out.println(expression);
+        String fileName;
+        if (args.length != 1) {
+            fileName = FileSystems.getDefault().getPath(getWorkingDirectory() + "\\src\\main\\resources\\expresiones.txt").toString();
+        } else {
+            fileName = args[0];
+        }
+        try (FileInputStream fis = new FileInputStream(fileName);
+             InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+             BufferedReader br = new BufferedReader(isr)) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String postfix = infixToPostfix(line);
+                System.out.println(postfix);
+            }
+        } catch (IOException e) {
+            System.out.println("Ocurrió un error al leer el archivo: " + e.getMessage());
+        }
     }
 
     public String infixToPostfix(String expression) {
@@ -128,5 +149,9 @@ public class Main {
 
     public boolean isNumber(String expression) {
         return expression.matches("\\d+[\\.?,?\\d+]{0,}");
+    }
+
+    public static String getWorkingDirectory() {
+        return System.getProperty("user.dir");
     }
 }

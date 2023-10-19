@@ -79,7 +79,7 @@ public class EvaluationTree{
     public static String inorder(Vertex<String> root) {
         if(root != null){
             StringBuilder str = new StringBuilder();
-            if(root.isLeaf()) return root.info;
+            if(root.isLeaf()) return String.valueOf(Double.parseDouble(root.info));
             else {
                 str.append("(").append(inorder(root.left)).append(" ").append(root.info).append(" ");
                 str.append(inorder(root.right)).append(")");
@@ -88,5 +88,84 @@ public class EvaluationTree{
         } else {
             throw new NullPointerException();
         }
+    }
+    //------------------------------------------------------------------
+    //
+    public String evaluate() {
+        return (root != null) ? evaluate(root): null;
+    }
+
+    private String evaluate(Vertex<String> root) {
+        if(root != null){
+            StringBuilder str = new StringBuilder();
+            if(!root.isLeaf()) {
+                if (isNumber(root.left) && isNumber(root.right)) {
+                    double left = Double.parseDouble(root.left.info);
+                    double right = Double.parseDouble(root.right.info);
+                    double result = 0;
+                    switch (root.info) {
+                        case "+":
+                            result = left + right;
+                            break;
+                        case "-":
+                            result = left - right;
+                            break;
+                        case "*":
+                            result = left * right;
+                            break;
+                        case "/":
+                            result = left / right;
+                            break;
+                        case "^":
+                            result = left;
+                            for (int i = 1; i < right; i++) {
+                                result *= left;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    root.left = null;
+                    root.right = null;
+                    root.info = String.valueOf(result);
+                    return str.append(inorder()).toString();
+                } else {
+                    if (isNumber(root.right)) {
+                        str.append(evaluate(root.left));
+                    } else {
+                        str.append(evaluate(root.right));
+                    }
+                }
+            }
+            return str.toString();
+        } else {
+            throw new NullPointerException();
+        }
+    }
+
+    //------------------------------------------------------------------
+    //
+    @Override
+    public String toString() {
+        return String.format("%s", (!isEmpty()) ? root.toString() : "{}");
+    }
+
+    public String toString(boolean indented) {
+        return ((root != null) && indented)
+                ? toString(new StringBuilder(), root, 0).toString()
+                : toString();
+    }
+
+    private StringBuilder toString(StringBuilder sb, Vertex<String> root, int level) {
+        if (root != null) {
+            sb.append(String.format("%s%s", "\t".repeat(level), root.info));
+            if ((root.left != null) || (root.right != null)) {
+                toString(sb.append("\n"), root.left, level + 1);
+                toString(sb.append("\n"), root.right, level + 1);
+            }
+        } else {
+            sb.append(String.format("%s%s", "\t".repeat(level), "_"));
+        }
+        return sb;
     }
 }

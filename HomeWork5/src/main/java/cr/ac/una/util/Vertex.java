@@ -20,4 +20,20 @@ public class Vertex<T> {
     public boolean isLeaf() {
         return (left == null) && (right == null);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder r = new StringBuilder("{");
+        r.append(info);
+        if (count > 1) {
+            r.append(String.format(" (%d)", count));
+        }
+        if ((left != null) || (right != null)) {
+            r.append(String.format(", %s, %s",
+                    (left != null) ? left : "_",
+                    (right != null) ? right : "_"));
+        }
+        r.append("}");
+        return r.toString();
+    }
 }

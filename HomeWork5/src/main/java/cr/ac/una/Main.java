@@ -1,5 +1,6 @@
 package cr.ac.una;
 
+import cr.ac.una.util.EvaluationTree;
 import cr.ac.una.util.Stack;
 
 import java.io.BufferedReader;
@@ -28,8 +29,19 @@ public class Main {
              BufferedReader br = new BufferedReader(isr)) {
             String line;
             while ((line = br.readLine()) != null) {
+                System.out.printf("s: '%s'%n%n", line);
+                EvaluationTree tree = new EvaluationTree();
                 String postfix = infixToPostfix(line);
-                System.out.println(postfix);
+                String[] postFixElements = postfix.split(" ");
+                for(int i = postFixElements.length-1; i >= 0; i--){
+                    tree.add(postFixElements[i]);
+                }
+                System.out.printf("a: %s%n", tree.inorder());
+                while(!isNumber(tree.getRoot())){
+                    System.out.printf("a: %s%n", tree.evaluate());
+                }
+                System.out.println("-".repeat(50));
+                System.out.println();
             }
         } catch (IOException e) {
             System.out.println("Ocurrió un error al leer el archivo: " + e.getMessage());

@@ -4,5 +4,5 @@ Prioritized Backlog
 2. Create Expressions Insertion Algorithm - "DONE"
 3. Create Reading Expressions Algorithm - "DONE"
 4. Create Transformation Expressions Algorithm from Infix to Postfix Expressions - "DONE"
-5. Create Evaluation Expressions Algorithms
+5. Create Evaluation Expressions Algorithms - "DONE"
 6. Create File Reading line by line Algorithm - "DONE"

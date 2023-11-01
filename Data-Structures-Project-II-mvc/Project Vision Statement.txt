@@ -1,0 +1,15 @@
+Project Vision Statement
+
+El programa permitirá abrir y guardar laberintos desde un archivo en formato XML. La estructura específica del archivo dependerá de la manera en que las clases sean definidas.
+Cada laberinto se mostrará en una ventana independiente, y el programa puede tener abierta una cantidad arbitraria de ventanas. 
+Existirá una opción en la aplicación (por medio de un menú y un botón en la ventana principal) para generar un nuevo laberinto de tamaño arbitrario 
+(con un tamaño mínimo de 4 X 4 celdas), que se mostrará en la ventana correspondiente. El algoritmo de generación debe garantizar que no haya rutas inaccesibles 
+o ciclos dentro del laberinto.
+En la ventana principal se mostrará una tabla con información sobre los laberintos que se encuentren abiertos en ese momento, 
+mostrando el nombre del archivo, la fecha de creación y el tamaño (filas y columnas) del laberinto. 
+Si el usuario selecciona un laberinto de la lista, utilizando un doble clic, el programa traerá al frente la ventana correspondiente.
+Cada laberinto se mostrará en una ventana independiente, con un tamaño mínimo de 480 X 360 píxeles. 
+El laberinto no tiene ningún tamaño máximo definido, así que, si la ventana es muy pequeña para mostrarlo completamente, se podrán utilizar barras de 
+desplazamiento (scroll bars) para moverse dentro de la ventana y una opción de menú que permita cambiar la escala del dibujo. \
+La escala del dibujo podrá variarse entre un 1/8 (12.5%) y 8 veces (800%) el tamaño normal. En una escala del 100%, cada celda del laberinto se mostrará 
+con un tamaño de 16 píxeles, aunque este tamaño podrá variar, por lo que deberá especificarlo como un valor constante dentro del código de programa.

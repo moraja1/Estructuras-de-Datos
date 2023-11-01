@@ -1,0 +1,19 @@
+BACKLOG
+
+1. Generación de Laberintos
+	- Implementación de las clases necesarias.
+	- Creación del laberinto por algoritmo
+	- Creación de la ventana
+	- Creación del dibujo del laberinto
+2. Procedimiento para recorrer el algoritmo de manera interactiva
+	- Eventos de detección de Mouse y dibujo
+3. Manejo de documentos XML
+	- Implementación de clases de utilidad necesarias
+	- Creación de métodos de Serialización y Deserialización
+4. Procedimiento de solución automática del laberinto.
+	- Creación de Método de resolución automática
+5. Implementación de menú de escala.
+	- Edición de la ventana para incluír los elementos de acción
+	- Metodos de eventos de los elementos de acción
+6. Validación del laberinto (Accesibilidad y eliminación de ciclos)
+	- Creación de Método de Servicio que revise el algoritmo generado y lo corriga si es necesario

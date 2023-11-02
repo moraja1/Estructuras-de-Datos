@@ -65,36 +65,12 @@ public class MazeGraph {
                 edges.addAll(matrix[i][j].getEdges());
             }
         }
+
         edges.mergeSort(false);
     }
 
     public void createMaze() {
-        ICollection<Edge<MazeVertexModel>> pathEdges = new List<>();
-        for(Edge<MazeVertexModel> e : edges) {
-            boolean startHasRoom = e.start.getInfo().hasRoom();
-            boolean endHasRoom = e.end.getInfo().hasRoom();
-            if(startHasRoom || endHasRoom) {
-                ++edgesCount;
-                Vertex<MazeVertexModel> vStart = e.getStart();
-                int indexOf = 0;
-                for(Edge<MazeVertexModel> vEdge : vStart.getEdges()) {
-                    if(vEdge.equals(e)) break;
-                    ++indexOf;
-                }
-                pathEdges.add(vStart.removeEdge(indexOf));
-                vStart.getInfo().setRoom(false);
-            }
-            if (edgesCount == (sizeX * sizeY - 1)) break;
-        }
 
-        for(Edge<MazeVertexModel> e : pathEdges) {
-            int indexOf = 0;
-            for(Edge<MazeVertexModel> ex : edges) {
-                if(e.equals(ex)) edges.remove(indexOf);
-                ++indexOf;
-            }
-
-        }
     }
 
     public int getSizeX() {

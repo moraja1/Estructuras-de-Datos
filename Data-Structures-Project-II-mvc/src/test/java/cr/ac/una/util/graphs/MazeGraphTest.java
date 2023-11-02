@@ -13,13 +13,11 @@ public class MazeGraphTest {
         System.out.println();
         System.out.println();
         System.out.println();
-        System.out.println("After Creating Maze");
+        /*System.out.println("After Creating Maze");
         maze.createMaze();
         System.out.println(maze);
         System.out.println();
         System.out.println(maze.getEdges());
-        System.out.println();
-        System.out.println("Maze Tree");
-        System.out.println(maze.getMaze().toString(true));
+        System.out.println();*/
     }
 }

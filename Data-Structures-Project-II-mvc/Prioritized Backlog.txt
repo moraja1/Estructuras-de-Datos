@@ -1,7 +1,7 @@
 BACKLOG
 
 1. Generación de Laberintos
-	- Implementación de las clases necesarias.
+	- Implementación de las clases necesarias - "DONE".
 	- Creación del laberinto por algoritmo
 	- Creación de la ventana
 	- Creación del dibujo del laberinto

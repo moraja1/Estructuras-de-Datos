@@ -6,7 +6,8 @@ import cr.ac.una.util.List;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
-public class Tree<T> implements Paintable {
+public class Tree<T> implements Printable {
+    private TVertex<T> root;
 
     public Tree() {
         this.root = null;
@@ -36,10 +37,9 @@ public class Tree<T> implements Paintable {
         return (!isEmpty()) ? root.find(info) : null;
     }
 
-    public Tree<T> add(T antecessor, T info)
-            throws RootNotNullException, VertexNotFoundException {
+    public Tree<T> add(T ancestor, T info) throws RootNotNullException, VertexNotFoundException {
         if (info != null) {
-            if (antecessor == null) {
+            if (ancestor == null) {
                 if (root == null) {
                     root = new TVertex<>(info);
                 } else {
@@ -47,7 +47,7 @@ public class Tree<T> implements Paintable {
                 }
             } else {
                 if (root != null) {
-                    TVertex<T> ant = root.find(antecessor);
+                    TVertex<T> ant = root.find(ancestor);
                     if (ant != null) {
                         ant.appendChild(info);
                     } else {
@@ -89,6 +89,4 @@ public class Tree<T> implements Paintable {
     public void paint(Graphics g, Rectangle bounds) {
         throw new UnsupportedOperationException();
     }
-
-    private TVertex<T> root;
 }

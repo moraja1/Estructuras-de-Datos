@@ -20,5 +20,11 @@
             <artifactId>graphs_1.0.2</artifactId>
             <version>1.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

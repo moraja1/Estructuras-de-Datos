@@ -1,20 +1,20 @@
 package cr.ac.una.util.graphs;
 
 public class MazeVertexModel {
-    private boolean hasRoom;
+    private boolean room;
     private char info;
 
-    public MazeVertexModel(boolean hasRoom, char info) {
-        this.hasRoom = hasRoom;
+    public MazeVertexModel(boolean room, char info) {
+        this.room = room;
         this.info = info;
     }
 
-    public boolean isHasRoom() {
-        return hasRoom;
+    public boolean hasRoom() {
+        return room;
     }
 
-    public void setHasRoom(boolean hasRoom) {
-        this.hasRoom = hasRoom;
+    public void setRoom(boolean room) {
+        this.room = room;
     }
 
     public char getInfo() {

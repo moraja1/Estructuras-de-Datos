@@ -7,7 +7,7 @@ import cr.ac.una.util.List;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
-public class TVertex<T> implements Paintable {
+public class TVertex<T> implements Printable {
 
     public TVertex(T info) {
         this.info = info;

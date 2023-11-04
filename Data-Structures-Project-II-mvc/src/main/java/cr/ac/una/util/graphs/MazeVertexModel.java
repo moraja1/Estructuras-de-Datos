@@ -1,12 +1,18 @@
 package cr.ac.una.util.graphs;
 
-public class MazeVertexModel {
-    private boolean room;
-    private char info;
+import java.util.Objects;
 
-    public MazeVertexModel(boolean room, char info) {
+public class MazeVertexModel<T> {
+    private boolean room;
+    private T info;
+    private int posX;
+    private int posY;
+
+    public MazeVertexModel(boolean room, T info, int posX, int posY) {
         this.room = room;
         this.info = info;
+        this.posX = posX;
+        this.posY = posY;
     }
 
     public boolean hasRoom() {
@@ -17,12 +23,33 @@ public class MazeVertexModel {
         this.room = room;
     }
 
-    public char getInfo() {
+    public T getInfo() {
         return info;
     }
 
-    public void setInfo(char info) {
+    public void setInfo(T info) {
         this.info = info;
+    }
+
+    public int getPosX() {
+        return posX;
+    }
+
+    public int getPosY() {
+        return posY;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MazeVertexModel<?> that = (MazeVertexModel<?>) o;
+        return room == that.room && posX == that.posX && posY == that.posY && Objects.equals(info, that.info);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(room, info, posX, posY);
     }
 
     @Override

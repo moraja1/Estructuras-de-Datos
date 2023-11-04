@@ -1,6 +1,5 @@
 package cr.ac.una.util.graphs;
 
-import cr.ac.una.util.collections.ICollection;
 import cr.ac.una.util.collections.List;
 import cr.ac.una.util.collections.SortableList;
 import cr.ac.una.util.trees.RootNotNullException;
@@ -11,12 +10,12 @@ import java.util.Random;
 
 public class MazeGraph {
     private static final int MIN_SIZE = 4;
-    private int sizeX;
-    private int sizeY;
-    private int edgesCount = 0;
-    private final Vertex<MazeVertexModel>[][] matrix;
-    private final SortableList<Edge<MazeVertexModel>> edges;
-    private final Tree<Vertex<MazeVertexModel>> maze;
+    private final int sizeX;
+    private final int sizeY;
+    private final int vertexCount;
+    private final Vertex<MazeVertexModel<Character>>[][] matrix;
+    private final SortableList<Edge<MazeVertexModel<Character>>> edges;
+    private final Tree<MazeVertexModel<Character>> maze;
     public MazeGraph() {
         this(MIN_SIZE, MIN_SIZE);
     }
@@ -27,29 +26,24 @@ public class MazeGraph {
         maze = new Tree<>();
         this.sizeX = sizeX;
         this.sizeY = sizeY;
-        generateMaze();
+        vertexCount = sizeX * sizeY;
+        init();
     }
 
-    public void generateMaze() {
-        createMatrix(); //Init Matrix with rando weight's edge values
-
-        //createMaze(); //Creates a maze tree using kruskal algorithm
-    }
-
-    private void createMatrix() {
-        Random r = new Random();
+    private void init() {
         char var = 'A';
-        for(int i = 0; i < sizeX; i++){
-            for(int j = 0; j < sizeY; j++){
-                Vertex<MazeVertexModel> node = new Vertex<>(new MazeVertexModel(true, var++));
+        for(int i = 0; i < sizeY; i++){
+            for(int j = 0; j < sizeX; j++){
+                Vertex<MazeVertexModel<Character>> node = new Vertex<>(new MazeVertexModel<>(true, var++, j, i));
                 matrix[i][j] = node;
             }
         }
 
+        Random r = new Random();
         for(int i = 0; i < sizeY; i++){
             for(int j = 0; j < sizeX; j++){
-                Vertex<MazeVertexModel> vNext = null;
-                Vertex<MazeVertexModel> vAbove = null;
+                Vertex<MazeVertexModel<Character>> vNext = null;
+                Vertex<MazeVertexModel<Character>> vAbove = null;
                 if(i != sizeY-1) {
                     vAbove = matrix[i+1][j];
                 }
@@ -65,12 +59,29 @@ public class MazeGraph {
                 edges.addAll(matrix[i][j].getEdges());
             }
         }
-
         edges.mergeSort(false);
     }
 
-    public void createMaze() {
+    public void generateMaze() {
+        int count = 0;
+        List<Edge<MazeVertexModel<Character>>> pathMaze = new List<>();
+        for(var e : edges) {
+            var vStart = e.getStart();
+            var vEnd = e.getEnd();
+            if (vStart.getInfo().hasRoom() || vEnd.getInfo().hasRoom()) {
+                vStart.removeEdge(e);
+                vStart.getInfo().setRoom(false);
+                pathMaze.add(e);
+                ++count;
+            }
+            if (count == vertexCount - 1) break;
+        }
 
+        /*
+
+        FALTA PODER CREAR EL ARBOL, YA SE OBTIENE EL ARBOL MINIMO GENERADOR PERO EN FORMA DE LISTA CON LOS VERTICES DESORDENADOS
+
+         */
     }
 
     public int getSizeX() {
@@ -81,15 +92,15 @@ public class MazeGraph {
         return sizeY;
     }
 
-    public Vertex<MazeVertexModel>[][] getMatrix() {
+    public Vertex<MazeVertexModel<Character>>[][] getMatrix() {
         return matrix;
     }
 
-    public SortableList<Edge<MazeVertexModel>> getEdges() {
+    public SortableList<Edge<MazeVertexModel<Character>>> getEdges() {
         return edges;
     }
 
-    public Tree<Vertex<MazeVertexModel>> getMaze() {
+    public Tree<MazeVertexModel<Character>> getMaze() {
         return maze;
     }
 

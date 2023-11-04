@@ -29,5 +29,4 @@ public interface IGraph<T> {
     ICollection<VTuple<T>> getMatrix();
 
     int[][] getAdjacency();
-
 }

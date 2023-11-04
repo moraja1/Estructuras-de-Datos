@@ -4,7 +4,42 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2fde3578-1433-4f8c-ba4a-e4a8ef72182a" name="Changes" comment="" />
+    <list default="true" id="2fde3578-1433-4f8c-ba4a-e4a8ef72182a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/src/main/java/cr/ac/una/util/collections/Array.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/src/main/java/cr/ac/una/util/collections/ArrayIterator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/src/main/java/cr/ac/una/util/collections/Collection.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/src/main/java/cr/ac/una/util/collections/ICollection.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/src/main/java/cr/ac/una/util/collections/Link.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/src/main/java/cr/ac/una/util/collections/List.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/src/main/java/cr/ac/una/util/collections/ListIterator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/src/main/java/cr/ac/una/util/collections/Queue.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/src/main/java/cr/ac/una/util/collections/QueueException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/src/main/java/cr/ac/una/util/collections/SortableList.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/src/main/java/cr/ac/una/util/collections/Stack.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/src/main/java/cr/ac/una/util/graphs/Edge.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/src/main/java/cr/ac/una/util/graphs/Graph.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/src/main/java/cr/ac/una/util/graphs/GraphM.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/src/main/java/cr/ac/una/util/graphs/GraphUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/src/main/java/cr/ac/una/util/graphs/IGraph.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/src/main/java/cr/ac/una/util/graphs/VTuple.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/src/main/java/cr/ac/una/util/graphs/Vertex.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Data-Structures-Project-II-mvc/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Graphs/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Graphs/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Graphs/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Graphs/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Graphs/target/classes/cr/ac/una/util/graphs/Edge.class" beforeDir="false" afterPath="$PROJECT_DIR$/../../Graphs/target/classes/cr/ac/una/util/graphs/Edge.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Graphs/target/classes/cr/ac/una/util/graphs/Graph.class" beforeDir="false" afterPath="$PROJECT_DIR$/../../Graphs/target/classes/cr/ac/una/util/graphs/Graph.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Graphs/target/classes/cr/ac/una/util/graphs/GraphUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/../../Graphs/target/classes/cr/ac/una/util/graphs/GraphUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Graphs/target/classes/cr/ac/una/util/graphs/VTuple.class" beforeDir="false" afterPath="$PROJECT_DIR$/../../Graphs/target/classes/cr/ac/una/util/graphs/VTuple.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Graphs/target/classes/cr/ac/una/util/graphs/Vertex.class" beforeDir="false" afterPath="$PROJECT_DIR$/../../Graphs/target/classes/cr/ac/una/util/graphs/Vertex.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Graphs/target/graphs_1.0.2-1.0.2.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../../Graphs/target/graphs_1.0.2-1.0.2.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Graphs/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/../../Graphs/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Graphs/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/../../Graphs/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../HomeWork5/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../HomeWork5/.idea/misc.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,20 +56,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "D:/git/Estructuras-de-Datos/Collections/Collections",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/jeiso/Desktop/Proyects/Estructuras-de-Datos/Collections/Collections&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\N00148095\Desktop\Git\Estructuras-de-Datos\Collections\Collections\src\main\java\cr\ac\una" />
@@ -50,6 +86,8 @@
       <updated>1697556847835</updated>
       <workItem from="1697556849004" duration="655000" />
       <workItem from="1697601150654" duration="28000" />
+      <workItem from="1697839461616" duration="60000" />
+      <workItem from="1699071368768" duration="40000" />
     </task>
     <servers />
   </component>

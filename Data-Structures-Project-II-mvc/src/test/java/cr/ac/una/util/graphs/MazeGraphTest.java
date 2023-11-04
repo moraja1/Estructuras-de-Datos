@@ -9,15 +9,16 @@ public class MazeGraphTest {
         System.out.println("Before Creating Maze");
         System.out.println(maze); //Nodes Matrix
         System.out.println();
-        System.out.println(maze.getEdges()); //Sorted Edges
         System.out.println();
         System.out.println();
         System.out.println();
-        /*System.out.println("After Creating Maze");
-        maze.createMaze();
+        maze.generateMaze();
+        System.out.println("After Creating Maze");
         System.out.println(maze);
         System.out.println();
-        System.out.println(maze.getEdges());
-        System.out.println();*/
+        System.out.println();
+        System.out.println();
+        System.out.println("Tree");
+        System.out.println(maze.getMaze());
     }
 }

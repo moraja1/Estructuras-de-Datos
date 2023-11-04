@@ -3,8 +3,11 @@ package cr.ac.una.util.graphs;
 import cr.ac.una.util.collections.ICollection;
 import cr.ac.una.util.collections.List;
 
-public class Vertex<T> {
+import java.util.Objects;
 
+public class Vertex<T> {
+    private T info;
+    private final ICollection<Edge<T>> edges;
     public Vertex(T info) {
         this.info = info;
         this.edges = new List<>();
@@ -18,8 +21,20 @@ public class Vertex<T> {
         edges.add(new Edge<>(this, end, weight));
     }
 
-    void removeEdge(int i) {
-        edges.remove(i);
+    Edge<T> removeEdge(Edge<T> edge) {
+        boolean done = false;
+        Edge<T> removed = null;
+        for(int i = 0; i < edges.count() && !done; i++) {
+            if(edges.get(i).equals(edge)) {
+                removed = edges.remove(i);
+                done = true;
+            }
+        }
+        return removed;
+    }
+
+    Edge<T> removeEdge(int i) {
+        return edges.remove(i);
     }
 
     @Override
@@ -43,6 +58,16 @@ public class Vertex<T> {
         return edges;
     }
 
-    private T info;
-    private final ICollection<Edge<T>> edges;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vertex<?> vertex = (Vertex<?>) o;
+        return Objects.equals(info, vertex.info);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(info);
+    }
 }

@@ -1,7 +1,9 @@
 package cr.ac.una.util.graphs;
 
 public class Edge<T> implements Comparable<Edge<T>> {
-
+    final Vertex<T> start;
+    final Vertex<T> end;
+    double weight;
     public Edge(Vertex<T> start, Vertex<T> end, double weight) {
         this.start = start;
         this.end = end;
@@ -10,12 +12,6 @@ public class Edge<T> implements Comparable<Edge<T>> {
 
     public Edge(Vertex<T> start, Vertex<T> end) {
         this(start, end, 0.0);
-    }
-
-    @Override
-    public String toString() {
-        return String.format("{(%s, %s), %5.3f}",
-                getStart().getInfo(), getEnd().getInfo(), getWeight());
     }
 
     public Vertex<T> getStart() {
@@ -34,12 +30,14 @@ public class Edge<T> implements Comparable<Edge<T>> {
         this.weight = weight;
     }
 
-    final Vertex<T> start;
-    final Vertex<T> end;
-    double weight;
-
     @Override
     public int compareTo(Edge<T> o) {
         return Double.compare(weight, o.weight);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("{(%s, %s), %5.3f}",
+                getStart().getInfo(), getEnd().getInfo(), getWeight());
     }
 }

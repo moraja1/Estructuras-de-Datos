@@ -1,8 +1,8 @@
 package cr.ac.una.util.graphs;
 
-import cr.ac.una.util.ICollection;
-import cr.ac.una.util.List;
-import cr.ac.una.util.SortableList;
+import cr.ac.una.util.collections.ICollection;
+import cr.ac.una.util.collections.List;
+import cr.ac.una.util.collections.SortableList;
 import cr.ac.una.util.trees.RootNotNullException;
 import cr.ac.una.util.trees.Tree;
 import cr.ac.una.util.trees.VertexNotFoundException;

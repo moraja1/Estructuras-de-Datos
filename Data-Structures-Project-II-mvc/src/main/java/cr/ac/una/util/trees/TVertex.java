@@ -1,8 +1,8 @@
 package cr.ac.una.util.trees;
 
-import cr.ac.una.util.Array;
-import cr.ac.una.util.ICollection;
-import cr.ac.una.util.List;
+import cr.ac.una.util.collections.Array;
+import cr.ac.una.util.collections.ICollection;
+import cr.ac.una.util.collections.List;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;

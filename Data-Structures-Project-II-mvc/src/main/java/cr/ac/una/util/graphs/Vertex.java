@@ -23,6 +23,9 @@ public class Vertex<T> {
     public Boolean addEdge(Vertex<T> end, Double weight) {
         return edges.add(new Edge<>(this, end, weight));
     }
+    public void removeEdge(Edge<T> edge) {
+        edges.remove(edge);
+    }
     public T getInfo() {
         return info;
     }
@@ -56,7 +59,7 @@ public class Vertex<T> {
         }
         int idx = s.lastIndexOf(",");
         s.delete(idx != -1 ? idx : s.length(), s.length());
-        s.append("]\t");
+        s.append("]");
         return s.toString();
     }
 }

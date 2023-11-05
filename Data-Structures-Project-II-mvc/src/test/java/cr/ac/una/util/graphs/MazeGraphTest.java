@@ -8,5 +8,6 @@ public class MazeGraphTest {
 
         System.out.println("Before Creating Maze");
         System.out.println(maze); //Nodes Matrix
+        System.out.println();
     }
 }

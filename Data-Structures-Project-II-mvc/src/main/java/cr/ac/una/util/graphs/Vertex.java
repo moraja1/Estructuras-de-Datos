@@ -26,6 +26,14 @@ public class Vertex<T> {
     public void removeEdge(Edge<T> edge) {
         edges.remove(edge);
     }
+    public void removeEdge(Vertex<T> end) {
+        for(var e : edges) {
+            if(e.getEnd().equals(end)) {
+                removeEdge(e);
+                break;
+            }
+        }
+    }
     public T getInfo() {
         return info;
     }

@@ -6,8 +6,8 @@ public class MazeGraphTest {
     public static void main(String[] args) {
         MGraph maze = new MGraph();
 
-        System.out.println("Before Creating Maze");
+        /*System.out.println("Before Creating Maze");
         System.out.println(maze); //Nodes Matrix
-        System.out.println();
+        System.out.println();*/
     }
 }

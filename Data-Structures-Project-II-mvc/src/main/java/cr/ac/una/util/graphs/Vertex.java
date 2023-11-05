@@ -53,7 +53,7 @@ public class Vertex<T> {
 
     @Override
     public String toString() {
-        StringBuilder s = new StringBuilder(info.toString() + " : [");
+        StringBuilder s = new StringBuilder(String.format("%-2s : [", info.toString()));
         for (var e : edges) {
             s.append(e.getEnd().getInfo()).append(", ");
         }

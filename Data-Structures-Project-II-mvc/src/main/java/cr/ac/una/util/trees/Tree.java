@@ -1,10 +1,12 @@
 package cr.ac.una.util.trees;
 
-import cr.ac.una.util.collections.ICollection;
-import cr.ac.una.util.collections.List;
+import cr.ac.una.util.trees.exceptions.RootNotNullException;
+import cr.ac.una.util.trees.exceptions.VertexNotFoundException;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Tree<T> implements Printable {
     private TVertex<T> root;
@@ -63,8 +65,8 @@ public class Tree<T> implements Printable {
         return this;
     }
 
-    public ICollection<T> listAll() {
-        ICollection<T> r = new List<>();
+    public List<T> listAll() {
+        List<T> r = new ArrayList<>();
         if (!isEmpty()) {
             r.addAll(root.findAll());
         }

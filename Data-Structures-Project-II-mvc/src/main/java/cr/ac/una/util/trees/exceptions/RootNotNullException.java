@@ -1,4 +1,4 @@
-package cr.ac.una.util.trees;
+package cr.ac.una.util.trees.exceptions;
 
 public class RootNotNullException extends Exception {
 

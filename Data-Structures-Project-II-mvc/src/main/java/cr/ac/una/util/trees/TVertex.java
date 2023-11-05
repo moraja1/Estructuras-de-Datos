@@ -1,14 +1,15 @@
 package cr.ac.una.util.trees;
 
-import cr.ac.una.util.collections.Array;
-import cr.ac.una.util.collections.ICollection;
-import cr.ac.una.util.collections.List;
-
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TVertex<T> implements Printable {
 
+    private final T info;
+    private TVertex<T> firstChild;
+    private TVertex<T> nextSibling;
     public TVertex(T info) {
         this.info = info;
         this.firstChild = null;
@@ -56,8 +57,8 @@ public class TVertex<T> implements Printable {
         return r;
     }
 
-    public ICollection<T> findAll() {
-        ICollection<T> r = new List<>();
+    public List<T> findAll() {
+        List<T> r = new ArrayList<>();
         r.add(getInfo());
         for (TVertex<T> v : getChildren()) {
             r.addAll(v.findAll());
@@ -75,8 +76,8 @@ public class TVertex<T> implements Printable {
         return r;
     }
 
-    public ICollection<TVertex<T>> getChildren() {
-        ICollection<TVertex<T>> vertices;
+    public List<TVertex<T>> getChildren() {
+        List<TVertex<T>> vertices;
 
         // Se utiliza un array para guardar cada nodo
         // de modo que puedan recuperarse por medio de get()
@@ -84,14 +85,14 @@ public class TVertex<T> implements Printable {
         //
         int n = getChildrenCount();
         if (n > 0) {
-            vertices = new Array<>(n);
+            vertices = new ArrayList<>(n);
             TVertex<T> current = getFirstChild();
             while (current != null) {
                 vertices.add(current);
                 current = current.getNextSibling();
             }
         } else {
-            vertices = new List<>();
+            vertices = new ArrayList<>();
         }
 
         return vertices;
@@ -175,9 +176,5 @@ public class TVertex<T> implements Printable {
     void setNextSibling(TVertex<T> nextSibling) {
         this.nextSibling = nextSibling;
     }
-
-    private final T info;
-    private TVertex<T> firstChild;
-    private TVertex<T> nextSibling;
 
 }

@@ -2,6 +2,8 @@ package cr.ac.una.util.graphs;
 
 import cr.ac.una.model.VInfo;
 import cr.ac.una.util.graphs.exceptions.VertexNotFoundException;
+import cr.ac.una.util.trees.Tree;
+import cr.ac.una.util.trees.exceptions.RootNotNullException;
 
 import java.util.*;
 
@@ -12,21 +14,29 @@ public class MGraph {
     private final int sizeY;
     private String label;
     private final Vertex<VInfo<Character>>[][] MATRIX;
-    private final Set<Edge<VInfo<Character>>> EDGES;
+    private final Set<Edge<VInfo<Character>>> MATRIX_EDGES;
+    private final Tree<VInfo<Character>> MINIMUM_SPANNING;
+    private final List<Edge<VInfo<Character>>> MAZE_EDGES;
     private final int vertexCount;
 
     public MGraph() {
-        this(MIN_SIZE, MIN_SIZE);
+        this(null, MIN_SIZE, MIN_SIZE);
     }
 
-    public MGraph(int sizeX, int sizeY) {
+    public MGraph(String name) {
+        this(name, MIN_SIZE, MIN_SIZE);
+    }
+
+    public MGraph(String name, int sizeX, int sizeY) {
         MATRIX = new Vertex[sizeX][sizeY];
-        EDGES = new HashSet<>();
+        MATRIX_EDGES = new HashSet<>();
+        MINIMUM_SPANNING = new Tree<>();
+        MAZE_EDGES = new LinkedList<>();
         vertexCount = sizeX * sizeY;
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         ++instances;
-        this.label = String.format("Maze #%d", instances);
+        this.label = name != null ? name : String.format("Maze #%d", instances);
 
         char c = 'A';
         for (int i = 0; i < MATRIX.length; i++) {
@@ -40,6 +50,8 @@ public class MGraph {
         }
     }
 
+    //------------------------------------------------------------------------------------------------------
+    //
     private void init() throws VertexNotFoundException {
         Random rdm = new Random();
         for (int i = 0; i < sizeX; i++) {
@@ -53,17 +65,20 @@ public class MGraph {
             }
         }
 
-        generateMaze();
+        try {
+            generateMaze();
+        } catch (RootNotNullException | cr.ac.una.util.trees.exceptions.VertexNotFoundException e) {
+            throw new RuntimeException
+                    ("Unable to create the Minimum Spanning Tree, please verify the information and try again.");
+        }
     }
 
-    public void generateMaze() {
-        List<Edge<VInfo<Character>>> close;
-        List<Edge<VInfo<Character>>> open = new ArrayList<>();
-        close = generateMaze(open, MATRIX[0][0]);
-        System.out.println(close);
+    public void generateMaze() throws RootNotNullException, cr.ac.una.util.trees.exceptions.VertexNotFoundException {
+        MAZE_EDGES.addAll(generateMaze(new ArrayList<>(), MATRIX[0][0]));
     }
 
-    private List<Edge<VInfo<Character>>> generateMaze(List<Edge<VInfo<Character>>> openAnt, Vertex<VInfo<Character>> v) {
+    private List<Edge<VInfo<Character>>> generateMaze(List<Edge<VInfo<Character>>> openAnt, Vertex<VInfo<Character>> v)
+            throws RootNotNullException, cr.ac.una.util.trees.exceptions.VertexNotFoundException {
         List<Edge<VInfo<Character>>> close = new ArrayList<>();
         List<Edge<VInfo<Character>>> open = new ArrayList<>(v.getEdges());
         List<Edge<VInfo<Character>>> newClose = null;
@@ -107,8 +122,9 @@ public class MGraph {
             //Si todos los arcos generan un ciclo, hago backtrace
             if (minEdge == null) return close; //Backtrace
 
-            //Si no, añado a close el minimo
+            //Si no, añado a close y al arbol
             close.add(minEdge);
+            MINIMUM_SPANNING.add(minEdge.getStart().getInfo(), minEdge.getEnd().getInfo());
             open.addAll(openAnt);
             //Hago una nueva close, con el vertice final del arco minimo
             newClose = generateMaze(open, minEdge.getEnd());
@@ -120,6 +136,10 @@ public class MGraph {
         return close;
     }
 
+    /**
+     * This method deletes from the list passed all edges that connects to a vertex with no room on it.
+     * @param open
+     */
     private void purifyEdges(List<Edge<VInfo<Character>>> open) {
         //Quito los arcos que no se deben usar para no generar ciclos.
         List<Edge<VInfo<Character>>> officer = new ArrayList<>(open);
@@ -128,11 +148,11 @@ public class MGraph {
             boolean hasRoom = e.getEnd().getInfo().hasRoom();
             if (hasRoom) {
                 open.add(e);
-            } else {
-                e.getStart().removeEdge(e.getEnd());
             }
         }
     }
+    //
+    //------------------------------------------------------------------------------------------------------
 
     public boolean addEdge(Vertex<VInfo<Character>> start, Vertex<VInfo<Character>> end)
             throws VertexNotFoundException {
@@ -147,7 +167,7 @@ public class MGraph {
         Edge<VInfo<Character>> newEdge = new Edge<>(start, end, weight);
         boolean done = start.addEdge(end, weight);
         done &= end.addEdge(start, weight);
-        done &= EDGES.add(newEdge);
+        done &= MATRIX_EDGES.add(newEdge);
         if (!done) {
             //rollback
             removeEdge(start, end, newEdge);
@@ -159,7 +179,7 @@ public class MGraph {
     public void removeEdge(Vertex<VInfo<Character>> start, Vertex<VInfo<Character>> end, Edge<VInfo<Character>> edge) {
         start.removeEdge(edge);
         end.removeEdge(edge);
-        EDGES.remove(edge);
+        MATRIX_EDGES.remove(edge);
     }
 
     @SuppressWarnings({})
@@ -186,6 +206,14 @@ public class MGraph {
 
     public int getSizeY() {
         return sizeY;
+    }
+
+    public Tree<VInfo<Character>> getMinimumSpanningTree() {
+        return MINIMUM_SPANNING;
+    }
+
+    public List<Edge<VInfo<Character>>> getMazeEdges() {
+        return MAZE_EDGES;
     }
 
     public Vertex<VInfo<Character>>[][] getMatrix() {

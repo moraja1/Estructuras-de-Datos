@@ -56,7 +56,8 @@ public class Tree<T> implements Printable {
                         throw new VertexNotFoundException();
                     }
                 } else {
-                    throw new VertexNotFoundException();
+                    add(null, ancestor);
+                    add(ancestor, info);
                 }
             }
         } else {

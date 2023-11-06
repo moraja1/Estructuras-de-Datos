@@ -3,8 +3,12 @@ package cr.ac.una.model;
 import javax.swing.table.AbstractTableModel;
 
 public class MazeTableModel extends AbstractTableModel {
-    private String[] columnNames;
-    private Object[][] data;
+    private String[] columnNames = {"Nombre", "Fechas de Creación", "Filas", "Columnas"};
+    private Object[][] data = {{"Juan", "Pérez", 25, 80}, {"María", "García", 30, 65}, {"Pedro", "López", 35, 56}};
+
+    public MazeTableModel() {
+
+    }
 
     public MazeTableModel(String[] columnNames, Object[][] data) {
         this.columnNames = columnNames;

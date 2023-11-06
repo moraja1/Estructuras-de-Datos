@@ -17,6 +17,9 @@ public class MGraphTest {
         System.out.println("\n\n\n");
         System.out.println("MAZE EDGES");
         System.out.println(mGraph.getMazeEdges());
+        System.out.println("\n\n\n");
+        System.out.println("LOCALDATE CREATED");
+        System.out.println(mGraph.getFormattedCreationDate());
 
     }
 }

@@ -9,9 +9,24 @@ public class MainWindowController implements Controller{
     private final MainWindow window;
     public MainWindowController() {
         window = new MainWindow(this);
+        window.init();
     }
 
     public AbstractTableModel getTableModel(){
-        return new MazeTableModel(null, null);
+        return new MazeTableModel();
+    }
+
+    public void bringWindowToFront(int selectedRow){
+
+    }
+
+    public void createNewMaze() {
+        System.out.println("Maze creado");
+    }
+
+    public void saveProgramState() {
+    }
+
+    public void openMazesFile() {
     }
 }

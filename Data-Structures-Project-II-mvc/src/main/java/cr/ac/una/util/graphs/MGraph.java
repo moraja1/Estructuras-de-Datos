@@ -5,6 +5,8 @@ import cr.ac.una.util.graphs.exceptions.VertexNotFoundException;
 import cr.ac.una.util.trees.Tree;
 import cr.ac.una.util.trees.exceptions.RootNotNullException;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class MGraph {
@@ -12,6 +14,7 @@ public class MGraph {
     private static final int MIN_SIZE = 4;
     private final int sizeX;
     private final int sizeY;
+    private final LocalDate creationDate;
     private String label;
     private final Vertex<VInfo<Character>>[][] MATRIX;
     private final Set<Edge<VInfo<Character>>> MATRIX_EDGES;
@@ -32,6 +35,7 @@ public class MGraph {
         MATRIX_EDGES = new HashSet<>();
         MINIMUM_SPANNING = new Tree<>();
         MAZE_EDGES = new LinkedList<>();
+        creationDate = LocalDate.now();
         vertexCount = sizeX * sizeY;
         this.sizeX = sizeX;
         this.sizeY = sizeY;
@@ -206,6 +210,14 @@ public class MGraph {
 
     public int getSizeY() {
         return sizeY;
+    }
+
+    public LocalDate getCreationDate() {
+        return creationDate;
+    }
+    public String getFormattedCreationDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return creationDate.format(formatter);
     }
 
     public Tree<VInfo<Character>> getMinimumSpanningTree() {

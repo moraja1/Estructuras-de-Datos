@@ -4,9 +4,11 @@ import cr.ac.una.controller.Controller;
 import cr.ac.una.controller.MainWindowController;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import java.awt.*;
 
-public class MainWindow extends JFrame {
+public class MainWindow extends JFrame implements TableModelListener {
     private final MainWindowController controller;
     private JMenuBar menuBar;
     private JMenu fileMenu;
@@ -14,7 +16,7 @@ public class MainWindow extends JFrame {
     private JMenuItem openItem;
     private JMenuItem newItem;
     private JTable table;
-    private JButton boton;
+    private JButton button;
     public MainWindow(Controller controller) {
         super("Laberintos");
         this.controller = (MainWindowController) controller;
@@ -31,22 +33,46 @@ public class MainWindow extends JFrame {
         menuBar.add(fileMenu);
         setJMenuBar(menuBar);
 
+        //Creo un borderLayout
+        BorderLayout bl = new BorderLayout();
+        bl.setHgap(10);bl.setVgap(10);
+        setLayout(bl);
+
         // Crear la tabla
-        String[] columnas = {"Nombre", "Apellido", "Edad"};
-        Object[][] datos = {{"Juan", "Pérez", 25}, {"María", "García", 30}, {"Pedro", "López", 35}};
-        table = new JTable(datos, columnas);
-        table.setSize(getWidth() - 25, getHeight() - 25);
+        table = new JTable(((MainWindowController) controller).getTableModel());
         JScrollPane scrollPane = new JScrollPane(table);
-        add(scrollPane, BorderLayout.CENTER);
-        scrollPane.setSize(getWidth() - 25, getHeight() - 25);
+        scrollPane.setPreferredSize(new Dimension(getWidth() - 10, getHeight() - 10));
+        table.setFillsViewportHeight(true);
 
         // Crear el botón
-        boton = new JButton("Botón");
-        add(boton, BorderLayout.SOUTH);
+        button = new JButton("Nuevo");
+
+        // Creo contenedores para los componentes
+        JPanel buttonPanel = new JPanel();
+
+
+        JPanel tablePanel = new JPanel(new BorderLayout());
+        tablePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        tablePanel.add(scrollPane, BorderLayout.CENTER);
+
+
+        // Añado todos los componentes
+        add(tablePanel);
+
 
         // Configurar la ventana
         setSize(600, 450);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
         setVisible(true);
+    }
+
+    public void init(){
+        setVisible(true);
+    }
+
+    @Override
+    public void tableChanged(TableModelEvent e) {
+        table.repaint();
     }
 }

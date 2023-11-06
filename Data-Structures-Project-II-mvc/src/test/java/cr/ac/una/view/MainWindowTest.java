@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 
 public class MainWindowTest {
     public static void main(String[] args) {
-        new MainWindow(new MainWindowController());
+        new MainWindowController();
     }
 
 }

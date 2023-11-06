@@ -5,6 +5,16 @@ import javax.swing.table.AbstractTableModel;
 public class MazeTableModel extends AbstractTableModel {
     private String[] columnNames;
     private Object[][] data;
+
+    public MazeTableModel(String[] columnNames, Object[][] data) {
+        this.columnNames = columnNames;
+        this.data = data;
+    }
+
+    @Override
+    public String getColumnName(int column) {
+        return columnNames[column];
+    }
     @Override
     public int getRowCount() {
         return data.length;

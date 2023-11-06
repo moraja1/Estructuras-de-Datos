@@ -1,18 +1,17 @@
 package cr.ac.una.controller;
 
-import cr.ac.una.util.service.PathUtils;
+import cr.ac.una.model.MazeTableModel;
+import cr.ac.una.view.MainWindow;
 
-import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 
 public class MainWindowController implements Controller{
+    private final MainWindow window;
     public MainWindowController() {
-
+        window = new MainWindow(this);
     }
 
     public AbstractTableModel getTableModel(){
-
-        return null;
+        return new MazeTableModel(null, null);
     }
 }

@@ -1,6 +1,6 @@
-package cr.ac.una.model;
+package cr.ac.una.util.graphs;
 
-public class VInfo<T> implements ViewModel {
+public class VInfo<T> {
     private T info;
     private Boolean room;
     private final int x;

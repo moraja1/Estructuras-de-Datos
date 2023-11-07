@@ -7,10 +7,7 @@ import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import java.awt.event.WindowListener;
 
 public class MainWindow extends JFrame implements TableModelListener {
     private final MainWindowController controller;
@@ -43,6 +40,7 @@ public class MainWindow extends JFrame implements TableModelListener {
 
         // Crear la tabla
         table = new JTable(((MainWindowController) controller).getTableModel());
+        table.getModel().addTableModelListener(this);
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(getWidth() - 10, getHeight() - 10));
         table.setFillsViewportHeight(true);
@@ -71,48 +69,36 @@ public class MainWindow extends JFrame implements TableModelListener {
     }
 
     public void init(){
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if(e.getClickCount() == 2) {
-                    Executor exe = Executors.newSingleThreadExecutor();
-                    exe.execute(() -> ((MainWindowController) controller).bringWindowToFront(table.getSelectedRow()));
-                }
-            }
-        });
-        button.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                Executor exe = Executors.newSingleThreadExecutor();
-                exe.execute(() -> ((MainWindowController) controller).createNewMaze());
-            }
-        });
-        saveItem.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                Executor exe = Executors.newSingleThreadExecutor();
-                exe.execute(controller::saveProgramState);
-            }
-        });
-        openItem.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                Executor exe = Executors.newSingleThreadExecutor();
-                exe.execute(controller::openMazesFile);
-            }
-        });
-
-        newItem.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-            }
-        });
+        table.addMouseListener(controller);
+        button.addMouseListener(controller);
+        saveItem.addActionListener(controller);
+        openItem.addActionListener(controller);
+        newItem.addActionListener(controller);
         setVisible(true);
     }
 
     @Override
     public void tableChanged(TableModelEvent e) {
         table.repaint();
+    }
+
+    public JMenuItem getSaveItem() {
+        return saveItem;
+    }
+
+    public JMenuItem getOpenItem() {
+        return openItem;
+    }
+
+    public JMenuItem getNewItem() {
+        return newItem;
+    }
+
+    public JTable getTable() {
+        return table;
+    }
+
+    public JButton getButton() {
+        return button;
     }
 }

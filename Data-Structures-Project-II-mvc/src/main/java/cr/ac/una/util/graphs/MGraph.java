@@ -1,6 +1,5 @@
 package cr.ac.una.util.graphs;
 
-import cr.ac.una.model.VInfo;
 import cr.ac.una.util.graphs.exceptions.VertexNotFoundException;
 import cr.ac.una.util.trees.Tree;
 import cr.ac.una.util.trees.exceptions.RootNotNullException;

@@ -8,7 +8,7 @@ BACKLOG
 2. Procedimiento para recorrer el algoritmo de manera interactiva
 	- Eventos de detección de Mouse y dibujo
 3. Manejo de documentos XML
-	- Implementación de clases de utilidad necesarias
+	- Implementación de clases de utilidad necesarias - "DONE"
 	- Creación de métodos de Serialización y Deserialización
 4. Procedimiento de solución automática del laberinto.
 	- Creación de Método de resolución automática

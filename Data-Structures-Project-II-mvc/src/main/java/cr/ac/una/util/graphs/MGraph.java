@@ -29,17 +29,18 @@ public class MGraph {
         this(name, MIN_SIZE, MIN_SIZE);
     }
 
-    public MGraph(String name, int sizeX, int sizeY) {
-        MATRIX = new Vertex[sizeX][sizeY];
+    public MGraph(String name, Integer sizeX, Integer sizeY) {
+        this.label = name != null ? name : String.format("Maze #%d", instances);
+        this.sizeX = sizeX != null ? sizeX : MIN_SIZE;
+        this.sizeY = sizeY != null ? sizeY : MIN_SIZE;
+        MATRIX = new Vertex[this.sizeX][this.sizeY];
         MATRIX_EDGES = new HashSet<>();
         MINIMUM_SPANNING = new Tree<>();
         MAZE_EDGES = new LinkedList<>();
         creationDate = LocalDate.now();
-        vertexCount = sizeX * sizeY;
-        this.sizeX = sizeX;
-        this.sizeY = sizeY;
+        vertexCount = this.sizeX * this.sizeY;
         ++instances;
-        this.label = name != null ? name : String.format("Maze #%d", instances);
+
 
         char c = 'A';
         for (int i = 0; i < MATRIX.length; i++) {

@@ -7,18 +7,17 @@ import cr.ac.una.view.MazeConfigDialog;
 
 import javax.swing.table.TableModel;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class MainWindowController implements Controller, MouseListener, ActionListener {
+public class MainWindowController implements Controller {
     private final MainWindow window;
     private final MazeTableModel tableModel = new MazeTableModel();;
+    private MazeConfigDialog mazeConfig;
     private final Set<MGraph> mazes;
     private final ExecutorService executor = new ThreadPoolExecutor(0, 1, 0L,
             TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(1));
@@ -45,11 +44,29 @@ public class MainWindowController implements Controller, MouseListener, ActionLi
         System.out.println("Bringing window to front");
     }
 
-    public void createNewMaze() {
-        executor.execute(() -> {
-            new MazeConfigDialog(window);
-        });
-        mazes.add(new MGraph());
+    public void createNewMaze(){
+        mazeConfig = new MazeConfigDialog(window, this);
+        mazeConfig.init();
+        String name = "";
+        String sizeX = "";
+        String sizeY = "";
+        if(mazeConfig.isAccepted()) {
+            name = mazeConfig.getNameInput();
+            sizeX = mazeConfig.getSizeXInput();
+            sizeY = mazeConfig.getSizeYInput();
+            Integer size_x = (!sizeX.isBlank() && isDigit(sizeX)) ? Integer.parseInt(sizeX) : null;
+            Integer size_y = (!sizeY.isBlank() && isDigit(sizeY)) ? Integer.parseInt(sizeY) : null;
+            createNewMaze(name.isBlank() ? null : name, size_x, size_y);
+        }
+        mazeConfig = null;
+    }
+
+    public boolean isDigit(String value) {
+        return value.matches("^\\d+$");
+    }
+
+    public void createNewMaze(String name, Integer sizeX, Integer sizeY) {
+        mazes.add(new MGraph(name, sizeX, sizeY));
         tableModel.updateTable(mazes);
     }
 

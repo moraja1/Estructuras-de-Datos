@@ -1,6 +1,7 @@
 package cr.ac.una.controller;
 
 import cr.ac.una.model.MazeTableModel;
+import cr.ac.una.model.ViewModel;
 import cr.ac.una.util.graphs.MGraph;
 import cr.ac.una.view.MainWindow;
 import cr.ac.una.view.MazeConfigDialog;
@@ -8,6 +9,8 @@ import cr.ac.una.view.MazeConfigDialog;
 import javax.swing.table.TableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -21,9 +24,12 @@ public class MainWindowController implements Controller {
     private final Set<MGraph> mazes;
     private final ExecutorService executor = new ThreadPoolExecutor(0, 1, 0L,
             TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(1));
+
+    private final List<MazeViewController> mazeViewControllers;
     public MainWindowController() {
         window = new MainWindow(this);
         mazes = tableModel.getMazes();
+        mazeViewControllers = new ArrayList<>();
         loadXMLData();
         window.init();
     }
@@ -66,8 +72,11 @@ public class MainWindowController implements Controller {
     }
 
     public void createNewMaze(String name, Integer sizeX, Integer sizeY) {
-        mazes.add(new MGraph(name, sizeX, sizeY));
+        MGraph newGraph = new MGraph(name, sizeX, sizeY);
+        mazes.add(newGraph);
         tableModel.updateTable(mazes);
+        ViewModel vm = new ViewModel(newGraph);
+        mazeViewControllers.add(new MazeViewController(vm, executor));
     }
 
     public void saveProgramState() {

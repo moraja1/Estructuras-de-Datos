@@ -196,6 +196,10 @@ public class MGraph {
         return false;
     }
 
+    public Vertex<VInfo<Character>> getVertex(int x, int y) {
+        return MATRIX[x][y];
+    }
+
     public static int getInstances() {
         return instances;
     }

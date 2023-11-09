@@ -69,29 +69,29 @@ public class MazeView extends JFrame {
     }
 
     public String updateLabel() {
-        return controller.getCurrentScale() + "";
+        return (controller.getCurrentScale() * 100) + "";
     }
 
     public void updateWindow() {
         scaleLabel.setText(updateLabel());
         scrollPane.getHorizontalScrollBar().revalidate();
-        scrollPane.getHorizontalScrollBar().repaint();
         scrollPane.getVerticalScrollBar().revalidate();
+        scrollPane.getHorizontalScrollBar().repaint();
         scrollPane.getVerticalScrollBar().repaint();
         repaint();
     }
 
     private JScrollPane getScrollPane(MazeViewController controller) {
         final JPanel mazeBoard = new JPanel() {
-            private Dimension cellD;
+            private final Dimension cellD = new Dimension(16, 16);
             private int sizeX;
             private int sizeY;
             @Override
             public Dimension getPreferredSize() {
-                cellD = controller.getCellDimension();
                 sizeX = mazeInfo.getSizeX();
                 sizeY = mazeInfo.getSizeY();
-                return new Dimension(cellD.width * sizeX, cellD.height * sizeY);
+                return new Dimension((int) ((cellD.width * sizeX) * controller.getCurrentScale()) + 1,
+                        (int) ((cellD.height * sizeY) * controller.getCurrentScale()) + 1);
             }
 
             @Override
@@ -100,17 +100,22 @@ public class MazeView extends JFrame {
                 sizeX = mazeInfo.getSizeX();
                 sizeY = mazeInfo.getSizeY();
                 Graphics2D g2d = (Graphics2D) g.create();
-                //g2d.scale(escala, escala);
-                for(int i = 0; i < sizeX; i++) {
-                    cellD = controller.getCellDimension();
-                    g.setColor(Color.RED);
-                    g.fillRect(i * cellD.width,0, cellD.width, cellD.height);
+                g2d.scale(controller.getCurrentScale(), controller.getCurrentScale());
+                g2d.setColor(new Color(150, 50, 0));
+                g2d.fillRect(0, 0, cellD.width * sizeX, cellD.height * sizeY);
+                g2d.setColor(Color.WHITE);
+                final boolean[][] drawing = mazeInfo.getDrawingMatrix();
+                for(int i = 0; i < drawing.length; i++) {
+                    for(int j = 0; j < drawing[i].length; j++) {
+                        if(drawing[i][j]) {
+                            g2d.fillRect(i * cellD.width, j * cellD.width, cellD.width, cellD.height);
+                        }
+                    }
                 }
             }
         };
         return new JScrollPane(mazeBoard);
     }
-
     public JButton getIncreaseScale() {
         return increaseScale;
     }

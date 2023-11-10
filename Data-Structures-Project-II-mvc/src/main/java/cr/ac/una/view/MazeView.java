@@ -2,6 +2,7 @@ package cr.ac.una.view;
 
 import cr.ac.una.controller.Controller;
 import cr.ac.una.controller.MazeViewController;
+import cr.ac.una.model.DrawingPath;
 import cr.ac.una.model.ViewModel;
 
 import javax.swing.*;
@@ -84,7 +85,7 @@ public class MazeView extends JFrame {
 
     private JScrollPane getScrollPane(MazeViewController controller) {
         mazeBoard = new JPanel() {
-            private final Dimension cellD = new Dimension(16, 16);
+            private final Dimension cellD = mazeInfo.getCellDimensions();
             private int sizeX;
             private int sizeY;
             @Override
@@ -109,8 +110,19 @@ public class MazeView extends JFrame {
                 for(int i = 0; i < drawing.length; i++) {
                     for(int j = 0; j < drawing[i].length; j++) {
                         if(drawing[i][j]) {
-                            mazeInfo.getDrawingPath()[i][j] = new Rectangle(i * cellD.width, j * cellD.width, cellD.width, cellD.height);
                             g2d.fill(mazeInfo.getDrawingPath()[i][j]);
+                        }
+                    }
+                }
+                g2d.setColor(Color.BLACK);
+                final DrawingPath[][] drawingPath = mazeInfo.getDrawingPath();
+                for(int i = 0; i < drawingPath.length; i++) {
+                    for(int j = 0; j < drawingPath[i].length; j++) {
+                        if(drawingPath[i][j] != null) {
+                            if(drawingPath[i][j].isStart()){
+                                Rectangle r = (Rectangle) drawingPath[i][j];
+                                g2d.fillOval((int) r.getX(), (int) r.getY(), r.width, r.height);
+                            }
                         }
                     }
                 }

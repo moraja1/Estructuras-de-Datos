@@ -11,12 +11,13 @@ import java.util.List;
 public class ViewModel {
     private final MGraph maze;
     private final boolean[][] drawingMatrix;
-    private final Rectangle[][] drawingPath;
+    private final RectanglePaper[][] drawingPath;
+    private final Dimension cellD = new Dimension(16, 16);
 
     public ViewModel(MGraph maze) {
         this.maze = maze;
         drawingMatrix = new boolean[getSizeX()][getSizeY()];
-        drawingPath = new Rectangle[getSizeX()][getSizeY()];
+        drawingPath = new RectanglePaper[getSizeX()][getSizeY()];
         initializeMatrix();
     }
 
@@ -24,6 +25,7 @@ public class ViewModel {
         for(int i = 1; i < drawingMatrix.length; i += 2) {
             for(int j = 1; j < drawingMatrix[i].length; j += 2) {
                 drawingMatrix[i][j] = true;
+                drawingPath[i][j] = new RectanglePaper(i * cellD.width, j * cellD.width, cellD.width, cellD.height);
             }
         }
 
@@ -33,11 +35,17 @@ public class ViewModel {
                     int x = i / 2;
                     int y = j / 2;
                     drawingMatrix[i+1][j] = hasEdge(x, y, x + 1, y);
+                    if (drawingMatrix[i+1][j]) {
+                        drawingPath[i+1][j] = new RectanglePaper((i + 1) * cellD.width, j * cellD.width, cellD.width, cellD.height);
+                    }
                 }
                 if(j != getSizeY() - 2) {
                     int x = i / 2;
                     int y = j / 2;
                     drawingMatrix[i][j+1] = hasEdge(x, y, x, y + 1);
+                    if (drawingMatrix[i][j+1]) {
+                        drawingPath[i][j+1] = new RectanglePaper(i * cellD.width, (j + 1) * cellD.width, cellD.width, cellD.height);
+                    }
                 }
             }
         }
@@ -82,7 +90,11 @@ public class ViewModel {
         return drawingMatrix;
     }
 
-    public Rectangle[][] getDrawingPath() {
+    public RectanglePaper[][] getDrawingPath() {
         return drawingPath;
+    }
+
+    public Dimension getCellDimensions() {
+        return cellD;
     }
 }

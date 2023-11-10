@@ -19,20 +19,20 @@ public class ViewModel {
     }
 
     private void initializeMatrix() {
-        for(int i = 0; i < drawingMatrix.length; i += 2) {
-            for(int j = 0; j < drawingMatrix[i].length; j += 2) {
+        for(int i = 1; i < drawingMatrix.length; i += 2) {
+            for(int j = 1; j < drawingMatrix[i].length; j += 2) {
                 drawingMatrix[i][j] = true;
             }
         }
 
-        for(int i = 0; i < drawingMatrix.length - 1; i += 2) {
-            for(int j = 0; j < drawingMatrix[i].length; j += 2) {
-                if(i != getSizeX() - 1) {
+        for(int i = 1; i < drawingMatrix.length - 1; i += 2) {
+            for(int j = 1; j < drawingMatrix[i].length - 1; j += 2) {
+                if(i != getSizeX() - 2) {
                     int x = i / 2;
                     int y = j / 2;
                     drawingMatrix[i+1][j] = hasEdge(x, y, x + 1, y);
                 }
-                if(j != getSizeY() - 1) {
+                if(j != getSizeY() - 2) {
                     int x = i / 2;
                     int y = j / 2;
                     drawingMatrix[i][j+1] = hasEdge(x, y, x, y + 1);
@@ -42,11 +42,11 @@ public class ViewModel {
     }
 
     public int getSizeX() {
-        return maze.getSizeX() + maze.getSizeX() - 1;
+        return maze.getSizeX() + maze.getSizeX() + 1;
     }
 
     public int getSizeY() {
-        return maze.getSizeY() + maze.getSizeY() - 1;
+        return maze.getSizeY() + maze.getSizeY() + 1;
     }
 
     public String getName() {

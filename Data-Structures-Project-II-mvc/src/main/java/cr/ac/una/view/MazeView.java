@@ -90,8 +90,8 @@ public class MazeView extends JFrame {
             public Dimension getPreferredSize() {
                 sizeX = mazeInfo.getSizeX();
                 sizeY = mazeInfo.getSizeY();
-                return new Dimension((int) ((cellD.width * sizeX) * controller.getCurrentScale()) + 1,
-                        (int) ((cellD.height * sizeY) * controller.getCurrentScale()) + 1);
+                return new Dimension((int) ((cellD.width * sizeX) * controller.getCurrentScale()),
+                        (int) ((cellD.height * sizeY) * controller.getCurrentScale()));
             }
 
             @Override

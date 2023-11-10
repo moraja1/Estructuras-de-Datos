@@ -16,6 +16,7 @@ public class MazeView extends JFrame {
     private JButton increaseScale;
     private JButton reduceScale;
     private JScrollPane scrollPane;
+    private JPanel mazeBoard;
     public MazeView(ViewModel mazeInfo, Controller controller) {
         super(mazeInfo.getName());
         this.controller = (MazeViewController) controller;
@@ -82,7 +83,7 @@ public class MazeView extends JFrame {
     }
 
     private JScrollPane getScrollPane(MazeViewController controller) {
-        final JPanel mazeBoard = new JPanel() {
+        mazeBoard = new JPanel() {
             private final Dimension cellD = new Dimension(16, 16);
             private int sizeX;
             private int sizeY;
@@ -108,12 +109,14 @@ public class MazeView extends JFrame {
                 for(int i = 0; i < drawing.length; i++) {
                     for(int j = 0; j < drawing[i].length; j++) {
                         if(drawing[i][j]) {
-                            g2d.fillRect(i * cellD.width, j * cellD.width, cellD.width, cellD.height);
+                            mazeInfo.getDrawingPath()[i][j] = new Rectangle(i * cellD.width, j * cellD.width, cellD.width, cellD.height);
+                            g2d.fill(mazeInfo.getDrawingPath()[i][j]);
                         }
                     }
                 }
             }
         };
+
         return new JScrollPane(mazeBoard);
     }
     public JButton getIncreaseScale() {

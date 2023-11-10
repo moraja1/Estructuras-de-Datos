@@ -3,18 +3,20 @@ package cr.ac.una.model;
 import cr.ac.una.util.graphs.Edge;
 import cr.ac.una.util.graphs.MGraph;
 import cr.ac.una.util.graphs.VInfo;
-import cr.ac.una.util.graphs.Vertex;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ViewModel {
     private final MGraph maze;
     private final boolean[][] drawingMatrix;
+    private final Rectangle[][] drawingPath;
 
     public ViewModel(MGraph maze) {
         this.maze = maze;
         drawingMatrix = new boolean[getSizeX()][getSizeY()];
+        drawingPath = new Rectangle[getSizeX()][getSizeY()];
         initializeMatrix();
     }
 
@@ -78,5 +80,9 @@ public class ViewModel {
 
     public boolean[][] getDrawingMatrix() {
         return drawingMatrix;
+    }
+
+    public Rectangle[][] getDrawingPath() {
+        return drawingPath;
     }
 }

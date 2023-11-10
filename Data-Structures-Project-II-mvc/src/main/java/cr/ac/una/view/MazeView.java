@@ -116,7 +116,8 @@ public class MazeView extends JFrame {
                 }
             }
         };
-
+        mazeBoard.addMouseListener(controller);
+        mazeBoard.addMouseMotionListener(controller);
         return new JScrollPane(mazeBoard);
     }
     public JButton getIncreaseScale() {

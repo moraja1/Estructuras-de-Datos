@@ -6,9 +6,10 @@ import cr.ac.una.view.MazeView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.util.concurrent.ExecutorService;
 
-public class MazeViewController implements Controller {
+public class MazeViewController implements Controller, MouseMotionListener {
     private final MazeView window;
     public static final int BASE_WINDOW_WIDTH = 480;
     public static final int BASE_WINDOW_HEIGHT = 360;
@@ -63,4 +64,8 @@ public class MazeViewController implements Controller {
     public void mouseEntered(MouseEvent e) {}
     @Override
     public void mouseExited(MouseEvent e) {}
+    @Override
+    public void mouseDragged(MouseEvent e) {}
+    @Override
+    public void mouseMoved(MouseEvent e) {}
 }

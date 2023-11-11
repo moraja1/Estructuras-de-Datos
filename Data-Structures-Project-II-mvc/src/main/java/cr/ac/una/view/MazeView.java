@@ -12,11 +12,13 @@ import static cr.ac.una.controller.MazeViewController.*;
 public class MazeView extends JFrame {
     private final MazeViewController controller;
     private final ViewModel vm;
-    private JLabel scaleLabel;
-    private JButton increaseScale;
-    private JButton reduceScale;
-    private JScrollPane scrollPane;
-    private JPanel mazeBoard;
+    private final JLabel scaleLabel;
+    private final JButton increaseScale;
+    private final JButton reduceScale;
+    private final JButton solve;
+    private final JButton clear;
+    private final JScrollPane scrollPane;
+
     public MazeView(ViewModel vm, Controller controller) {
         super(vm.getName());
         this.controller = (MazeViewController) controller;
@@ -29,6 +31,8 @@ public class MazeView extends JFrame {
         scaleLabel = new JLabel();
         increaseScale = new JButton("+");
         reduceScale = new JButton("-");
+        solve = new JButton("Resolver");
+        clear = new JButton("Reiniciar");
 
         scrollPane = getScrollPane((MazeViewController) controller);
     }
@@ -38,6 +42,9 @@ public class MazeView extends JFrame {
         scaleLabel.setText(updateLabel());
         increaseScale.addMouseListener(controller);
         reduceScale.addMouseListener(controller);
+        solve.addMouseListener(controller);
+        clear.addMouseListener(controller);
+        clear.setFocusPainted(false);
         reduceScale.setFocusPainted(false);
         increaseScale.setFont(new Font("Arial", Font.PLAIN, 10));
         reduceScale.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -51,8 +58,13 @@ public class MazeView extends JFrame {
         reduceScale.setAlignmentX(Component.LEFT_ALIGNMENT);
         scaleLabel.setPreferredSize(new Dimension(50, 15));
         scaleLabel.setMaximumSize(new Dimension(50, 25));
+        solve.setFont(new Font("Arial", Font.PLAIN, 14));
+        solve.setMargin(new Insets(0,0,0,0));
+        solve.setFocusPainted(false);
+        clear.setFont(new Font("Arial", Font.PLAIN, 14));
+        clear.setMargin(new Insets(0,0,0,0));
 
-        //JPanel for JLabel and JButtons
+        //JPanel for JLabel and JButtons for Scale
         final JPanel southPanel = new JPanel();
         southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.X_AXIS));
         southPanel.setBorder(BorderFactory.createEmptyBorder(0,2,2,2));
@@ -62,7 +74,19 @@ public class MazeView extends JFrame {
         southPanel.add(Box.createHorizontalGlue());
         southPanel.add(increaseScale);
 
+        //JPanel for JButtons on top
+        final JPanel northPanel = new JPanel();
+        northPanel.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
+        northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
+        northPanel.add(Box.createHorizontalGlue());
+        northPanel.add(solve);
+        northPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+        northPanel.add(clear);
+
+
+
         //Add components
+        add(northPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
         add(southPanel, BorderLayout.SOUTH);
 
@@ -83,10 +107,11 @@ public class MazeView extends JFrame {
     }
 
     private JScrollPane getScrollPane(MazeViewController controller) {
-        mazeBoard = new JPanel() {
+        JPanel mazeBoard = new JPanel() {
             private final Dimension cellD = vm.getCellDimensions();
             private int sizeX;
             private int sizeY;
+
             @Override
             public Dimension getPreferredSize() {
                 sizeX = vm.getSizeX();
@@ -106,14 +131,14 @@ public class MazeView extends JFrame {
                 g2d.fillRect(0, 0, cellD.width * sizeX, cellD.height * sizeY);
                 g2d.setColor(Color.WHITE);
                 final boolean[][] drawing = vm.getDrawingMatrix();
-                for(int i = 0; i < drawing.length; i++) {
-                    for(int j = 0; j < drawing[i].length; j++) {
-                        if(drawing[i][j]) {
-                            if(vm.isStartPoint(new Point(i, j))) {
+                for (int i = 0; i < drawing.length; i++) {
+                    for (int j = 0; j < drawing[i].length; j++) {
+                        if (drawing[i][j]) {
+                            if (vm.isStartPoint(new Point(i, j))) {
                                 g2d.setColor(Color.RED);
-                            } else if(vm.isEndPoint(new Point(i, j))) {
+                            } else if (vm.isEndPoint(new Point(i, j))) {
                                 g2d.setColor(Color.GREEN);
-                            } else if(vm.isDrawnPoint(new Point(i, j))) {
+                            } else if (vm.isDrawnPoint(new Point(i, j))) {
                                 g2d.setColor(Color.BLACK);
                             }
                             g2d.fillRect(i * cellD.width, j * cellD.height,
@@ -134,5 +159,13 @@ public class MazeView extends JFrame {
 
     public JButton getReduceScale() {
         return reduceScale;
+    }
+
+    public JButton getSolve() {
+        return solve;
+    }
+
+    public JButton getClear() {
+        return clear;
     }
 }

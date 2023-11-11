@@ -3,6 +3,7 @@ package cr.ac.una.controller;
 import cr.ac.una.model.ViewModel;
 import cr.ac.una.view.MazeView;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -19,6 +20,7 @@ public class MazeViewController implements Controller, MouseMotionListener {
     private static final double MIN_SCALE = 0.125;
     private double currentScale;
     private final ExecutorService executor;
+    private boolean solved = false;
 
     public MazeViewController(ViewModel vm, ExecutorService executor) {
         this.window = new MazeView(vm, this);
@@ -41,9 +43,22 @@ public class MazeViewController implements Controller, MouseMotionListener {
                 if(currentScale > MIN_SCALE) {
                     currentScale = currentScale / 2;
                 }
+            } else if(e.getSource().equals(window.getSolve())) {
+                if(!solved) solveMaze();
+            } else if(e.getSource().equals(window.getClear())) {
+                vm.clearMaze();
+                solved = false;
             }
             window.updateWindow();
         });
+    }
+
+    private void solveMaze() {
+        vm.selectRandomStart();
+        vm.selectRandomEnd();
+        vm.solve();
+        solved = true;
+        window.revalidate();
     }
 
     public double getCurrentScale() {
@@ -57,9 +72,9 @@ public class MazeViewController implements Controller, MouseMotionListener {
             int yMouse = e.getY();
             int x = (int) (xMouse / vm.getCellDimensions().width * currentScale);
             int y = (int) (yMouse / vm.getCellDimensions().height * currentScale);
-            Point p = new Point(x, y);
-            vm.setAsStartPoint(p);
-            window.repaint();
+
+            System.out.println(x);
+            System.out.println(y);
         });
     }
     @Override

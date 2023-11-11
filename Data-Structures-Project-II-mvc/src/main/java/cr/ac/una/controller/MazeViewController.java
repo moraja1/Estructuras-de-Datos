@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutorService;
 
 public class MazeViewController implements Controller, MouseMotionListener {
     private final MazeView window;
+    private final ViewModel vm;
     public static final int BASE_WINDOW_WIDTH = 480;
     public static final int BASE_WINDOW_HEIGHT = 360;
     public static final double BASE_SCALE = 1;
@@ -21,17 +22,10 @@ public class MazeViewController implements Controller, MouseMotionListener {
 
     public MazeViewController(ViewModel vm, ExecutorService executor) {
         this.window = new MazeView(vm, this);
+        this.vm = vm;
         this.executor = executor;
         currentScale = BASE_SCALE;
         window.init();
-    }
-
-    public int getScaledHeight() {
-        return (int) (BASE_WINDOW_HEIGHT * currentScale / BASE_SCALE);
-    }
-
-    public int getScaledWidth() {
-        return (int) (BASE_WINDOW_WIDTH * currentScale / BASE_SCALE);
     }
 
     @Override
@@ -57,7 +51,17 @@ public class MazeViewController implements Controller, MouseMotionListener {
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {}
+    public void mousePressed(MouseEvent e) {
+        executor.execute(() -> {
+            int xMouse = e.getX();
+            int yMouse = e.getY();
+            int x = (int) (xMouse / vm.getCellDimensions().width * currentScale);
+            int y = (int) (yMouse / vm.getCellDimensions().height * currentScale);
+            Point p = new Point(x, y);
+            vm.setAsStartPoint(p);
+            window.repaint();
+        });
+    }
     @Override
     public void mouseReleased(MouseEvent e) {}
     @Override

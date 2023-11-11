@@ -2,7 +2,6 @@ package cr.ac.una.view;
 
 import cr.ac.una.controller.Controller;
 import cr.ac.una.controller.MazeViewController;
-import cr.ac.una.model.DrawingPath;
 import cr.ac.una.model.ViewModel;
 
 import javax.swing.*;
@@ -12,16 +11,16 @@ import static cr.ac.una.controller.MazeViewController.*;
 
 public class MazeView extends JFrame {
     private final MazeViewController controller;
-    private final ViewModel mazeInfo;
+    private final ViewModel vm;
     private JLabel scaleLabel;
     private JButton increaseScale;
     private JButton reduceScale;
     private JScrollPane scrollPane;
     private JPanel mazeBoard;
-    public MazeView(ViewModel mazeInfo, Controller controller) {
-        super(mazeInfo.getName());
+    public MazeView(ViewModel vm, Controller controller) {
+        super(vm.getName());
         this.controller = (MazeViewController) controller;
-        this.mazeInfo = mazeInfo;
+        this.vm = vm;
 
         setMinimumSize(new Dimension(BASE_WINDOW_WIDTH, BASE_WINDOW_HEIGHT));
         setLocationRelativeTo(null);
@@ -85,13 +84,13 @@ public class MazeView extends JFrame {
 
     private JScrollPane getScrollPane(MazeViewController controller) {
         mazeBoard = new JPanel() {
-            private final Dimension cellD = mazeInfo.getCellDimensions();
+            private final Dimension cellD = vm.getCellDimensions();
             private int sizeX;
             private int sizeY;
             @Override
             public Dimension getPreferredSize() {
-                sizeX = mazeInfo.getSizeX();
-                sizeY = mazeInfo.getSizeY();
+                sizeX = vm.getSizeX();
+                sizeY = vm.getSizeY();
                 return new Dimension((int) ((cellD.width * sizeX) * controller.getCurrentScale()),
                         (int) ((cellD.height * sizeY) * controller.getCurrentScale()));
             }
@@ -99,30 +98,27 @@ public class MazeView extends JFrame {
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
-                sizeX = mazeInfo.getSizeX();
-                sizeY = mazeInfo.getSizeY();
+                sizeX = vm.getSizeX();
+                sizeY = vm.getSizeY();
                 Graphics2D g2d = (Graphics2D) g.create();
                 g2d.scale(controller.getCurrentScale(), controller.getCurrentScale());
                 g2d.setColor(new Color(150, 50, 0));
                 g2d.fillRect(0, 0, cellD.width * sizeX, cellD.height * sizeY);
                 g2d.setColor(Color.WHITE);
-                final boolean[][] drawing = mazeInfo.getDrawingMatrix();
+                final boolean[][] drawing = vm.getDrawingMatrix();
                 for(int i = 0; i < drawing.length; i++) {
                     for(int j = 0; j < drawing[i].length; j++) {
                         if(drawing[i][j]) {
-                            g2d.fill(mazeInfo.getDrawingPath()[i][j]);
-                        }
-                    }
-                }
-                g2d.setColor(Color.BLACK);
-                final DrawingPath[][] drawingPath = mazeInfo.getDrawingPath();
-                for(int i = 0; i < drawingPath.length; i++) {
-                    for(int j = 0; j < drawingPath[i].length; j++) {
-                        if(drawingPath[i][j] != null) {
-                            if(drawingPath[i][j].isStart()){
-                                Rectangle r = (Rectangle) drawingPath[i][j];
-                                g2d.fillOval((int) r.getX(), (int) r.getY(), r.width, r.height);
+                            if(vm.isStartPoint(new Point(i, j))) {
+                                g2d.setColor(Color.RED);
+                            } else if(vm.isEndPoint(new Point(i, j))) {
+                                g2d.setColor(Color.GREEN);
+                            } else if(vm.isDrawnPoint(new Point(i, j))) {
+                                g2d.setColor(Color.BLACK);
                             }
+                            g2d.fillRect(i * cellD.width, j * cellD.height,
+                                    cellD.width, cellD.height);
+                            g2d.setColor(Color.WHITE);
                         }
                     }
                 }

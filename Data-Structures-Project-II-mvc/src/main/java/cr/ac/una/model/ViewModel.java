@@ -6,18 +6,18 @@ import cr.ac.una.util.graphs.VInfo;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ViewModel {
     private final MGraph maze;
     private final boolean[][] drawingMatrix;
-    private final RectanglePaper[][] drawingPath;
     private final Dimension cellD = new Dimension(16, 16);
+    private final HashMap<Point, CellState> cellStates = new HashMap<>();
 
     public ViewModel(MGraph maze) {
         this.maze = maze;
         drawingMatrix = new boolean[getSizeX()][getSizeY()];
-        drawingPath = new RectanglePaper[getSizeX()][getSizeY()];
         initializeMatrix();
     }
 
@@ -25,7 +25,7 @@ public class ViewModel {
         for(int i = 1; i < drawingMatrix.length; i += 2) {
             for(int j = 1; j < drawingMatrix[i].length; j += 2) {
                 drawingMatrix[i][j] = true;
-                drawingPath[i][j] = new RectanglePaper(i * cellD.width, j * cellD.width, cellD.width, cellD.height);
+                cellStates.put(new Point(i, j), CellState.UNDEFINED);
             }
         }
 
@@ -35,17 +35,13 @@ public class ViewModel {
                     int x = i / 2;
                     int y = j / 2;
                     drawingMatrix[i+1][j] = hasEdge(x, y, x + 1, y);
-                    if (drawingMatrix[i+1][j]) {
-                        drawingPath[i+1][j] = new RectanglePaper((i + 1) * cellD.width, j * cellD.width, cellD.width, cellD.height);
-                    }
+                    if(drawingMatrix[i+1][j]) cellStates.put(new Point(i+1, j), CellState.UNDEFINED);
                 }
                 if(j != getSizeY() - 2) {
                     int x = i / 2;
                     int y = j / 2;
                     drawingMatrix[i][j+1] = hasEdge(x, y, x, y + 1);
-                    if (drawingMatrix[i][j+1]) {
-                        drawingPath[i][j+1] = new RectanglePaper(i * cellD.width, (j + 1) * cellD.width, cellD.width, cellD.height);
-                    }
+                    if(drawingMatrix[i][j+1]) cellStates.put(new Point(i, j+1), CellState.UNDEFINED);
                 }
             }
         }
@@ -63,11 +59,7 @@ public class ViewModel {
         return maze.getLabel();
     }
 
-    public List<Edge<VInfo<Character>>> maze() {
-        return new ArrayList<>(maze.getMazeEdges());
-    }
-
-    public boolean hasEdge(int x, int y, int x1, int y1) {
+    private boolean hasEdge(int x, int y, int x1, int y1) {
         var vStart = maze.getVertex(x, y);
         var vEnd = maze.getVertex(x1, y1);
         List<Edge<VInfo<Character>>> vEdges = new ArrayList<>();
@@ -78,7 +70,8 @@ public class ViewModel {
         }
 
         for(var e : vEdges) {
-            if((e.getStart().equals(vStart) && e.getEnd().equals(vEnd)) || (e.getStart().equals(vEnd) && e.getEnd().equals(vStart))) {
+            if((e.getStart().equals(vStart) && e.getEnd().equals(vEnd)) ||
+                    (e.getStart().equals(vEnd) && e.getEnd().equals(vStart))) {
                 return true;
             }
         }
@@ -90,11 +83,37 @@ public class ViewModel {
         return drawingMatrix;
     }
 
-    public RectanglePaper[][] getDrawingPath() {
-        return drawingPath;
-    }
-
     public Dimension getCellDimensions() {
         return cellD;
+    }
+
+    public void setAsStartPoint(Point p) {
+        CellState c = cellStates.get(p);
+        if(c != null) cellStates.put(p, CellState.START);
+    }
+
+    public boolean isStartPoint(Point p) {
+        return verifiesCellState(p, CellState.START);
+    }
+
+    public boolean isEndPoint(Point p) {
+        return verifiesCellState(p, CellState.END);
+    }
+
+    public boolean isDrawnPoint(Point p) {
+        return verifiesCellState(p, CellState.DRAWN);
+    }
+
+    private boolean verifiesCellState(Point p, CellState c) {
+        CellState cs = cellStates.get(p);
+        if (cs != null) return cs.equals(c);
+        return false;
+    }
+
+    private enum CellState {
+        START,
+        END,
+        DRAWN,
+        UNDEFINED
     }
 }

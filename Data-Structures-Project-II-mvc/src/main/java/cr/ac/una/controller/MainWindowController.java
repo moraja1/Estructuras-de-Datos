@@ -22,8 +22,8 @@ public class MainWindowController implements Controller {
     private final MazeTableModel tableModel = new MazeTableModel();;
     private MazeConfigDialog mazeConfig;
     private final Set<MGraph> mazes;
-    private final ExecutorService executor = new ThreadPoolExecutor(0, 1, 0L,
-            TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(1));
+    private final ExecutorService executor = new ThreadPoolExecutor(0, 3, 0L,
+            TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(2));
 
     private final List<MazeViewController> mazeViewControllers;
     public MainWindowController() {

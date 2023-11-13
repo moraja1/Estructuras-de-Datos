@@ -89,7 +89,7 @@ public class MazeView extends JFrame {
         add(northPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
         add(southPanel, BorderLayout.SOUTH);
-
+        addWindowListener(controller);
         setVisible(true);
     }
 

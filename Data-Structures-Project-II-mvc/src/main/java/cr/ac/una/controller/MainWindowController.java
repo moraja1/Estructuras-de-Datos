@@ -6,6 +6,7 @@ import cr.ac.una.util.graphs.MGraph;
 import cr.ac.una.view.MainWindow;
 import cr.ac.una.view.MazeConfigDialog;
 
+import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -20,9 +21,9 @@ public class MainWindowController implements Controller {
     private MazeConfigDialog mazeConfig;
     private final Set<MGraph> mazes;
     private static final ExecutorService executor = new ThreadPoolExecutor(0, 2, 0L,
-            TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(2));
-
+            TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(1));
     private final List<MazeViewController> mazeViewControllers;
+
     public MainWindowController() {
         window = new MainWindow(this);
         mazes = tableModel.getMazes();
@@ -44,7 +45,14 @@ public class MainWindowController implements Controller {
     }
 
     public void bringWindowToFront(int selectedRow){
-        System.out.println("Bringing window to front");
+        String mazeName = (String) tableModel.getValueAt(selectedRow, 0);
+        var mGraph = tableModel.getMaze(mazeName);
+        for(var mazeVC : mazeViewControllers) {
+            if (mazeVC.ownsMaze(mGraph)) {
+                if(mazeVC.getWindow().isDisplayable()) mazeVC.getWindow().toFront();
+                else mazeVC.createWindow();
+            }
+        }
     }
 
     public void createNewMaze(){
@@ -72,8 +80,10 @@ public class MainWindowController implements Controller {
         MGraph newGraph = new MGraph(name, sizeX, sizeY);
         mazes.add(newGraph);
         tableModel.updateTable(mazes);
-        ViewModel vm = new ViewModel(newGraph);
-        mazeViewControllers.add(new MazeViewController(vm, executor));
+        SwingUtilities.invokeLater(() -> {
+            ViewModel vm = new ViewModel(newGraph);
+            mazeViewControllers.add(new MazeViewController(vm, executor));
+        });
     }
 
     public void saveProgramState() {

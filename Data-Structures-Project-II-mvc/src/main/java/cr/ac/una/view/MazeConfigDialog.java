@@ -26,8 +26,8 @@ public class MazeConfigDialog extends JDialog implements KeyListener {
 
 
         nameInput = new JTextField();
-        sizeXInput = new JTextField();
-        sizeYInput = new JTextField();
+        sizeXInput = new JTextField("4");
+        sizeYInput = new JTextField("4");
         sizeXInput.addKeyListener(this);
         sizeYInput.addKeyListener(this);
         sizeXInput.setMinimumSize(new Dimension(150, 20));

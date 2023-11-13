@@ -5,11 +5,12 @@ import cr.ac.una.util.graphs.MGraph;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 public class MazeTableModel extends AbstractTableModel {
-    private final Set<MGraph> mazes;
+    private final HashMap<String, MGraph> mazes;
     private Class[] classes = {String.class, LocalDate.class, Integer.class, Integer.class};
     private String[] columnNames = {"Nombre", "Fechas de Creación", "Filas", "Columnas"};
     private Object[][] data;
@@ -20,16 +21,18 @@ public class MazeTableModel extends AbstractTableModel {
     public MazeTableModel(Object[][] data) {
         if(data == null) this.data = new Object[1][columnNames.length];
         else this.data = data;
-        mazes = new HashSet<>();
+        mazes = new HashMap();
     }
     public void updateTable(Set<MGraph> mazes){
         //Update Mazes Set
-        this.mazes.addAll(mazes);
+        for(var m : mazes) {
+            this.mazes.put(m.getLabel(), m);
+        }
 
         //Convert mazes into data
         data = new Object[this.mazes.size()][getColumnCount()];
         int idx = 0;
-        for(var m : this.mazes) {
+        for(var m : mazes) {
             data[idx][0] = m.getLabel();
             data[idx][1] = m.getCreationDate();
             data[idx][2] = m.getSizeX();
@@ -43,7 +46,7 @@ public class MazeTableModel extends AbstractTableModel {
 
     public Set<MGraph> getMazes() {
         //Returns a copy
-        return new HashSet<>(mazes);
+        return new HashSet<>(mazes.values());
     }
 
     @Override
@@ -67,5 +70,9 @@ public class MazeTableModel extends AbstractTableModel {
 
     public Class<?> getColumnClass(int columnIndex) {
         return classes[columnIndex];
+    }
+
+    public MGraph getMaze(String key) {
+        return mazes.get(key);
     }
 }

@@ -9,20 +9,15 @@ import cr.ac.una.view.MazeView;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
-public class MazeViewController implements Controller, MouseMotionListener {
-    private final MazeView window;
+public class MazeViewController implements Controller, MouseMotionListener, WindowListener {
+    private MazeView window;
     private final ViewModel vm;
     public static final int BASE_WINDOW_WIDTH = 480;
     public static final int BASE_WINDOW_HEIGHT = 360;
@@ -31,13 +26,18 @@ public class MazeViewController implements Controller, MouseMotionListener {
     private static final double MIN_SCALE = 0.125;
     private double currentScale;
     private final ExecutorService executor;
+    private Future<?> futureTask;
     private boolean solved = false;
 
     public MazeViewController(ViewModel vm, ExecutorService executor) {
-        this.window = new MazeView(vm, this);
         this.vm = vm;
         this.executor = executor;
         currentScale = BASE_SCALE;
+        createWindow();
+    }
+
+    public void createWindow() {
+        this.window = new MazeView(vm, this);
         window.init();
     }
 
@@ -67,20 +67,21 @@ public class MazeViewController implements Controller, MouseMotionListener {
     private Point solve(Point startP, Point currentPoint, Point endP, List<Edge<VInfo<Character>>> lastClosed) {
         var maze = vm.getMaze();
         var mazeEdges = maze.getMazeEdges();
-
+        if (futureTask.isCancelled()) return null;
         //Obtengo el vertice actual
         assert currentPoint != null;
         assert endP != null;
         boolean isStartOrEnd = currentPoint.equals(startP) || currentPoint.equals(endP);
-        if(!isStartOrEnd) {
+        if (!isStartOrEnd) {
             vm.setAsDrawn(currentPoint);
             SwingUtilities.invokeLater(window::repaint);
             try {
                 Thread.sleep(10);
-            } catch (InterruptedException ignored) {}
+            } catch (InterruptedException ignored) {
+            }
         }
 
-        if(currentPoint.equals(endP)) {
+        if (currentPoint.equals(endP)) {
             return currentPoint;
         }
 
@@ -91,20 +92,21 @@ public class MazeViewController implements Controller, MouseMotionListener {
         //Creo listas abierta y cerrada
         List<Edge<VInfo<Character>>> openEdges = new ArrayList<>();
         List<Edge<VInfo<Character>>> closedEdges = new ArrayList<>();
-        for(var e : mazeEdges) {
-            if(e.getStart().equals(currentVertex) || e.getEnd().equals(currentVertex)) {
+        for (var e : mazeEdges) {
+            if (e.getStart().equals(currentVertex) || e.getEnd().equals(currentVertex)) {
                 openEdges.add(e);
             }
         }
         openEdges.removeAll(lastClosed);
 
         //Itero hasta que encuentre el vértice final de manera recursiva, si hay backtrace elimino la linea trazada
-        while(!openEdges.isEmpty()) {
+        while (!openEdges.isEmpty()) {
+            if (futureTask.isCancelled()) return null;
             //Obtengo el primer edge de la lista abierta y el siguiente vertice a revisar
             var edge = openEdges.remove(0);
             closedEdges.add(edge);
             Vertex<VInfo<Character>> nextVertex;
-            if(edge.getStart().equals(currentVertex)) nextVertex = edge.getEnd();
+            if (edge.getStart().equals(currentVertex)) nextVertex = edge.getEnd();
             else nextVertex = edge.getStart();
             int xNext = nextVertex.getInfo().getX();
             int yNext = nextVertex.getInfo().getY();
@@ -115,27 +117,34 @@ public class MazeViewController implements Controller, MouseMotionListener {
             SwingUtilities.invokeLater(window::repaint);
             try {
                 Thread.sleep(10);
-            } catch (InterruptedException ignored) {}
+            } catch (InterruptedException ignored) {
+            }
 
             //Paso el nuevo punto de manera recursiva
             var endPoint = solve(startP, new Point(xNext * 2 + 1, yNext * 2 + 1), endP, closedEdges);
-
-            if(endPoint.equals(endP)) {
-                return endPoint;
-            } else {
-                vm.setAsUndef(nextPoint);
-                SwingUtilities.invokeLater(window::repaint);
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException ignored) {}
+            if (endPoint == null) openEdges.clear();
+            else {
+                if (endPoint.equals(endP)) {
+                    return endPoint;
+                } else {
+                    vm.setAsUndef(nextPoint);
+                    SwingUtilities.invokeLater(window::repaint);
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException ignored) {
+                    }
+                }
             }
         }
-        if(!isStartOrEnd) vm.setAsUndef(currentPoint);
+        if (futureTask.isCancelled()) return null;
+        if (!isStartOrEnd) vm.setAsUndef(currentPoint);
         SwingUtilities.invokeLater(window::repaint);
         try {
             Thread.sleep(10);
-        } catch (InterruptedException ignored) {}
+        } catch (InterruptedException ignored) {
+        }
         return currentPoint;
+
     }
 
     private void selectRandom(ViewModel.CellState cellState) {
@@ -181,10 +190,18 @@ public class MazeViewController implements Controller, MouseMotionListener {
         return currentScale;
     }
 
+    public boolean ownsMaze(MGraph maze) {
+        return maze.equals(vm.getMaze());
+    }
+
+    public MazeView getWindow() {
+        return window;
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
         try{
-            executor.execute(() -> {
+            futureTask = executor.submit(() -> {
                 if(e.getSource().equals(window.getIncreaseScale())){
                     if(currentScale < MAX_SCALE) {
                         currentScale = currentScale * 2;
@@ -242,4 +259,20 @@ public class MazeViewController implements Controller, MouseMotionListener {
     public void mouseDragged(MouseEvent e) {}
     @Override
     public void mouseMoved(MouseEvent e) {}
+    @Override
+    public void windowOpened(WindowEvent e) {}
+    @Override
+    public void windowClosing(WindowEvent e) {}
+    @Override
+    public void windowClosed(WindowEvent e) {
+        if(futureTask != null) futureTask.cancel(true);
+    }
+    @Override
+    public void windowIconified(WindowEvent e) {}
+    @Override
+    public void windowDeiconified(WindowEvent e) {}
+    @Override
+    public void windowActivated(WindowEvent e) {}
+    @Override
+    public void windowDeactivated(WindowEvent e) {}
 }

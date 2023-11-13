@@ -132,10 +132,19 @@ public class ViewModel {
         cellStates.put(p, CellState.UNDEFINED);
     }
 
+    public void setAsReady(Point p){
+        cellStates.put(p, CellState.READY);
+    }
+
+    public boolean isPointReady(Point p) {
+        return verifiesCellState(p, CellState.READY);
+    }
+
     public enum CellState {
         START,
         END,
         DRAWN,
-        UNDEFINED
+        UNDEFINED,
+        READY
     }
 }

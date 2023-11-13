@@ -10,9 +10,8 @@ import cr.ac.una.view.MazeView;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
@@ -25,9 +24,11 @@ public class MazeViewController implements Controller, MouseMotionListener, Wind
     private static final double MAX_SCALE = 8;
     private static final double MIN_SCALE = 0.125;
     private double currentScale;
+    private boolean playing = false;
     private final ExecutorService executor;
     private Future<?> futureTask;
     private boolean solved = false;
+    private final HashMap<Point, List<Point>> drawnReady = new HashMap<>();
 
     public MazeViewController(ViewModel vm, ExecutorService executor) {
         this.vm = vm;
@@ -43,10 +44,14 @@ public class MazeViewController implements Controller, MouseMotionListener, Wind
 
     private void solveMaze() {
         solved = true;
-        selectRandom(ViewModel.CellState.START);
-        selectRandom(ViewModel.CellState.END);
+        placeStartEnd();
         solve();
         window.revalidate();
+    }
+
+    private void placeStartEnd() {
+        selectRandom(ViewModel.CellState.START);
+        selectRandom(ViewModel.CellState.END);
     }
 
     private void solve() {
@@ -155,13 +160,7 @@ public class MazeViewController implements Controller, MouseMotionListener, Wind
         var possibleStartEnd = vm.getPossibleStartEnd();
         var cellStates = vm.getCellStates();
 
-        if(possibleStartEnd.isEmpty()){
-            for (var k : cellStates.keySet()){
-                if(k.getX() == 1 || k.getX() == vm.getSizeX() - 2) {
-                    if(k.getY() % 2 == 1) possibleStartEnd.add(k);
-                }
-            }
-        }
+        verifyPossibleStartEnd(possibleStartEnd, cellStates);
 
         List<Point> selectedList = null;
         if(cellState.equals(ViewModel.CellState.START)) {
@@ -173,15 +172,72 @@ public class MazeViewController implements Controller, MouseMotionListener, Wind
                     .filter(n -> n.getX() == vm.getSizeX() - 2)
                     .collect(Collectors.toList());
         }
+        boolean changed = false;
+        for(var p : selectedList) {
+            if(cellStates.get(p).equals(cellState)) changed = true;
+        }
 
         final Random rdn = new Random();
-        boolean changed = false;
         while(!changed) {
             var point = selectedList.get(rdn.nextInt(selectedList.size()));
             var pointState = cellStates.get(point);
             if (pointState != cellState) {
                 cellStates.put(point, cellState);
                 changed = true;
+            }
+        }
+    }
+
+    private void startConfigToPlay() {
+        var possibleStartEnd = vm.getPossibleStartEnd();
+        var cellStates = vm.getCellStates();
+
+        verifyPossibleStartEnd(possibleStartEnd, cellStates);
+
+        possibleStartEnd = possibleStartEnd.stream()
+                .filter(n -> n.getX() == 1)
+                .collect(Collectors.toList());
+        
+        for(var p : possibleStartEnd) {
+            if(cellStates.get(p).equals(ViewModel.CellState.START)) {
+                setNeighboursReady(p);
+            }
+        }
+    }
+
+    private void setNeighboursReady(Point p) {
+        var mazeEdges = vm.getMaze().getMazeEdges();
+        var vertex = vm.getMaze().getVertex(p.x / 2, p.y / 2);
+        int xVer = p.x / 2;
+        int yVer = p.y / 2;
+        List<Point> readyList = new ArrayList<>();
+        for (var m : mazeEdges) {
+            Vertex<VInfo<Character>> end = null;
+            int xEnd = 0;
+            int yEnd = 0;
+            if(m.getStart().equals(vertex)) {
+                end = m.getEnd();
+            } else if(m.getEnd().equals(vertex)) {
+                end = m.getStart();
+            }
+            if (end != null) {
+                xEnd = end.getInfo().getX();
+                yEnd = end.getInfo().getY();
+                Point point = new Point(xEnd + xVer + 1, yEnd + yVer + 1);
+                vm.setAsReady(point);
+                readyList.add(point);
+                end = null;
+            }
+        }
+        drawnReady.put(p, readyList);
+    }
+
+    private void verifyPossibleStartEnd(List<Point> possibleStartEnd, HashMap<Point, ViewModel.CellState> cellStates) {
+        if(possibleStartEnd.isEmpty()){
+            for (var k : cellStates.keySet()){
+                if(k.getX() == 1 || k.getX() == vm.getSizeX() - 2) {
+                    if(k.getY() % 2 == 1) possibleStartEnd.add(k);
+                }
             }
         }
     }
@@ -217,6 +273,7 @@ public class MazeViewController implements Controller, MouseMotionListener, Wind
                             window.getSolve().setEnabled(false);
                             window.getClear().setVisible(false);
                             window.getSolve().setVisible(false);
+                            window.getInteractive().setVisible(false);
                         });
                         solveMaze();
                         SwingUtilities.invokeLater(() -> {
@@ -224,28 +281,43 @@ public class MazeViewController implements Controller, MouseMotionListener, Wind
                             window.getSolve().setEnabled(true);
                             window.getClear().setVisible(true);
                             window.getSolve().setVisible(true);
+                            window.getInteractive().setVisible(true);
                         });
                     }
                 } else if(e.getSource().equals(window.getClear())) {
                     vm.clearMaze();
                     solved = false;
+                } else if(e.getSource().equals(window.getInteractive())) {
+                    if(!playing) {
+                        playing = true;
+                        placeStartEnd();
+                        startConfigToPlay();
+                    }
                 }
                 window.updateWindow();
             });
         }catch (RejectedExecutionException ignored){}
     }
+
     @Override
     public void mousePressed(MouseEvent e) {
-        try{
-            executor.execute(() -> {
-                int xMouse = e.getX();
-                int yMouse = e.getY();
-                int x = (int) (xMouse / vm.getCellDimensions().width * currentScale);
-                int y = (int) (yMouse / vm.getCellDimensions().height * currentScale);
+        if(playing) {
+            try{
+                executor.execute(() -> {
+                    int xMouse = e.getX();
+                    int yMouse = e.getY();
+                    int x = (int) (xMouse / vm.getCellDimensions().width * currentScale);
+                    int y = (int) (yMouse / vm.getCellDimensions().height * currentScale);
+                    Point p = new Point(y, x);
+                    if(e.getButton() == MouseEvent.BUTTON1) {
+                        if (drawnReady.v)
+                    } else if(e.getButton() == MouseEvent.BUTTON3) {
+                        if (vm.isDrawnPoint(p)) vm.setAsUndef(p);
+                    }
 
-
-            });
-        } catch (RejectedExecutionException ignored) {}
+                });
+            } catch (RejectedExecutionException ignored) {}
+        }
     }
     @Override
     public void actionPerformed(ActionEvent e) {}

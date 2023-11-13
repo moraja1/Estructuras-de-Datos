@@ -17,6 +17,7 @@ public class MazeView extends JFrame {
     private final JButton reduceScale;
     private final JButton solve;
     private final JButton clear;
+    private final JButton interactive;
     private final JScrollPane scrollPane;
 
     public MazeView(ViewModel vm, Controller controller) {
@@ -33,6 +34,7 @@ public class MazeView extends JFrame {
         reduceScale = new JButton("-");
         solve = new JButton("Resolver");
         clear = new JButton("Reiniciar");
+        interactive = new JButton("Jugar!");
 
         scrollPane = getScrollPane((MazeViewController) controller);
     }
@@ -44,6 +46,7 @@ public class MazeView extends JFrame {
         reduceScale.addMouseListener(controller);
         solve.addMouseListener(controller);
         clear.addMouseListener(controller);
+        interactive.addMouseListener(controller);
         clear.setFocusPainted(false);
         reduceScale.setFocusPainted(false);
         increaseScale.setFont(new Font("Arial", Font.PLAIN, 10));
@@ -63,6 +66,9 @@ public class MazeView extends JFrame {
         solve.setFocusPainted(false);
         clear.setFont(new Font("Arial", Font.PLAIN, 14));
         clear.setMargin(new Insets(0,0,0,0));
+        interactive.setFocusPainted(false);
+        interactive.setFont(new Font("Arial", Font.PLAIN, 14));
+        interactive.setMargin(new Insets(0,0,0,0));
 
         //JPanel for JLabel and JButtons for Scale
         final JPanel southPanel = new JPanel();
@@ -82,7 +88,8 @@ public class MazeView extends JFrame {
         northPanel.add(solve);
         northPanel.add(Box.createRigidArea(new Dimension(10, 0)));
         northPanel.add(clear);
-
+        northPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+        northPanel.add(interactive);
 
 
         //Add components
@@ -167,5 +174,9 @@ public class MazeView extends JFrame {
 
     public JButton getClear() {
         return clear;
+    }
+
+    public JButton getInteractive() {
+        return interactive;
     }
 }

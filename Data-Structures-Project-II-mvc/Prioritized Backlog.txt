@@ -11,7 +11,7 @@ BACKLOG
 	- Implementación de clases de utilidad necesarias - "DONE"
 	- Creación de métodos de Serialización y Deserialización
 4. Procedimiento de solución automática del laberinto.
-	- Creación de Método de resolución automática - "WORKING"
+	- Creación de Método de resolución automática - "DONE"
 5. Implementación de menú de escala.
 	- Edición de la ventana para incluír los elementos de acción -"DONE"
 	- Metodos de eventos de los elementos de acción - "DONE"

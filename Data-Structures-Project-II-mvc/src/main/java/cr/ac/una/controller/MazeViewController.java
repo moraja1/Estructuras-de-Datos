@@ -1,14 +1,19 @@
 package cr.ac.una.controller;
 
 import cr.ac.una.model.ViewModel;
+import cr.ac.una.util.graphs.Edge;
+import cr.ac.una.util.graphs.VInfo;
+import cr.ac.una.util.graphs.Vertex;
 import cr.ac.una.view.MazeView;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
+import java.util.stream.Collectors;
 
 public class MazeViewController implements Controller, MouseMotionListener {
     private final MazeView window;
@@ -30,8 +35,75 @@ public class MazeViewController implements Controller, MouseMotionListener {
         window.init();
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {}
+    private void solveMaze() {
+        selectRandom(ViewModel.CellState.START);
+        selectRandom(ViewModel.CellState.END);
+        solve();
+        solved = true;
+        window.revalidate();
+    }
+
+    private void solve() {
+        var maze = vm.getMaze();
+        var mazeEdges = maze.getMazeEdges();
+        var cellStates = vm.getCellStates();
+
+        //Busco el punto de inicio
+        Point startP = null;
+        for(var p : cellStates.keySet()) {
+            if(cellStates.get(p).equals(ViewModel.CellState.START)) startP = p;
+        }
+
+        //Obtengo el vertice de inicio
+        assert startP != null;
+        int xVertex = startP.x / 2;
+        int yVertex = startP.y /2;
+        var startVertex = maze.getVertex(xVertex, yVertex);
+    }
+
+    private void selectRandom(ViewModel.CellState cellState) {
+        if(cellState != ViewModel.CellState.START && cellState != ViewModel.CellState.END) {
+            throw new IllegalArgumentException("This parameter should receive START or END only.");
+        }
+
+        var possibleStartEnd = vm.getPossibleStartEnd();
+        var cellStates = vm.getCellStates();
+
+        if(possibleStartEnd.isEmpty()){
+            for (var k : cellStates.keySet()){
+                if(k.getY() == 1 || k.getY() == vm.getSizeY() - 2) {
+                    possibleStartEnd.add(k);
+                }
+            }
+        }
+
+        List<Point> selectedList = null;
+        if(cellState.equals(ViewModel.CellState.START)) {
+            selectedList = possibleStartEnd.stream()
+                    .filter(n -> n.getY() == 1)
+                    .collect(Collectors.toList());
+        } else {
+            selectedList = possibleStartEnd.stream()
+                    .filter(n -> n.getY() == vm.getSizeY() - 2)
+                    .collect(Collectors.toList());
+        }
+
+        final Random rdn = new Random();
+        boolean changed = false;
+        while(!changed) {
+            var point = selectedList.get(rdn.nextInt(selectedList.size()));
+            var pointState = cellStates.get(point);
+            if (pointState != cellState) {
+                cellStates.put(point, cellState);
+                changed = true;
+            }
+        }
+    }
+
+    public double getCurrentScale() {
+        return currentScale;
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
         executor.execute(() -> {
@@ -52,19 +124,6 @@ public class MazeViewController implements Controller, MouseMotionListener {
             window.updateWindow();
         });
     }
-
-    private void solveMaze() {
-        vm.selectRandomStart();
-        vm.selectRandomEnd();
-        vm.solve();
-        solved = true;
-        window.revalidate();
-    }
-
-    public double getCurrentScale() {
-        return currentScale;
-    }
-
     @Override
     public void mousePressed(MouseEvent e) {
         executor.execute(() -> {
@@ -73,10 +132,15 @@ public class MazeViewController implements Controller, MouseMotionListener {
             int x = (int) (xMouse / vm.getCellDimensions().width * currentScale);
             int y = (int) (yMouse / vm.getCellDimensions().height * currentScale);
 
-            System.out.println(x);
-            System.out.println(y);
+            /*
+
+            Para usar el mouse para resolver
+
+             */
         });
     }
+    @Override
+    public void actionPerformed(ActionEvent e) {}
     @Override
     public void mouseReleased(MouseEvent e) {}
     @Override

@@ -135,9 +135,9 @@ public class MazeView extends JFrame {
                     for (int j = 0; j < drawing[i].length; j++) {
                         if (drawing[i][j]) {
                             if (vm.isStartPoint(new Point(i, j))) {
-                                g2d.setColor(Color.RED);
-                            } else if (vm.isEndPoint(new Point(i, j))) {
                                 g2d.setColor(Color.GREEN);
+                            } else if (vm.isEndPoint(new Point(i, j))) {
+                                g2d.setColor(Color.RED);
                             } else if (vm.isDrawnPoint(new Point(i, j))) {
                                 g2d.setColor(Color.BLACK);
                             }

@@ -3,13 +3,12 @@ package cr.ac.una.model;
 import cr.ac.una.util.graphs.Edge;
 import cr.ac.una.util.graphs.MGraph;
 import cr.ac.una.util.graphs.VInfo;
+import cr.ac.una.util.graphs.Vertex;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 public class ViewModel {
     private final MGraph maze;
@@ -89,22 +88,6 @@ public class ViewModel {
     public Dimension getCellDimensions() {
         return cellD;
     }
-
-    public void setAsStartPoint(Point p) {
-        CellState c = cellStates.get(p);
-        if(c != null) cellStates.put(p, CellState.START);
-    }
-
-    public void setAsEndPoint(Point p) {
-        CellState c = cellStates.get(p);
-        if(c != null) cellStates.put(p, CellState.END);
-    }
-
-    public void setAsDrawnPoint(Point p) {
-        CellState c = cellStates.get(p);
-        if(c != null) cellStates.put(p, CellState.DRAWN);
-    }
-
     public boolean isStartPoint(Point p) {
         return verifiesCellState(p, CellState.START);
     }
@@ -123,63 +106,23 @@ public class ViewModel {
         return false;
     }
 
-    public void selectRandomStart() {
-        selectRandom(CellState.START);
-    }
-
-    private void selectRandom(CellState cellState) {
-        if(cellState != CellState.START && cellState != CellState.END) {
-            throw new IllegalArgumentException("This parameter should receive START or END only.");
-        }
-        if(possibleStartEnd.isEmpty()){
-            for (var k : cellStates.keySet()){
-                if(k.getY() == 1 || k.getY() == getSizeY() - 2) {
-                    possibleStartEnd.add(k);
-                }
-            }
-        }
-
-        List<Point> selectedList = null;
-        if(cellState.equals(CellState.START)) {
-            selectedList = possibleStartEnd.stream()
-                    .filter(n -> n.getY() == 1)
-                    .collect(Collectors.toList());
-        } else {
-            selectedList = possibleStartEnd.stream()
-                    .filter(n -> n.getY() == getSizeY() - 2)
-                    .collect(Collectors.toList());
-        }
-
-        final Random rdn = new Random();
-        boolean changed = false;
-        while(!changed) {
-            var point = selectedList.get(rdn.nextInt(selectedList.size()));
-            var pointState = cellStates.get(point);
-            if (pointState != cellState) {
-                cellStates.put(point, cellState);
-                changed = true;
-            }
-        }
-
-    }
-
-    public void selectRandomEnd() {
-        selectRandom(CellState.END);
-    }
-
     public void clearMaze(){
         cellStates.replaceAll((k, v) -> CellState.UNDEFINED);
     }
 
-    public void solve() {
-        /*
-
-        Solving maze
-
-         */
+    public List<Point> getPossibleStartEnd() {
+        return possibleStartEnd;
     }
 
-    private enum CellState {
+    public HashMap<Point, CellState> getCellStates() {
+        return cellStates;
+    }
+
+    public MGraph getMaze() {
+        return maze;
+    }
+
+    public enum CellState {
         START,
         END,
         DRAWN,

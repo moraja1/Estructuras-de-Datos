@@ -2,14 +2,15 @@ package cr.ac.una.controller;
 
 import cr.ac.una.model.ViewModel;
 import cr.ac.una.util.graphs.Edge;
+import cr.ac.una.util.graphs.MGraph;
 import cr.ac.una.util.graphs.VInfo;
-import cr.ac.una.util.graphs.Vertex;
 import cr.ac.una.view.MazeView;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -48,23 +49,40 @@ public class MazeViewController implements Controller, MouseMotionListener {
         var mazeEdges = maze.getMazeEdges();
         var cellStates = vm.getCellStates();
 
-        //Busco el punto de inicio
+        //Busco el punto de inicio y el punto final
         Point startP = null;
+        Point endP = null;
         for(var p : cellStates.keySet()) {
             if(cellStates.get(p).equals(ViewModel.CellState.START)) startP = p;
+            if(cellStates.get(p).equals(ViewModel.CellState.END)) endP = p;
+            if(startP != null && endP != null) break;
         }
 
-        //Obtengo el vertice de inicio
-        assert startP != null;
-        int xVertex = startP.x / 2;
-        int yVertex = startP.y /2;
-        var startVertex = maze.getVertex(xVertex, yVertex);
+        List<Edge<VInfo<Character>>> solution = solve(startP, endP, mazeEdges, maze);
+    }
 
-        /*
+    private List<Edge<VInfo<Character>>> solve(Point currentPoint, Point endP, List<Edge<VInfo<Character>>> mazeEdges, MGraph maze) {
+        //Obtengo el vertice actual
+        assert currentPoint != null;
+        assert endP != null;
+        List<Edge<VInfo<Character>>> solution = new ArrayList<>();
 
-        CONTINUES
+        int xVertex = currentPoint.x / 2;
+        int yVertex = currentPoint.y / 2;
+        var currentVertex = maze.getVertex(xVertex, yVertex);
+        List<Edge<VInfo<Character>>> openEdges = new ArrayList<>();
+        List<Edge<VInfo<Character>>> closedEdges = new ArrayList<>();
+        System.out.println(currentVertex);
+        System.out.println(mazeEdges);
 
-         */
+        for(var e : mazeEdges) {
+            if(e.getStart().equals(currentVertex) || e.getEnd().equals(currentVertex)) {
+                openEdges.add(e);
+            }
+        }
+
+        System.out.println(openEdges);
+        return mazeEdges;
     }
 
     private void selectRandom(ViewModel.CellState cellState) {
@@ -77,7 +95,7 @@ public class MazeViewController implements Controller, MouseMotionListener {
 
         if(possibleStartEnd.isEmpty()){
             for (var k : cellStates.keySet()){
-                if(k.getY() == 1 || k.getY() == vm.getSizeY() - 2) {
+                if(k.getX() == 1 || k.getX() == vm.getSizeX() - 2) {
                     possibleStartEnd.add(k);
                 }
             }
@@ -86,11 +104,11 @@ public class MazeViewController implements Controller, MouseMotionListener {
         List<Point> selectedList = null;
         if(cellState.equals(ViewModel.CellState.START)) {
             selectedList = possibleStartEnd.stream()
-                    .filter(n -> n.getY() == 1)
+                    .filter(n -> n.getX() == 1)
                     .collect(Collectors.toList());
         } else {
             selectedList = possibleStartEnd.stream()
-                    .filter(n -> n.getY() == vm.getSizeY() - 2)
+                    .filter(n -> n.getX() == vm.getSizeX() - 2)
                     .collect(Collectors.toList());
         }
 

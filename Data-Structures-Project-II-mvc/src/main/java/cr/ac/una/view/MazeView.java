@@ -141,10 +141,10 @@ public class MazeView extends JFrame {
                             } else if (vm.isDrawnPoint(new Point(i, j))) {
                                 g2d.setColor(Color.BLACK);
                             }
-                            g2d.fillRect(i * cellD.width, j * cellD.height,
+                            g2d.fillRect(j * cellD.width, i * cellD.height,
                                     cellD.width, cellD.height);
-                            g2d.setColor(Color.WHITE);
                         }
+                        g2d.setColor(Color.WHITE);
                     }
                 }
             }

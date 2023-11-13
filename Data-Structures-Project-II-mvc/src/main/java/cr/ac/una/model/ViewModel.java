@@ -64,6 +64,8 @@ public class ViewModel {
     private boolean hasEdge(int x, int y, int x1, int y1) {
         var vStart = maze.getVertex(x, y);
         var vEnd = maze.getVertex(x1, y1);
+        var mazeE = maze.getMazeEdges();
+
         List<Edge<VInfo<Character>>> vEdges = new ArrayList<>();
         for(var e : maze.getMazeEdges()) {
             if(e.getStart().equals(vStart) || e.getStart().equals(vEnd)) {

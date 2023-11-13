@@ -59,6 +59,12 @@ public class MazeViewController implements Controller, MouseMotionListener {
         int xVertex = startP.x / 2;
         int yVertex = startP.y /2;
         var startVertex = maze.getVertex(xVertex, yVertex);
+
+        /*
+
+        CONTINUES
+
+         */
     }
 
     private void selectRandom(ViewModel.CellState cellState) {

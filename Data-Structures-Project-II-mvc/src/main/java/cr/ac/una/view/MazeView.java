@@ -128,7 +128,7 @@ public class MazeView extends JFrame {
                 Graphics2D g2d = (Graphics2D) g.create();
                 g2d.scale(controller.getCurrentScale(), controller.getCurrentScale());
                 g2d.setColor(new Color(150, 50, 0));
-                g2d.fillRect(0, 0, cellD.width * sizeX, cellD.height * sizeY);
+                g2d.fillRect(0, 0, cellD.height * sizeY, cellD.width * sizeX);
                 g2d.setColor(Color.WHITE);
                 final boolean[][] drawing = vm.getDrawingMatrix();
                 for (int i = 0; i < drawing.length; i++) {

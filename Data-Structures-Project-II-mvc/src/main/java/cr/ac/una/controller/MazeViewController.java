@@ -4,8 +4,10 @@ import cr.ac.una.model.ViewModel;
 import cr.ac.una.util.graphs.Edge;
 import cr.ac.una.util.graphs.MGraph;
 import cr.ac.una.util.graphs.VInfo;
+import cr.ac.una.util.graphs.Vertex;
 import cr.ac.una.view.MazeView;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -14,6 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class MazeViewController implements Controller, MouseMotionListener {
@@ -37,16 +42,15 @@ public class MazeViewController implements Controller, MouseMotionListener {
     }
 
     private void solveMaze() {
+        solved = true;
         selectRandom(ViewModel.CellState.START);
         selectRandom(ViewModel.CellState.END);
         solve();
-        solved = true;
         window.revalidate();
     }
 
     private void solve() {
         var maze = vm.getMaze();
-        var mazeEdges = maze.getMazeEdges();
         var cellStates = vm.getCellStates();
 
         //Busco el punto de inicio y el punto final
@@ -57,32 +61,81 @@ public class MazeViewController implements Controller, MouseMotionListener {
             if(cellStates.get(p).equals(ViewModel.CellState.END)) endP = p;
             if(startP != null && endP != null) break;
         }
-
-        List<Edge<VInfo<Character>>> solution = solve(startP, endP, mazeEdges, maze);
+        solve(startP, startP, endP, new ArrayList<>());
     }
 
-    private List<Edge<VInfo<Character>>> solve(Point currentPoint, Point endP, List<Edge<VInfo<Character>>> mazeEdges, MGraph maze) {
+    private Point solve(Point startP, Point currentPoint, Point endP, List<Edge<VInfo<Character>>> lastClosed) {
+        var maze = vm.getMaze();
+        var mazeEdges = maze.getMazeEdges();
+
         //Obtengo el vertice actual
         assert currentPoint != null;
         assert endP != null;
-        List<Edge<VInfo<Character>>> solution = new ArrayList<>();
+        boolean isStartOrEnd = currentPoint.equals(startP) || currentPoint.equals(endP);
+        if(!isStartOrEnd) {
+            vm.setAsDrawn(currentPoint);
+            SwingUtilities.invokeLater(window::repaint);
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException ignored) {}
+        }
 
-        int xVertex = currentPoint.x / 2;
-        int yVertex = currentPoint.y / 2;
-        var currentVertex = maze.getVertex(xVertex, yVertex);
+        if(currentPoint.equals(endP)) {
+            return currentPoint;
+        }
+
+        int xCurrent = currentPoint.x / 2;
+        int yCurrent = currentPoint.y / 2;
+        var currentVertex = maze.getVertex(xCurrent, yCurrent);
+
+        //Creo listas abierta y cerrada
         List<Edge<VInfo<Character>>> openEdges = new ArrayList<>();
         List<Edge<VInfo<Character>>> closedEdges = new ArrayList<>();
-        System.out.println(currentVertex);
-        System.out.println(mazeEdges);
-
         for(var e : mazeEdges) {
             if(e.getStart().equals(currentVertex) || e.getEnd().equals(currentVertex)) {
                 openEdges.add(e);
             }
         }
+        openEdges.removeAll(lastClosed);
 
-        System.out.println(openEdges);
-        return mazeEdges;
+        //Itero hasta que encuentre el vértice final de manera recursiva, si hay backtrace elimino la linea trazada
+        while(!openEdges.isEmpty()) {
+            //Obtengo el primer edge de la lista abierta y el siguiente vertice a revisar
+            var edge = openEdges.remove(0);
+            closedEdges.add(edge);
+            Vertex<VInfo<Character>> nextVertex;
+            if(edge.getStart().equals(currentVertex)) nextVertex = edge.getEnd();
+            else nextVertex = edge.getStart();
+            int xNext = nextVertex.getInfo().getX();
+            int yNext = nextVertex.getInfo().getY();
+
+            //Dibujo el edge que conecta los dos vertices
+            Point nextPoint = new Point(xCurrent + 1 + xNext, yCurrent + 1 + yNext);
+            vm.setAsDrawn(nextPoint);
+            SwingUtilities.invokeLater(window::repaint);
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException ignored) {}
+
+            //Paso el nuevo punto de manera recursiva
+            var endPoint = solve(startP, new Point(xNext * 2 + 1, yNext * 2 + 1), endP, closedEdges);
+
+            if(endPoint.equals(endP)) {
+                return endPoint;
+            } else {
+                vm.setAsUndef(nextPoint);
+                SwingUtilities.invokeLater(window::repaint);
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException ignored) {}
+            }
+        }
+        if(!isStartOrEnd) vm.setAsUndef(currentPoint);
+        SwingUtilities.invokeLater(window::repaint);
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException ignored) {}
+        return currentPoint;
     }
 
     private void selectRandom(ViewModel.CellState cellState) {
@@ -96,7 +149,7 @@ public class MazeViewController implements Controller, MouseMotionListener {
         if(possibleStartEnd.isEmpty()){
             for (var k : cellStates.keySet()){
                 if(k.getX() == 1 || k.getX() == vm.getSizeX() - 2) {
-                    possibleStartEnd.add(k);
+                    if(k.getY() % 2 == 1) possibleStartEnd.add(k);
                 }
             }
         }
@@ -130,38 +183,52 @@ public class MazeViewController implements Controller, MouseMotionListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        executor.execute(() -> {
-            if(e.getSource().equals(window.getIncreaseScale())){
-                if(currentScale < MAX_SCALE) {
-                    currentScale = currentScale * 2;
+        try{
+            executor.execute(() -> {
+                if(e.getSource().equals(window.getIncreaseScale())){
+                    if(currentScale < MAX_SCALE) {
+                        currentScale = currentScale * 2;
+                    }
+                } else if(e.getSource().equals(window.getReduceScale())) {
+                    if(currentScale > MIN_SCALE) {
+                        currentScale = currentScale / 2;
+                    }
+                } else if(e.getSource().equals(window.getSolve())) {
+                    if(!solved) {
+                        SwingUtilities.invokeLater(() -> {
+                            window.getClear().setEnabled(false);
+                            window.getSolve().setEnabled(false);
+                            window.getClear().setVisible(false);
+                            window.getSolve().setVisible(false);
+                        });
+                        solveMaze();
+                        SwingUtilities.invokeLater(() -> {
+                            window.getClear().setEnabled(true);
+                            window.getSolve().setEnabled(true);
+                            window.getClear().setVisible(true);
+                            window.getSolve().setVisible(true);
+                        });
+                    }
+                } else if(e.getSource().equals(window.getClear())) {
+                    vm.clearMaze();
+                    solved = false;
                 }
-            } else if(e.getSource().equals(window.getReduceScale())) {
-                if(currentScale > MIN_SCALE) {
-                    currentScale = currentScale / 2;
-                }
-            } else if(e.getSource().equals(window.getSolve())) {
-                if(!solved) solveMaze();
-            } else if(e.getSource().equals(window.getClear())) {
-                vm.clearMaze();
-                solved = false;
-            }
-            window.updateWindow();
-        });
+                window.updateWindow();
+            });
+        }catch (RejectedExecutionException ignored){}
     }
     @Override
     public void mousePressed(MouseEvent e) {
-        executor.execute(() -> {
-            int xMouse = e.getX();
-            int yMouse = e.getY();
-            int x = (int) (xMouse / vm.getCellDimensions().width * currentScale);
-            int y = (int) (yMouse / vm.getCellDimensions().height * currentScale);
+        try{
+            executor.execute(() -> {
+                int xMouse = e.getX();
+                int yMouse = e.getY();
+                int x = (int) (xMouse / vm.getCellDimensions().width * currentScale);
+                int y = (int) (yMouse / vm.getCellDimensions().height * currentScale);
 
-            /*
 
-            Para usar el mouse para resolver
-
-             */
-        });
+            });
+        } catch (RejectedExecutionException ignored) {}
     }
     @Override
     public void actionPerformed(ActionEvent e) {}

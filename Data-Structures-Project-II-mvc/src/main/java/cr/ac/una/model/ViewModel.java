@@ -124,6 +124,14 @@ public class ViewModel {
         return maze;
     }
 
+    public void setAsDrawn(Point p) {
+        cellStates.put(p, CellState.DRAWN);
+    }
+
+    public void setAsUndef(Point p) {
+        cellStates.put(p, CellState.UNDEFINED);
+    }
+
     public enum CellState {
         START,
         END,

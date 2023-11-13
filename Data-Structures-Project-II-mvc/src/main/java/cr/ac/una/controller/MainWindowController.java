@@ -12,17 +12,14 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class MainWindowController implements Controller {
     private final MainWindow window;
     private final MazeTableModel tableModel = new MazeTableModel();;
     private MazeConfigDialog mazeConfig;
     private final Set<MGraph> mazes;
-    private final ExecutorService executor = new ThreadPoolExecutor(0, 3, 0L,
+    private static final ExecutorService executor = new ThreadPoolExecutor(0, 2, 0L,
             TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(2));
 
     private final List<MazeViewController> mazeViewControllers;
@@ -89,26 +86,30 @@ public class MainWindowController implements Controller {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        executor.execute(() -> {
-            if(e.getSource().equals(window.getTable())) {
-                if(e.getClickCount() == 2) bringWindowToFront(window.getTable().getSelectedRow());
-            } else if(e.getSource().equals(window.getButton())) {
-                createNewMaze();
-            }
-        });
+        try {
+            executor.execute(() -> {
+                if(e.getSource().equals(window.getTable())) {
+                    if(e.getClickCount() == 2) bringWindowToFront(window.getTable().getSelectedRow());
+                } else if(e.getSource().equals(window.getButton())) {
+                    createNewMaze();
+                }
+            });
+        } catch (RejectedExecutionException ignored) {}
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        executor.execute(() -> {
-            if(e.getSource().equals(window.getNewItem())) {
-                createNewMaze();
-            } else if(e.getSource().equals(window.getOpenItem())) {
-                openMazesFile();
-            } else if(e.getSource().equals(window.getSaveItem())) {
-                saveProgramState();
-            }
-        });
+        try {
+            executor.execute(() -> {
+                if(e.getSource().equals(window.getNewItem())) {
+                    createNewMaze();
+                } else if(e.getSource().equals(window.getOpenItem())) {
+                    openMazesFile();
+                } else if(e.getSource().equals(window.getSaveItem())) {
+                    saveProgramState();
+                }
+            });
+        } catch (RejectedExecutionException ignored) {}
     }
 
     @Override

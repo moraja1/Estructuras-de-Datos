@@ -136,8 +136,12 @@ public class ViewModel {
         cellStates.put(p, CellState.READY);
     }
 
-    public boolean isPointReady(Point p) {
+    public boolean isReadyPoint(Point p) {
         return verifiesCellState(p, CellState.READY);
+    }
+
+    public boolean isUndefPoint(Point p){
+        return  verifiesCellState(p, CellState.UNDEFINED);
     }
 
     public enum CellState {

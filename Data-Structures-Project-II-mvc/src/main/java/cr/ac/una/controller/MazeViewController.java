@@ -201,34 +201,19 @@ public class MazeViewController implements Controller, MouseMotionListener, Wind
         for(var p : possibleStartEnd) {
             if(cellStates.get(p).equals(ViewModel.CellState.START)) {
                 setNeighboursReady(p);
+                break;
             }
         }
     }
 
     private void setNeighboursReady(Point p) {
-        var mazeEdges = vm.getMaze().getMazeEdges();
-        var vertex = vm.getMaze().getVertex(p.x / 2, p.y / 2);
-        int xVer = p.x / 2;
-        int yVer = p.y / 2;
+        int xP = p.x;
+        int yP = p.y;
         List<Point> readyList = new ArrayList<>();
-        for (var m : mazeEdges) {
-            Vertex<VInfo<Character>> end = null;
-            int xEnd = 0;
-            int yEnd = 0;
-            if(m.getStart().equals(vertex)) {
-                end = m.getEnd();
-            } else if(m.getEnd().equals(vertex)) {
-                end = m.getStart();
-            }
-            if (end != null) {
-                xEnd = end.getInfo().getX();
-                yEnd = end.getInfo().getY();
-                Point point = new Point(xEnd + xVer + 1, yEnd + yVer + 1);
-                vm.setAsReady(point);
-                readyList.add(point);
-                end = null;
-            }
-        }
+        if(vm.isUndefPoint(new Point(xP + 1, yP))) readyList.add(new Point(xP + 1, yP));
+        if(vm.isUndefPoint(new Point(xP - 1, yP))) readyList.add(new Point(xP - 1, yP));
+        if(vm.isUndefPoint(new Point(xP, yP + 1))) readyList.add(new Point(xP, yP + 1));
+        if(vm.isUndefPoint(new Point(xP, yP - 1))) readyList.add(new Point(xP, yP - 1));
         drawnReady.put(p, readyList);
     }
 
@@ -287,6 +272,7 @@ public class MazeViewController implements Controller, MouseMotionListener, Wind
                 } else if(e.getSource().equals(window.getClear())) {
                     vm.clearMaze();
                     solved = false;
+                    playing = false;
                 } else if(e.getSource().equals(window.getInteractive())) {
                     if(!playing) {
                         playing = true;
@@ -304,19 +290,37 @@ public class MazeViewController implements Controller, MouseMotionListener, Wind
         if(playing) {
             try{
                 executor.execute(() -> {
-                    int xMouse = e.getX();
-                    int yMouse = e.getY();
-                    int x = (int) (xMouse / vm.getCellDimensions().width * currentScale);
-                    int y = (int) (yMouse / vm.getCellDimensions().height * currentScale);
-                    Point p = new Point(y, x);
                     if(e.getButton() == MouseEvent.BUTTON1) {
-                        if (drawnReady.v)
-                    } else if(e.getButton() == MouseEvent.BUTTON3) {
-                        if (vm.isDrawnPoint(p)) vm.setAsUndef(p);
+                        processDrawn(e);
                     }
-
                 });
             } catch (RejectedExecutionException ignored) {}
+        }
+    }
+
+    private void processDrawn(MouseEvent e) {
+        int xMouse = e.getX();
+        int yMouse = e.getY();
+        int x = (int) (xMouse / vm.getCellDimensions().width * currentScale);
+        int y = (int) (yMouse / vm.getCellDimensions().height * currentScale);
+        Point p = new Point(y, x);
+        if(!vm.isStartPoint(p) & !vm.isEndPoint(p)) {
+            boolean isReady = false;
+            for(var l : drawnReady.values()) {
+                if (l.contains(p)) {
+                    isReady = true;
+                    l.remove(p);
+                    break;
+                }
+            }
+
+            if(isReady) {
+                vm.setAsDrawn(p);
+                SwingUtilities.invokeLater(window::repaint);
+                setNeighboursReady(p);
+            }
+        } else {
+            if(vm.isEndPoint(p)) playing = false;
         }
     }
     @Override
@@ -328,7 +332,11 @@ public class MazeViewController implements Controller, MouseMotionListener, Wind
     @Override
     public void mouseExited(MouseEvent e) {}
     @Override
-    public void mouseDragged(MouseEvent e) {}
+    public void mouseDragged(MouseEvent e) {
+        if(playing) {
+            processDrawn(e);
+        }
+    }
     @Override
     public void mouseMoved(MouseEvent e) {}
     @Override

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<listaempleados>
+  <empleado>
+    <id>118090020</id>
+    <name>Isaac Méndez</name>
+    <telefono>70561756</telefono>
+    <departamento>Sabana</departamento>
+    <zonaje>3.2</zonaje>
+    <salariobase>180600.0</salariobase>
+    <salariototal>186379.2</salariototal>
+  </empleado>
+  <empleado>
+    <id>603790746</id>
+    <name>Manfred Fernandez</name>
+    <telefono>70351816</telefono>
+    <departamento>Liberia</departamento>
+    <zonaje>2.0</zonaje>
+    <salariobase>196860.0</salariobase>
+    <salariototal>200797.2</salariototal>
+  </empleado>
+</listaempleados>

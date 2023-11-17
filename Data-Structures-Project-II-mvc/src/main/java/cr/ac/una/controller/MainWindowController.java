@@ -3,6 +3,7 @@ package cr.ac.una.controller;
 import cr.ac.una.model.MazeTableModel;
 import cr.ac.una.model.ViewModel;
 import cr.ac.una.util.graphs.MGraph;
+import cr.ac.una.util.service.xml.XMLDom;
 import cr.ac.una.view.MainWindow;
 import cr.ac.una.view.MazeConfigDialog;
 
@@ -11,6 +12,7 @@ import javax.swing.table.TableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.*;
@@ -19,7 +21,7 @@ public class MainWindowController implements Controller {
     private final MainWindow window;
     private final MazeTableModel tableModel = new MazeTableModel();;
     private MazeConfigDialog mazeConfig;
-    private final Set<MGraph> mazes;
+    private Set<MGraph> mazes;
     private static final ExecutorService executor = new ThreadPoolExecutor(0, 2, 0L,
             TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(1));
     private final List<MazeViewController> mazeViewControllers;
@@ -28,16 +30,27 @@ public class MainWindowController implements Controller {
         window = new MainWindow(this);
         mazes = tableModel.getMazes();
         mazeViewControllers = new ArrayList<>();
-        loadXMLData();
         window.init();
     }
 
     private void loadXMLData() {
-        /*
+        XMLDom xml = new XMLDom();
+        Set<MGraph> list = xml.loadData();
+        Iterator<MGraph> iterator = list.iterator();
+        while (iterator.hasNext()){
+            MGraph maze = iterator.next();
+            mazes.add(maze);
+            tableModel.updateTable(mazes);
+            SwingUtilities.invokeLater(() -> {
+                ViewModel vm = new ViewModel(maze);
+                mazeViewControllers.add(new MazeViewController(vm, executor));
+            });
+        }
+    }
 
-                LOADS LAST XML FILE
-
-         */
+    private void saveXMLData(){
+        XMLDom xml = new XMLDom();
+        xml.saveData(mazes);
     }
 
     public TableModel getTableModel(){
@@ -77,7 +90,7 @@ public class MainWindowController implements Controller {
     }
 
     public void createNewMaze(String name, Integer sizeX, Integer sizeY) {
-        MGraph newGraph = new MGraph(name, sizeX, sizeY);
+        MGraph newGraph = new MGraph(name, sizeX, sizeY, true);
         mazes.add(newGraph);
         tableModel.updateTable(mazes);
         SwingUtilities.invokeLater(() -> {
@@ -115,8 +128,10 @@ public class MainWindowController implements Controller {
                     createNewMaze();
                 } else if(e.getSource().equals(window.getOpenItem())) {
                     openMazesFile();
+                    loadXMLData();
                 } else if(e.getSource().equals(window.getSaveItem())) {
                     saveProgramState();
+                    saveXMLData();
                 }
             });
         } catch (RejectedExecutionException ignored) {}

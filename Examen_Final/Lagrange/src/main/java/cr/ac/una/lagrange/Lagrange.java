@@ -42,8 +42,16 @@ public class Lagrange {
 
     private void solucion(int n) {
         int k = 0;
+        //Cree un Set de soluciones, creo un Set y no una lista porque en realidad no me interesa el orden de los
+        //elementos, solamente saber si están o no.
         Set<Integer> solutions = new HashSet<>();
 
+        //El cambio mas importante que hice fue ir obteniendo en cada vuelta de ciclo el primer cuadrado,
+        //limitando al ciclo a cuando el cuadrado sea menor o igual a n porque si no el valor llega hasta a n,
+        //cuando en realidad como máximo debería llegar a n/2, sin embargo el cuadrado de n/2 de 10 en adelante
+        //es mayor a n, por lo que la solución más obvia era limitarlo computacionalmente.
+        //Luego para b, c y d, parto desde el punto que se obtiene con a, esto quiere decir que b, c y d no recalcula
+        //lo ya calculado en ciclos anteriores. Con estos cambios quedó resuelta la eficiencia del método.
         int a2;
         for (int a = 0; (a2 = a * a) <= n; a++) {
             int b2;
@@ -54,8 +62,11 @@ public class Lagrange {
                     for (int d = c; (d2 = d * d) <= n - (a2 + b2 + c2); d++) {
                         k0++;
                         if (n == (a2 + b2 + c2 + d2)) {
+                            //Si los cuadrados de a, b, c, y d sumados dan n, verifico que la solución no haya sido
+                            //encontrada previamente, de manera que si ya fué encontrada no la imprimo, así remuevo las
+                            //impresiones repetidas.
                             Set<Integer> solution = new HashSet<>(Arrays.asList(a, b, c, d));
-                            if(!solutions.contains(solution)){
+                            if(!solutions.contains(solution)){ //Acá verifico la existencia de la solución.
                                 solutions.addAll(solution);
                                 k++;
                                 System.out.printf(

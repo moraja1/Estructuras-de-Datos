@@ -41,7 +41,6 @@ public class Main {
             throw new RuntimeException(e);
         }
 
-        var cicles = graph.getCicleNodes();
-        System.out.println(cicles);
+        System.out.println(graph.getCycleNodes());
     }
 }

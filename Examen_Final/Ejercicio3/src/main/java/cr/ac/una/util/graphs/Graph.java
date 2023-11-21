@@ -1,8 +1,6 @@
 package cr.ac.una.util.graphs;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class Graph<T> implements IGraph<T> {
 
@@ -231,33 +229,48 @@ public class Graph<T> implements IGraph<T> {
         return label;
     }
 
-    public List<List<T>> getCicleNodes() {
-        List<List<T>> cicles = new ArrayList<>();
+    public List<List<T>> getCycleNodes() {
+        List<List<T>> cycles = new ArrayList<>();
         //Creo cola con primer nodo (abiertos)
-
+        Queue<Vertex<T>> opened = new ArrayDeque<>();
+        opened.add(vertices.get(0));
         //Creo una pila (cerrados)
-
+        Stack<Vertex<T>> closed = new Stack<>();
         //Invoco un metodo que reciba la cola, la pila y la lista de ciclos
+        getCycleNodes(cycles, opened, closed);
 
-        //getCicleNodes(open, closed, cicles);
-            //DENTRO DEL METODO
-            //El primer elemento de la cola existe en la pila?
-                //Si:
-                    //Capturo todos los elementos de la pila hasta llegar al nodo igual y los guardo en una lista
-                    //Agrego esa lista a cicles
-                    //Elimino el primer elemento de la cola sin agregarlo a la pila
-                    //Llamo a este método recursivamente
-                //No:
-                    //El primer elemento de la cola tiene nodos adjacentes?
-                        //Si
-                            //Añado a la cola los nodos adjacentes al primer elemento de la cola
-                            //Saco el primer elemento de la cola y lo añado a la pila
-                        //No:
-                            //Elimino el elemento de la cola
-                            //Invoco el método de manera recursiva
-            //
-            //
-            //
-        return cicles;
+        return cycles;
+    }
+
+    public List<List<T>> getCycleNodes(List<List<T>> cycles, Queue<Vertex<T>> opened, Stack<Vertex<T>> closed) {
+        if (opened.isEmpty()) {
+            return cycles;
+        }
+        var v = opened.remove();
+        if (closed.contains(v)) {
+            List<T> cycle = new ArrayList<>();
+            var vx = closed.peek();
+            int idx = closed.indexOf(vx);
+            while (vx != v) {
+                cycle.add(vx.getInfo());
+                vx = closed.get(--idx);
+            }
+            cycle.add(vx.getInfo());
+            cycles.add(cycle);
+        } else {
+            var edges = v.getEdges();
+            if (edges.isEmpty()) {
+                return getCycleNodes(cycles, opened, closed);
+            } else {
+                for (var e : edges) {
+                    var vx = e.getEnd();
+                    if (!vx.equals(v)) {
+                        opened.add(vx);
+                    }
+                }
+                closed.add(v);
+            }
+        }
+        return getCycleNodes(cycles, opened, closed);
     }
 }

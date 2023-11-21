@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<listasucursales>
+  <sucursal>
+    <codigo>002</codigo>
+    <referencia>Liberia</referencia>
+    <direccion>Guanacaste, 130m O Iglesia</direccion>
+    <zonaje>2.0</zonaje>
+    <ubicacionx>40.0</ubicacionx>
+    <ubicaciony>40.0</ubicaciony>
+  </sucursal>
+  <sucursal>
+    <codigo>003</codigo>
+    <referencia>Sabana</referencia>
+    <direccion>San José, 25m N Musmanni</direccion>
+    <zonaje>3.2</zonaje>
+    <ubicacionx>0.0</ubicacionx>
+    <ubicaciony>0.0</ubicaciony>
+  </sucursal>
+</listasucursales>

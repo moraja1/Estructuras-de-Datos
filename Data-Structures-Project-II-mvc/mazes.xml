@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Mazes>
+  <Maze>
+    <Size x="4" y="4"/>
+    <Label name="aaa"/>
+    <Date creation="16/11/2023"/>
+    <Edges>
+      <edge>
+        <weight amount="7.782505373198278"/>
+      </edge>
+      <edge>
+        <weight amount="5.617851533179957"/>
+      </edge>
+      <edge>
+        <weight amount="8.476897663043456"/>
+      </edge>
+      <edge>
+        <weight amount="3.871720290676622"/>
+      </edge>
+      <edge>
+        <weight amount="8.473644333770386"/>
+      </edge>
+      <edge>
+        <weight amount="9.114627506284847"/>
+      </edge>
+      <edge>
+        <weight amount="7.55318543654766"/>
+      </edge>
+      <edge>
+        <weight amount="1.917082972247658"/>
+      </edge>
+      <edge>
+        <weight amount="6.1643016705787215"/>
+      </edge>
+      <edge>
+        <weight amount="3.148373660626118"/>
+      </edge>
+      <edge>
+        <weight amount="9.347441196209141"/>
+      </edge>
+      <edge>
+        <weight amount="2.5075874459661995"/>
+      </edge>
+      <edge>
+        <weight amount="8.825819797046957"/>
+      </edge>
+      <edge>
+        <weight amount="1.787275185093521"/>
+      </edge>
+      <edge>
+        <weight amount="9.163817541198448"/>
+      </edge>
+      <edge>
+        <weight amount="6.07524726390606"/>
+      </edge>
+      <edge>
+        <weight amount="2.176717796949247"/>
+      </edge>
+      <edge>
+        <weight amount="5.812539636482156"/>
+      </edge>
+      <edge>
+        <weight amount="2.5443456815215737"/>
+      </edge>
+      <edge>
+        <weight amount="2.4207173130714397"/>
+      </edge>
+      <edge>
+        <weight amount="4.296452164674145"/>
+      </edge>
+      <edge>
+        <weight amount="5.403434262627798"/>
+      </edge>
+      <edge>
+        <weight amount="1.993030511964785"/>
+      </edge>
+      <edge>
+        <weight amount="1.7793972019490378"/>
+      </edge>
+    </Edges>
+  </Maze>
+  <Maze>
+    <Size x="4" y="4"/>
+    <Label name="eee"/>
+    <Date creation="16/11/2023"/>
+    <Edges>
+      <edge>
+        <weight amount="7.437134213901256"/>
+      </edge>
+      <edge>
+        <weight amount="9.288568799674806"/>
+      </edge>
+      <edge>
+        <weight amount="0.07594200136043727"/>
+      </edge>
+      <edge>
+        <weight amount="1.4443599674940444"/>
+      </edge>
+      <edge>
+        <weight amount="8.192284433437852"/>
+      </edge>
+      <edge>
+        <weight amount="2.775759412635792"/>
+      </edge>
+      <edge>
+        <weight amount="4.6751235489056295"/>
+      </edge>
+      <edge>
+        <weight amount="2.9198270883067403"/>
+      </edge>
+      <edge>
+        <weight amount="1.6667609452084575"/>
+      </edge>
+      <edge>
+        <weight amount="6.807807097066997"/>
+      </edge>
+      <edge>
+        <weight amount="0.4637633266450314"/>
+      </edge>
+      <edge>
+        <weight amount="9.885600831378818"/>
+      </edge>
+      <edge>
+        <weight amount="3.9113892208784176"/>
+      </edge>
+      <edge>
+        <weight amount="8.208660118953567"/>
+      </edge>
+      <edge>
+        <weight amount="6.909847667300678"/>
+      </edge>
+      <edge>
+        <weight amount="2.0851763658645615"/>
+      </edge>
+      <edge>
+        <weight amount="2.927511390255443"/>
+      </edge>
+      <edge>
+        <weight amount="5.64918646533187"/>
+      </edge>
+      <edge>
+        <weight amount="9.597398685338211"/>
+      </edge>
+      <edge>
+        <weight amount="6.9225948780123145"/>
+      </edge>
+      <edge>
+        <weight amount="0.16101409413780576"/>
+      </edge>
+      <edge>
+        <weight amount="4.429155162891"/>
+      </edge>
+      <edge>
+        <weight amount="1.3795207873277804"/>
+      </edge>
+      <edge>
+        <weight amount="2.7132382297124504"/>
+      </edge>
+    </Edges>
+  </Maze>
+  <Maze>
+    <Size x="4" y="4"/>
+    <Label name="ccc"/>
+    <Date creation="16/11/2023"/>
+    <Edges>
+      <edge>
+        <weight amount="0.6860695428883212"/>
+      </edge>
+      <edge>
+        <weight amount="0.8742873099387949"/>
+      </edge>
+      <edge>
+        <weight amount="7.044372476111849"/>
+      </edge>
+      <edge>
+        <weight amount="8.822375821017545"/>
+      </edge>
+      <edge>
+        <weight amount="6.154629224720041"/>
+      </edge>
+      <edge>
+        <weight amount="7.0259604394747575"/>
+      </edge>
+      <edge>
+        <weight amount="0.943410579488726"/>
+      </edge>
+      <edge>
+        <weight amount="2.8067572790206463"/>
+      </edge>
+      <edge>
+        <weight amount="8.943571274284816"/>
+      </edge>
+      <edge>
+        <weight amount="4.9905274043601455"/>
+      </edge>
+      <edge>
+        <weight amount="7.865702061648106"/>
+      </edge>
+      <edge>
+        <weight amount="7.021632179599255"/>
+      </edge>
+      <edge>
+        <weight amount="4.7974578258885785"/>
+      </edge>
+      <edge>
+        <weight amount="7.979238868949636"/>
+      </edge>
+      <edge>
+        <weight amount="3.036221590452471"/>
+      </edge>
+      <edge>
+        <weight amount="6.480841082578258"/>
+      </edge>
+      <edge>
+        <weight amount="4.155405765908848"/>
+      </edge>
+      <edge>
+        <weight amount="5.28747071024711"/>
+      </edge>
+      <edge>
+        <weight amount="4.662482600691997"/>
+      </edge>
+      <edge>
+        <weight amount="8.916205685679031"/>
+      </edge>
+      <edge>
+        <weight amount="9.23199184312339"/>
+      </edge>
+      <edge>
+        <weight amount="6.6235835351673416"/>
+      </edge>
+      <edge>
+        <weight amount="8.610644333559051"/>
+      </edge>
+      <edge>
+        <weight amount="0.5440863349250391"/>
+      </edge>
+    </Edges>
+  </Maze>
+  <Maze>
+    <Size x="4" y="4"/>
+    <Label name="prueba"/>
+    <Date creation="17/11/2023"/>
+    <Edges>
+      <edge>
+        <weight amount="1.7726156835998708"/>
+      </edge>
+      <edge>
+        <weight amount="3.383252669506539"/>
+      </edge>
+      <edge>
+        <weight amount="4.418415703600838"/>
+      </edge>
+      <edge>
+        <weight amount="1.9591237047622756"/>
+      </edge>
+      <edge>
+        <weight amount="3.1363869913650033"/>
+      </edge>
+      <edge>
+        <weight amount="3.97427636442248"/>
+      </edge>
+      <edge>
+        <weight amount="5.600635686198725"/>
+      </edge>
+      <edge>
+        <weight amount="1.6816556128773796"/>
+      </edge>
+      <edge>
+        <weight amount="3.2466276787406514"/>
+      </edge>
+      <edge>
+        <weight amount="4.409822199163537"/>
+      </edge>
+      <edge>
+        <weight amount="3.7077066607026965"/>
+      </edge>
+      <edge>
+        <weight amount="9.75195644529624"/>
+      </edge>
+      <edge>
+        <weight amount="5.974322170802794"/>
+      </edge>
+      <edge>
+        <weight amount="1.719074488583291"/>
+      </edge>
+      <edge>
+        <weight amount="3.6178837364117444"/>
+      </edge>
+      <edge>
+        <weight amount="7.05746819120337"/>
+      </edge>
+      <edge>
+        <weight amount="9.107960208367151"/>
+      </edge>
+      <edge>
+        <weight amount="6.267636860741515"/>
+      </edge>
+      <edge>
+        <weight amount="6.0424748387733125"/>
+      </edge>
+      <edge>
+        <weight amount="8.694963029347463"/>
+      </edge>
+      <edge>
+        <weight amount="6.015370336623759"/>
+      </edge>
+      <edge>
+        <weight amount="7.416491385441853"/>
+      </edge>
+      <edge>
+        <weight amount="0.5309490915827486"/>
+      </edge>
+      <edge>
+        <weight amount="9.455023886649553"/>
+      </edge>
+    </Edges>
+  </Maze>
+</Mazes>

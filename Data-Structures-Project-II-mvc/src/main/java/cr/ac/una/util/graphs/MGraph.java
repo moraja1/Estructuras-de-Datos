@@ -11,30 +11,23 @@ import java.util.*;
 public class MGraph {
     private static int instances = 0;
     private static final int MIN_SIZE = 4;
-    private final int sizeX;
-    private final int sizeY;
-    private final LocalDate creationDate;
+    private int sizeX;
+    private int sizeY;
+    private LocalDate creationDate;
     private String label;
-    private final Vertex<VInfo<Character>>[][] MATRIX;
-    private final Set<Edge<VInfo<Character>>> MATRIX_EDGES;
-    private final Tree<VInfo<Character>> MINIMUM_SPANNING;
-    private final List<Edge<VInfo<Character>>> MAZE_EDGES;
-    private final int vertexCount;
+    private Vertex<VInfo<Character>>[][] MATRIX;
+    private Set<Edge<VInfo<Character>>> MATRIX_EDGES;
+    private Tree<VInfo<Character>> MINIMUM_SPANNING;
+    private List<Edge<VInfo<Character>>> MAZE_EDGES;
+    private int vertexCount;
 
-    public MGraph() {
-        this(null, MIN_SIZE, MIN_SIZE);
-    }
 
-    public MGraph(String name) {
-        this(name, MIN_SIZE, MIN_SIZE);
-    }
-
-    public MGraph(String name, Integer sizeX, Integer sizeY) {
+    public MGraph(String name, Integer sizeX, Integer sizeY, Boolean nuevo) {
         this.label = name != null ? name : String.format("Maze #%d", instances);
         this.sizeX = sizeX != null ? sizeX : MIN_SIZE;
         this.sizeY = sizeY != null ? sizeY : MIN_SIZE;
         MATRIX = new Vertex[this.sizeX][this.sizeY];
-        MATRIX_EDGES = new HashSet<>();
+        MATRIX_EDGES = new LinkedHashSet<>();
         MINIMUM_SPANNING = new Tree<>();
         MAZE_EDGES = new LinkedList<>();
         creationDate = LocalDate.now();
@@ -48,10 +41,16 @@ public class MGraph {
                 MATRIX[i][j] = new Vertex<>(new VInfo<>(c++, i, j));
             }
         }
+
+        if(nuevo){
         try {
             init();
         } catch (VertexNotFoundException ignored) {
-        }
+        }}
+    }
+
+    public MGraph() {
+
     }
 
     //------------------------------------------------------------------------------------------------------
@@ -236,9 +235,32 @@ public class MGraph {
         return MATRIX;
     }
 
+    public Set<Edge<VInfo<Character>>> getMATRIX_EDGES() {
+        return MATRIX_EDGES;
+    }
+
     public void setLabel(String label) {
         this.label = label;
     }
+
+    public void setCreationDate(String date){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        creationDate = LocalDate.parse(date, formatter);
+    }
+
+    public void setMATRIX_EDGES(Set<Edge<VInfo<Character>>> MATRIX_EDGES) {
+        this.MATRIX_EDGES = MATRIX_EDGES;
+    }
+
+    public void setMAZE_EDGES(List<Edge<VInfo<Character>>> MAZE_EDGES) {
+        this.MAZE_EDGES = MAZE_EDGES;
+    }
+
+    public void setSize(int x, int y){
+        this.sizeX = x;
+        this.sizeY = y;
+    }
+
 
     @Override
     public String toString() {

@@ -4,11 +4,9 @@ import cr.ac.una.util.trees.TVertex;
 import cr.ac.una.util.trees.Tree;
 import cr.ac.una.util.trees.exceptions.RootNotNullException;
 import cr.ac.una.util.trees.exceptions.VertexNotFoundException;
-import org.w3c.dom.css.CSSImportRule;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class Main {

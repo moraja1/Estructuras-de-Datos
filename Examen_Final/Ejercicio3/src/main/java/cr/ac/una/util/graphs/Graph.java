@@ -7,6 +7,7 @@ public class Graph<T> implements IGraph<T> {
     private static int instances = 0;
     private String label;
     private final List<Vertex<T>> vertices;
+    private final HashMap<Vertex<T>, List<Stack<Vertex<T>>>> minPaths = new HashMap<>();
 
     public Graph(String label) {
         this.label = label;
@@ -272,5 +273,91 @@ public class Graph<T> implements IGraph<T> {
             }
         }
         return getCycleNodes(cycles, opened, closed);
+    }
+
+    public void printMatrix() {
+        int size = vertices.size() + 1;
+
+        Object[][] matrix = new Object[size][size];
+        int n = 1;
+        matrix[0][0] = " ";
+        for (var v : vertices) {
+            matrix[0][n] = v.getInfo();
+            matrix[n][0] = v.getInfo();
+            n++;
+        }
+
+        for (int i = 1; i < matrix.length; i++) {
+            for (int j = i; j < matrix[i].length; j++) {
+                if (i == j) matrix[i][j] = 0;
+                else {
+                    int level = getLevel(vertices.get(i - 1), vertices.get(j - 1));
+                    matrix[i][j] = level;
+                    matrix[j][i] = level;
+                }
+            }
+        }
+
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                s.append(String.format(" %2s%2s|", matrix[i][j], ""));
+            }
+            s.append("\n").append("-".repeat(54)).append("\n");
+        }
+
+        System.out.println(s);
+    }
+
+    private int getLevel(Vertex<T> start, Vertex<T> end) {
+        //Creo el Stack que sera el camino minimo
+        Stack<Vertex<T>> minPath = new Stack<>();
+        minPath = getLevel(start, end, new Stack<>(), new ArrayList<>());
+
+        return minPath.size() - 1;
+    }
+
+    private Stack<Vertex<T>> getLevel(Vertex<T> start, Vertex<T> end, Stack<Vertex<T>> closed, List<Vertex<T>> checked) {
+        //Creo el minPath
+        Stack<Vertex<T>> minPath = new Stack<>();
+        //Creo open
+        Queue<Vertex<T>> opened = new ArrayDeque<>();
+        //Tomo los vertices adjacentes a start
+        var sEdges = start.getEdges();
+        if (!sEdges.isEmpty()) {
+            //Tomo start y lo agrego a closed
+            closed.add(start);
+        }
+        for (var e : sEdges) {
+            if (!closed.contains(e.getEnd())) {
+                //Si end es un vertice adjacente lo agrego a close y devuelvo closed
+                if (end.equals(e.getEnd())) {
+                    closed.add(end);
+                    return closed;
+                } else {
+                    //Reviso que no sea un camino ya recorrido o un camino sin retorno
+                    if (!checked.contains(e.getEnd())) {
+                        opened.add(e.getEnd());
+                    }
+                }
+            }
+        }
+        if (opened.isEmpty()) {
+            checked.add(start);
+            return closed;
+        }
+        while (!opened.isEmpty()) {
+            var v = opened.remove();
+            Stack<Vertex<T>> newClosed = new Stack<>();
+            newClosed.addAll(closed);
+            newClosed = getLevel(v, end, newClosed, checked);
+            if (newClosed.contains(end)) {
+                if (minPath.isEmpty()) minPath = newClosed;
+                else if (minPath.size() > newClosed.size()) minPath = newClosed;
+            } else {
+                checked.add(v);
+            }
+        }
+        return minPath;
     }
 }

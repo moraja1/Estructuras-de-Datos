@@ -6,10 +6,11 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        new Main().init();
+        new Main().Ejercicio3();
+        new Main().Ejercicio4();
     }
 
-    private void init() {
+    private void Ejercicio3() {
         Graph<Integer> graph = new Graph<>();
         try {
             graph
@@ -42,5 +43,46 @@ public class Main {
         }
 
         System.out.println(graph.getCycleNodes());
+    }
+
+    private void Ejercicio4() {
+        Graph<Character> graph = new Graph<>();
+
+        try {
+            graph
+                    .add('A')
+                    .add('B')
+                    .add('C')
+                    .add('D')
+                    .add('E')
+                    .add('F')
+                    .add('G')
+                    .add('H');
+            graph
+                    .addEdge('A', 'C', 0)
+                    .addEdge('A', 'B', 0)
+                    .addEdge('B', 'A', 0)
+                    .addEdge('B', 'C', 0)
+                    .addEdge('B', 'D', 0)
+                    .addEdge('C', 'A', 0)
+                    .addEdge('C', 'B', 0)
+                    .addEdge('C', 'D', 0)
+                    .addEdge('C', 'E', 0)
+                    .addEdge('D', 'B', 0)
+                    .addEdge('D', 'C', 0)
+                    .addEdge('E', 'C', 0)
+                    .addEdge('E', 'F', 0)
+                    .addEdge('F', 'E', 0)
+                    .addEdge('F', 'G', 0)
+                    .addEdge('F', 'H', 0)
+                    .addEdge('G', 'F', 0)
+                    .addEdge('G', 'H', 0)
+                    .addEdge('H', 'F', 0)
+                    .addEdge('H', 'G', 0);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        graph.printMatrix();
     }
 }

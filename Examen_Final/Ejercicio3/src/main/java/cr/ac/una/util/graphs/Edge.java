@@ -30,6 +30,10 @@ public class Edge<T> {
         return weight;
     }
 
+    public boolean contains(Vertex<T> v) {
+        return v.equals(start) || v.equals(end);
+    }
+
     public void setWeight(double weight) {
         this.weight = weight;
     }

@@ -299,6 +299,7 @@ public class Graph<T> implements IGraph<T> {
         }
 
         StringBuilder s = new StringBuilder();
+        s.append("\n").append("-".repeat(54)).append("\n");
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
                 s.append(String.format(" %2s%2s|", matrix[i][j], ""));
